@@ -51,7 +51,7 @@
                 "--exclude",
                 ".DS_Store",
                 "--file",
-                "miraview-x.x.x.tar.gz",
+                "build.tar.gz",
                 "--directory",
                 "${workspaceFolder}/build",
                 "."
