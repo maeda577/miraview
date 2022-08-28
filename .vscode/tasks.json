@@ -52,7 +52,9 @@
                 ".DS_Store",
                 "--file",
                 "miraview-x.x.x.tar.gz",
-                "${workspaceFolder}/build"
+                "--directory",
+                "${workspaceFolder}/build",
+                "."
             ],
             "problemMatcher": [],
             "dependsOrder": "sequence",
