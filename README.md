@@ -93,7 +93,7 @@ server:
 
 ### 手順3 再読み込み
 
-`docker-compose.yml` があるディレクトリで `docker compose down` してから `docker compose up` してください。mirakcも一度落ちるので、録画中でないことを確認しておいてください。
+`docker-compose.yml` があるディレクトリで `sudo docker compose down` してから `sudo docker compose up -d` してください。mirakcも一度落ちるので、録画中でないことを確認しておいてください。
 
 その後 http://[mirakcが動いているIPアドレス]:[ポート]/miraview/index.html へアクセスするとmiraviewが開くはずです。
 
