@@ -2,6 +2,7 @@
 
 package-lock.json
 build.tar.gz
+/test
 
 # dependencies
 /node_modules
