@@ -1,0 +1,63 @@
+.MuiTableContainer-root {
+  overflow: visible;    /* スクロールは上位でBoxでやる */
+}
+
+.MuiTable-root {
+  table-layout: fixed;  /* Tableでwidthの指定が効くようにする */
+  position: relative;   /* 現在時刻の横棒分上にずらす */
+  top: calc(var(--now-line-border) * -2);
+}
+
+._bordered {
+  border-width: thin;
+  border-style: solid;
+  border-color: var(--border-color);
+}
+
+/* z-indexは1000を下回るならなんでもよさそう https://mui.com/material-ui/customization/default-theme/ */
+._left_sticky {
+  position: sticky;
+  left: 0px;
+  z-index: 100;
+}
+
+/* TableRowにはデフォルトでvertical-align: middleが指定されているので上書きする */
+.program_row {
+  vertical-align: top;
+}
+
+.channel_header {
+  background-color: var(--header-color);
+  width: var(--channel-width);
+  text-align: center;
+  z-index: 100;
+}
+
+.hour_header {
+  background-color: var(--header-color);
+  width: var(--hour-width);
+  height: var(--channel-height);
+}
+
+.hour {
+  background-color: var(--header-color);
+  text-align: center;
+  height: var(--height-per-hour);
+  padding-top: 1em;
+}
+
+.program {
+  position: sticky;
+  top: var(--channel-height);
+  padding: 0 5px;   /* 上下のpaddingをつけると番組表の時刻がずれる */
+  overflow: hidden;
+}
+
+.now_line {
+  border: var(--now-line-border);
+  border-style: solid;
+  position: relative;
+  opacity: 0.5;
+  border-color: green;
+  z-index: 10;
+}

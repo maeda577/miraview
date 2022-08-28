@@ -1,0 +1,96 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "start",
+            "label": "start-react",
+            "detail": "react-scripts start",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling...",  // Signals the begin of the Task
+                    "endsPattern": "Compiled .*"      // Signals that now the initialization of the task is complete
+                }
+            },
+            "options": {
+                "env": {
+                    "BROWSER": "none",
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        // --- ここまで自動生成のテンプレート ---
+        // リリース用アーカイブの作成
+        {
+            "label": "build for release",
+            "type": "npm",
+            "script": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "create release archive",
+            "type": "process",
+            "command": "tar",
+            "args": [
+                "--create",
+                "--gzip",
+                "--verbose",
+                "--exclude",
+                ".DS_Store",
+                "--file",
+                "miraview-x.x.x.tar.gz ",
+                "${workspaceFolder}/build"
+            ],
+            "problemMatcher": [],
+            "dependsOrder": "sequence",
+            "dependsOn": [ "build for release" ]
+        },
+        // イメージのビルド コンテナから出て実行する
+        {
+            "label": "build image",
+            "type": "process",
+            "command": "docker",
+            "args": [
+                "build",
+                "--pull",
+                "--platform",
+                "linux/amd64",
+                "--tag",
+                "ghcr.io/maeda577/miraview:latest",
+                "${workspaceFolder}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "login to ghcr.io",
+            "type": "shell",
+            "command": "echo 'https://ghcr.io' | docker-credential-osxkeychain get | docker login ghcr.io",
+            "problemMatcher": []
+        },
+        {
+            "label": "push image to ghcr.io",
+            "type": "process",
+            "command": "docker",
+            "args": [
+                "push",
+                "ghcr.io/maeda577/miraview:latest"
+            ],
+            "problemMatcher": [],
+            "dependsOrder": "sequence",
+            "dependsOn": [ "login to ghcr.io", "build image" ]
+        }
+    ]
+}
