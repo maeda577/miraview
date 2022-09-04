@@ -54,7 +54,7 @@ services:
       - miraview-html:/var/www/miraview
     working_dir: /var/www/miraview
     environment:
-      MIRAVIEW_VERSION: v0.1.0    # ここのバージョンは適宜変更
+      MIRAVIEW_VERSION: v0.1.1    # ここのバージョンは適宜変更
     entrypoint: ash
     command: -c "curl -L https://github.com/maeda577/miraview/releases/download/$$MIRAVIEW_VERSION/build.tar.gz | tar -zxvf -"
 # 追加2 ここまで
