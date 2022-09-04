@@ -84,7 +84,13 @@ function ConfigView(props: { onSave?: (savedConfig: MiraviewConfig) => void; }):
   const inputUrlRef = React.useRef<HTMLInputElement>(null);
 
   // configの保存関数
-  function saveConfigToLocalStorage() {
+  function saveConfigToLocalStorage(): void {
+    // 検証に失敗したら中断する
+    if (inputProtocolRef?.current?.validity?.valid !== true || inputUrlRef?.current?.validity?.valid !== true) {
+      setSnackbarMessage({ message: '入力値の検証に失敗しました。エラーを確認してください', severity: 'error' });
+      return;
+    }
+
     try{
       // プロトコルはバリデーションを信じてそのまま入れる
       localStorage.setItem(StorageKeys.config.streamProtocol, inputProtocolRef.current?.value!);
