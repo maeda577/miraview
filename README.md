@@ -97,6 +97,11 @@ server:
 
 その後 http://[mirakcが動いているIPアドレス]:[ポート]/miraview/index.html へアクセスするとmiraviewが開くはずです。
 
+## URLプロトコルハンドラの設定
+
+* [macOS用URLプロトコルハンドラの設定](./docs/mac-url.md)
+* windows向けは今後作成
+
 ## 使用するAPI
 
 以下のAPIを使用しています。試していませんが、Mirakurun互換のものしか使用していないのでMirakurunでも動作すると思います。
