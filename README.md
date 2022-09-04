@@ -54,7 +54,7 @@ services:
       - miraview-html:/var/www/miraview
     working_dir: /var/www/miraview
     environment:
-      MIRAVIEW_VERSION: v0.1.0    # ここのバージョンは適宜変更
+      MIRAVIEW_VERSION: v0.1.1    # ここのバージョンは適宜変更
     entrypoint: ash
     command: -c "curl -L https://github.com/maeda577/miraview/releases/download/$$MIRAVIEW_VERSION/build.tar.gz | tar -zxvf -"
 # 追加2 ここまで
@@ -96,6 +96,11 @@ server:
 `docker-compose.yml` があるディレクトリで `sudo docker compose down` してから `sudo docker compose up -d` してください。mirakcも一度落ちるので、録画中でないことを確認しておいてください。
 
 その後 http://[mirakcが動いているIPアドレス]:[ポート]/miraview/index.html へアクセスするとmiraviewが開くはずです。
+
+## URLプロトコルハンドラの設定
+
+* [macOS用URLプロトコルハンドラの設定](./docs/mac-url.md)
+* windows向けは今後作成
 
 ## 使用するAPI
 
