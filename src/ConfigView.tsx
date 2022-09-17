@@ -128,15 +128,16 @@ function ConfigView(props: { onSave?: (savedConfig: MiraviewConfig) => void; }):
           </ListItem>
           <ListSubheader>全般</ListSubheader>
           <ListItem>
-            <ListItemText primary='選局ボタンのプロトコル' />
+            <ListItemText primary='リアルタイム視聴のプロトコル' />
             <ListItemIcon>
               <IconButton color='primary' onClick={ (event: React.MouseEvent<HTMLButtonElement>) => {
                 setPopoverMessage({
                   messages: [
-                    '番組ダイアログ下部にある選局ボタンの、リンク先プロトコルを指定します',
+                    'リアルタイム視聴へのリンクに使用するプロトコルを指定します',
+                    'リンクは番組ダイアログ下部にある選局ボタンと、番組表のチャンネル名に張られています',
                     '使用可能な文字は英数字と . + _ - です',
                     'デフォルト値はvlcです',
-                    '空欄にした場合、選局ボタンが無効になります',
+                    '空欄にした場合、リンクが無効になります',
                   ],
                   anchorEl: event.currentTarget
                 });
