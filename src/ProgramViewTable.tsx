@@ -13,16 +13,19 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import './ProgramViewTable.css';
-import type { Program, Service, ProgramPair } from './types';
+import ProgramViewDialog from './ProgramViewDialog';
+import type { MiraviewConfig, Program, Service, ProgramPair } from './types';
 
 // 1日あたりの番組表のテーブル
 // servicesはその日の放送がなくても入っている
 // programsは実際にある放送だけが入っている前提 第1キーはnetwork_idで第2キーはservice_id
-function ProgramViewTable(props: { services?: Service[]; programs?: Map<number, Map<number, Program[]>>; onLinkClick: (program: ProgramPair) => void; }): JSX.Element {
+function ProgramViewTable(props: { config: MiraviewConfig; services?: Service[]; programs?: Map<number, Map<number, Program[]>>; }): JSX.Element {
   // 現在時刻の横棒のref
   const nowLineRef = React.useRef<HTMLDivElement>(null);
   // 現在時刻の横棒の高さ計算に使う時刻
   const [now, setNow] = React.useState(Date.now());
+  // クリックされた番組
+  const [focusProgram, setFocusProgram] = React.useState<ProgramPair | undefined>(undefined);
 
   React.useEffect(() => {
     // 1回だけ横棒までスクロールする
@@ -103,7 +106,7 @@ function ProgramViewTable(props: { services?: Service[]; programs?: Map<number, 
                         prg.name &&
                         <Link component='button' color='inherit' underline='hover'
                           align='left' fontSize='0.85rem' lineHeight='1.5'
-                          onClick={() => props.onLinkClick({ program: prg, service: srv })}>
+                          onClick={() => setFocusProgram({ program: prg, service: srv })}>
                           { programTimeFormat.format(prg.startAt) + ' ' + prg.name }
                         </Link>
                       }
@@ -115,6 +118,11 @@ function ProgramViewTable(props: { services?: Service[]; programs?: Map<number, 
           </TableRow>
         </TableBody>
       </Table>
+      <ProgramViewDialog
+        pgPair={ focusProgram }
+        config={ props.config }
+        onClose={ () => setFocusProgram(undefined) }
+      />
     </TableContainer>
   );
 }

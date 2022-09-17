@@ -5,9 +5,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 
-import ProgramViewDialog from './ProgramViewDialog';
 import ProgramViewTable from './ProgramViewTable';
-import type { MiraviewConfig, Program, Service, ProgramPair } from './types';
+import type { MiraviewConfig, Program, Service } from './types';
 
 // 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
@@ -89,8 +88,6 @@ function groupPrograms(programs?: Program[]): Map<number, Map<number, Map<number
 function ProgramView(props: { config: MiraviewConfig, programs?: Program[], services?: Service[] }): JSX.Element {
   // タブで選ばれている日付の0時ちょうどのunixtime
   const [currentDate, setCurrentDate] = React.useState<number>(new Date(Date.now() - (5 * 60 * 60 * 1000)).setHours(0, 0, 0, 0));
-  // クリックされた番組
-  const [focusProgram, setFocusProgram] = React.useState<ProgramPair | undefined>(undefined);
 
   // 番組情報一覧 第一キーは日付の0時ちょうどのunixtime、第二キーはnetwork_idで第三キーはservice_id
   const programs = React.useMemo(() => groupPrograms(props.programs), [props.programs]);
@@ -110,16 +107,11 @@ function ProgramView(props: { config: MiraviewConfig, programs?: Program[], serv
       </Tabs>
       <Box sx={{ overflow: 'auto' }}>
         <ProgramViewTable
+          config={ props.config }
           services={ props.services }
           programs={ programs.get(currentDate) }
-          onLinkClick={ setFocusProgram }
         />
       </Box>
-      <ProgramViewDialog
-        pgPair={ focusProgram }
-        config={ props.config }
-        onClose={ () => setFocusProgram(undefined) }
-      />
     </Stack>
   );
 }
