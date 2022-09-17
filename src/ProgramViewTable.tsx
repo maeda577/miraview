@@ -16,6 +16,15 @@ import './ProgramViewTable.css';
 import ProgramViewDialog from './ProgramViewDialog';
 import type { MiraviewConfig, Program, Service, ProgramPair } from './types';
 
+function getStreamUrl(config: MiraviewConfig, service: Service) : string | undefined {
+  if (!config.streamProtocol) {
+    return undefined
+  }
+  const streamUrl = new URL(`/api/services/${service.id}/stream`, config.mirakcUri);
+  streamUrl.protocol = config.streamProtocol;
+  return streamUrl.href;
+}
+
 // 1日あたりの番組表のテーブル
 // servicesはその日の放送がなくても入っている
 // programsは実際にある放送だけが入っている前提 第1キーはnetwork_idで第2キーはservice_id
@@ -80,7 +89,11 @@ function ProgramViewTable(props: { config: MiraviewConfig; services?: Service[];
             <TableCell className='_left_sticky hour_header _bordered'/>
             { filteredServices.map(srv => (
               <TableCell key={srv.id} className='channel_header _bordered'>
-                {srv.name}
+                {
+                  props.config.streamProtocol ?
+                    <Link color='inherit' underline='hover' href={ getStreamUrl(props.config, srv) }>{srv.name}</Link> :
+                    <React.Fragment>{srv.name}</React.Fragment>
+                }
               </TableCell>
             ))}
           </TableRow>
