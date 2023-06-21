@@ -1,0 +1,5 @@
+{
+    "files.readonlyInclude": {
+        "node_modules/**": true
+    }
+}
