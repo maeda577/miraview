@@ -4,7 +4,7 @@
 
 mirakc用のWebUIです。html+javascriptで出来ているため、mirakcの内蔵Webサーバ機能で動かすことが可能です。
 
-![デモgif](/demo.gif)
+![デモgif](/docs/demo.gif)
 
 ## 機能
 

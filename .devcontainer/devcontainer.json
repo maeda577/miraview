@@ -1,6 +1,6 @@
 {
-    "name": "Node.js & TypeScript",
-    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:bullseye",
+    "name": "Miraview",
+    "image": "docker.io/library/node:18",
 
     "postCreateCommand": "npm install",
     "remoteUser": "node",
