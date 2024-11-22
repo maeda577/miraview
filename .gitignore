@@ -4,6 +4,13 @@ package-lock.json
 build.tar.gz
 /test
 
+# Transpiled JS
+/public/js
+# UI library
+/public/ix
+# Dummy data
+/public/api
+
 # dependencies
 /node_modules
 /.pnp

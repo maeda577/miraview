@@ -1,41 +1,25 @@
 {
   "name": "miraview",
-  "version": "0.1.2",
-  "private": true,
-  "homepage": ".",
-  "dependencies": {
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.6.2",
-    "@types/react": "^18.0.6",
-    "@types/react-dom": "^18.0.2",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.6.3"
+  "version": "3.2.0",
+  "description": "A web frontend for mirakc.",
+  "keywords": [],
+  "homepage": "https://github.com/maeda577/miraview",
+  "bugs": {
+    "url": "https://github.com/maeda577/miraview/issues"
+  },
+  "license": "MIT",
+  "author": "maeda577",
+  "devDependencies": {
+    "rollup": "^4.24.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@siemens/ix": "^2.5.0",
+    "@siemens/ix-icons": "^2.2.0",
+    "typescript": "^5.6.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "clean": "rm public/ix/* && rm public/js/*",
+    "setup": "mkdir -p public/ix public/js && cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/ && npx rollup --config rollup.config.mjs",
+    "watch": "tsc",
+    "test": "react-scripts test"
   }
 }

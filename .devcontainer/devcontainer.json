@@ -1,21 +1,28 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.231.6/containers/typescript-node
 {
-    "name": "Node.js & TypeScript",
-    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:bullseye",
+    "name": "miraview",
+    "image": "docker.io/library/node:22-bookworm",
+    "postCreateCommand": "apt update && apt install --yes git && npm install",
 
-    // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        "dbaeumer.vscode-eslint",
-        "editorconfig.editorconfig"
+    // https://containers.dev/supporting
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "ms-vscode.live-server",
+                "dbaeumer.vscode-eslint",
+                "editorconfig.editorconfig"
+            ]
+        }
+    },
+
+    // https://code.visualstudio.com/remote/advancedcontainers/docker-options#_podman
+    // M1Mac+Podmanではこれで動いた
+    "runArgs": [
+        "--userns=keep-id"
     ],
-
-    // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // "forwardPorts": [],
-
-    // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "npm install",
-
-    // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-    "remoteUser": "node"
+    "containerEnv": {
+        "HOME": "/root"
+    },
+    "containerUser": "root",
+    "remoteUser": "root"
 }
