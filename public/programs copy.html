@@ -6,33 +6,35 @@
     <script type="module" src="./ix/ix.js"></script>
     <title>番組表:miraview</title>
     <style type="text/css">
-      ix-tabs{
-        /* position: sticky;
-        top:0px; */
-        /* left: 0px; */
-        z-index: 5;
-        width: 50%;
-        background-color: blue;
-      }
+      /* ix-tabs{
+        position: sticky;
+        top: 0;
+      } */
       table{
         display: block;
         overflow: scroll;
-        height: 70%;
-        width: 70%;
+        height: 70%; /* 高さを測る */
       }
       th{
         position: sticky;
-        top: 100px; /**/
+        top: 50px; /* 高さを測る */
         left: 0;
-        z-index: 1;
-        background-color: blue;
+        z-index: 10;
+        background-color: var(--theme-color-primary);
+        border: var(--theme-weak-bdr-1);
+      }
+      td{
+        border: var(--theme-weak-bdr-1);
       }
     </style>
   </head>
 
-  <body>
-    <!-- hide-header をつけるとbreakpointがmd,smになった時にコンテンツがめり込む -->
-    <ix-basic-navigation>
+  <!--  class="theme-classic-light" -->
+  <body class="theme-classic-light">
+    <ix-application>
+      <ix-application-header name="My Application">
+        <div class="placeholder-logo" slot="logo"></div>
+      </ix-application-header>
       <ix-menu>
         <ix-menu-item icon="table" active="true">番組表</ix-menu-item>
         <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
@@ -41,36 +43,21 @@
         <ix-menu-item icon="list">録画予約リスト</ix-menu-item>
         <ix-menu-item icon="radio-waves">チューナー</ix-menu-item>
         <ix-menu-item icon="configuration" bottom>設定</ix-menu-item>
-        <ix-menu-item icon="about" bottom>gaiyou</ix-menu-item>
-        <!-- <ix-menu-about>
-          <ix-menu-about-item label="Tab 1">Content 1</ix-menu-about-item>
-          <ix-menu-about-item label="Tab 2">Content 2</ix-menu-about-item>
-        </ix-menu-about> -->
+        <ix-menu-item icon="about" bottom>概要</ix-menu-item>
       </ix-menu>
-      <div class="tabs">
+      <div>
         <ix-tabs>
           <ix-tab-item data-tab-id="0" counter="5">01/01(月)</ix-tab-item>
           <ix-tab-item data-tab-id="1">01/02(月)</ix-tab-item>
           <ix-tab-item data-tab-id="2">01/03(月)</ix-tab-item>
         </ix-tabs>
-        
         <table><!--class="table"-->
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">First</th>
               <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
-              <th scope="col">Handle</th>
+              <th scope="col">HandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandleHandle</th>
             </tr>
           </thead>
           <tbody>
@@ -194,15 +181,6 @@
           </tbody>
         </table>
       </div>
-      <ix-content>aaa</ix-content>
-    </ix-basic-navigation>
-
-    <!-- <script type="module">
-      (async () => {
-        await window.customElements.whenDefined('ix-menu');
-        const menu = document.querySelector('ix-menu');
-        menu.breakpoints = ['medium'];
-      })();
-    </script> -->
+    </ix-application>
   </body>
 </html>
