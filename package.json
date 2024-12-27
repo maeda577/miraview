@@ -11,14 +11,18 @@
   "author": "maeda577",
   "devDependencies": {
     "rollup": "^4.24.0",
+    "sass": "^1.83.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
-    "@siemens/ix": "^2.5.0",
-    "@siemens/ix-icons": "^2.2.0",
+    "@carbon/web-components": "^2.19.0",
+    "@carbon/icons": "^11.53.0",
+    "@carbon/icon-helpers": "^10.54.0",
+    "@carbon/themes": "^11.43.0",
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "clean": "rm public/ix/* && rm public/js/*",
-    "setup": "mkdir -p public/ix public/js && cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/ && npx rollup --config rollup.config.mjs",
+    "clean": "rm public/js/*.js",
+    "setup": "mkdir -p public/js && cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/ && npx rollup --config rollup.config.mjs",
+    "build": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --dir public/js/ --input src/*.ts",
     "watch": "tsc",
     "test": "react-scripts test"
   }
