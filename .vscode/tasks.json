@@ -2,41 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "start",
-            "label": "start-react",
-            "detail": "react-scripts start",
-            "isBackground": true,
-            "problemMatcher": {
-                "owner": "custom",
-                "pattern": {
-                    "regexp": "^$"
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "Compiling...",  // Signals the begin of the Task
-                    "endsPattern": "Compiled .*"      // Signals that now the initialization of the task is complete
-                }
-            },
-            "options": {
-                "env": {
-                    "BROWSER": "none",
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        // --- ここまで自動生成のテンプレート ---
-        // リリース用アーカイブの作成
-        {
-            "label": "build for release",
+            "label": "build",
             "type": "npm",
             "script": "build",
             "group": {
                 "kind": "build",
-                "isDefault": false
+                "isDefault": true
             },
             "problemMatcher": []
         },

@@ -1,44 +1,199 @@
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./ix/siemens-ix.css"> -->
     <link rel="stylesheet" href="./css/carbon.css"/>
     <script type="module" src="./js/programs.js"></script>
+    <style type="text/css">
+      cds-header:not(:defined), cds-side-nav:not(:defined) {
+        display: none;
+      }
+    </style>
     <title>番組表 | miraview</title>
   </head>
-
   <body>
-    <cds-header aria-label="IBM Platform Name">
-      <cds-header-menu-button
-        button-label-active="Close menu"
-        button-label-inactive="Open menu">
-      </cds-header-menu-button>
-      <cds-header-name>
-        番組表
-      </cds-header-name>
-      <!-- <cds-header-global-action
-        id="Notification"
-        aria-label="Notification"
-        tooltip-text="Notification">
-        <icon-add slot="icon"></icon-add>
-      </cds-header-global-action> -->
+    <cds-header>
+      <cds-header-menu-button></cds-header-menu-button>
+      <cds-header-name prefix="miraview">[番組表]</cds-header-name>
+      <div style="display: flex; flex: auto; justify-content: flex-end;">
+        <cds-header-global-action aria-label="Search" tooltip-text="Search" kind="primary" size="lg" tooltip-alignment="" tooltip-position="bottom" type="button">
+          <svg focusable="false" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" width="20" height="20" viewBox="0 0 32 32" slot="icon">
+            <path d="M29,27.5859l-7.5521-7.5521a11.0177,11.0177,0,1,0-1.4141,1.4141L27.5859,29ZM4,13a9,9,0,1,1,9,9A9.01,9.01,0,0,1,4,13Z" />
+          </svg>
+        </cds-header-global-action>
+      </div>
     </cds-header>
-    <cds-side-nav collapse-mode="rail" aria-label="Side navigation">
+    <cds-side-nav collapse-mode="rail">
       <cds-side-nav-items>
-        <cds-side-nav-link href="javascript:void(0)" active>
-          <icon-add slot="title-icon"></icon-add>
-          test
+        <cds-side-nav-link id="menu-link-program" href="#" large active>
+          <span>番組表</span>
         </cds-side-nav-link>
-        <cds-side-nav-link href="javascript:void(0)">L0 link</cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-live" href="#" large>
+          <span>ライブ視聴</span>
+        </cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-search" href="#" large>
+          <span>番組検索</span>
+        </cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-timeshift" href="#" large>
+          <span>タイムシフト</span>
+        </cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-schedule" href="#" large>
+          <span>録画予約</span>
+        </cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-recorded" href="#" large>
+          <span>録画一覧</span>
+        </cds-side-nav-link>
+        <cds-side-nav-link id="menu-link-tuner" href="#" large>
+          <span>チューナー</span>
+        </cds-side-nav-link>
+        <cds-side-nav-divider></cds-side-nav-divider>
+        <cds-side-nav-link id="menu-link-setting" href="#" large>
+          <span>設定</span>
+        </cds-side-nav-link>
       </cds-side-nav-items>
     </cds-side-nav>
-    <main style="margin-top: 3rem; height: calc(100%);background-color: aquamarine;">
-      aaaaaaaaaa<br />
-      aaaaaaaaaa<br />
-      aaaaaaaaaa<br />
-      aaaaaaaaaa<br />
-      aaaaaaaaaa<br />
+    <main>
+      <cds-tabs trigger-content="Select an item" value="11">
+        <cds-tab value="11">11/11(月)</cds-tab>
+        <cds-tab value="12">11/12(火)</cds-tab>
+        <cds-tab value="13">11/13(水)</cds-tab>
+        <cds-tab value="14">11/14(木)</cds-tab>
+        <cds-tab value="15">11/15(金)</cds-tab>
+      </cds-tabs>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th scope="col">ＮＨＫ総合１・東京</th>
+            <th scope="col">ＮＨＫＥテレ１東京</th>
+            <th scope="col">日テレ１</th>
+            <th scope="col">日テレ１</th>
+            <th scope="col">日テレ１</th>
+            <th scope="col">日テレ１</th>
+            <th scope="col">日テレ１</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2" style="height: 300px;">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   </body>
 </html>

@@ -14,16 +14,12 @@
     "sass": "^1.83.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@carbon/web-components": "^2.19.0",
-    "@carbon/icons": "^11.53.0",
     "@carbon/icon-helpers": "^10.54.0",
-    "@carbon/themes": "^11.43.0",
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "clean": "rm public/js/*.js",
-    "setup": "mkdir -p public/js && cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/ && npx rollup --config rollup.config.mjs",
-    "build": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --dir public/js/ --input src/*.ts",
-    "watch": "tsc",
-    "test": "react-scripts test"
+    "clean": "find public/js/ public/css/ -type f -name '*.js' -or -name '*.css' -delete",
+    "setup": "mkdir -p public/js public/css",
+    "build": "npx sass --load-path=node_modules src/carbon.scss public/css/carbon.css && npx rollup --config rollup.config.mjs"
   }
 }

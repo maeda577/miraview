@@ -12,8 +12,7 @@
 * v0系はReactで作っていたが、バニラtypescript + WebComponentsに切り替える
     * React Routerがmirakc内蔵Webサーバで動かせない事に気づいたから
 * 勉強のため、極力プレーンな作りにする
-    * 流行りのViteは使わず、tscを直で叩く
-    * JSバンドラも極力使わず、RollupをSiemems IXのライブラリをまとめるためにだけ使う
+    * 流行りのViteは使わず、rollupを直で叩く
 
 ## アイコンのソース
 
