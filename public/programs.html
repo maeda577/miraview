@@ -13,6 +13,7 @@
     <title>番組表 | miraview</title>
   </head>
   <body>
+    <!-- ヘッダとメニュー 各画面で共通 -->
     <cds-header>
       <cds-header-menu-button></cds-header-menu-button>
       <cds-header-name prefix="miraview">[番組表]</cds-header-name>
@@ -48,22 +49,26 @@
           <span>チューナー</span>
         </cds-side-nav-link>
         <cds-side-nav-divider></cds-side-nav-divider>
-        <cds-side-nav-link id="menu-link-setting" href="#" large>
+        <cds-side-nav-link id="menu-link-setting" href="./setting.html" large>
           <span>設定</span>
         </cds-side-nav-link>
       </cds-side-nav-items>
     </cds-side-nav>
+    <!-- ヘッダとメニュー ここまで -->
     <main>
-      <cds-tabs trigger-content="Select an item" value="11">
-        <cds-tab value="11">11/11(月)</cds-tab>
-        <cds-tab value="12">11/12(火)</cds-tab>
-        <cds-tab value="13">11/13(水)</cds-tab>
-        <cds-tab value="14">11/14(木)</cds-tab>
-        <cds-tab value="15">11/15(金)</cds-tab>
-      </cds-tabs>
+      <div style="display:flex; margin-bottom: 1rem;">
+        <cds-dropdown id="day-dropdown"></cds-dropdown>
+        <cds-content-switcher style="margin-left: 1rem; width: 20rem;" value="gr">
+          <cds-content-switcher-item value="gr">GR</cds-content-switcher-item>
+          <cds-content-switcher-item value="bs">BS</cds-content-switcher-item>
+          <cds-content-switcher-item value="cs">CS</cds-content-switcher-item>
+          <cds-content-switcher-item value="sky">SKY</cds-content-switcher-item>
+        </cds-content-switcher>
+      </div>
+      <!-- <cds-tabs id="day-tabs"></cds-tabs> -->
       <table>
         <thead>
-          <tr>
+          <tr id="service-header">
             <th></th>
             <th scope="col">ＮＨＫ総合１・東京</th>
             <th scope="col">ＮＨＫＥテレ１東京</th>
@@ -76,121 +81,32 @@
         </thead>
         <tbody>
           <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2" style="height: 300px;">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
+            <th scope="row">
+              <div class="program-table-hour">5</div>
+              <div class="program-table-hour">6</div>
+              <div class="program-table-hour">7</div>
+              <div class="program-table-hour">8</div>
+              <div class="program-table-hour">9</div>
+              <div class="program-table-hour">10</div>
+              <div class="program-table-hour">11</div>
+              <div class="program-table-hour">12</div>
+              <div class="program-table-hour">13</div>
+              <div class="program-table-hour">14</div>
+              <div class="program-table-hour">15</div>
+              <div class="program-table-hour">16</div>
+              <div class="program-table-hour">17</div>
+              <div class="program-table-hour">18</div>
+              <div class="program-table-hour">19</div>
+              <div class="program-table-hour">20</div>
+              <div class="program-table-hour">21</div>
+              <div class="program-table-hour">22</div>
+              <div class="program-table-hour">23</div>
+              <div class="program-table-hour">0</div>
+              <div class="program-table-hour">1</div>
+              <div class="program-table-hour">2</div>
+              <div class="program-table-hour">3</div>
+              <div class="program-table-hour">4</div>
+            </th>
           </tr>
         </tbody>
       </table>

@@ -9,6 +9,7 @@
   @include theme.theme(themes.$g90);
   // background-color: var(--cds-background);
   // color: var(--cds-text-primary);
+  --height-per-hour: 240px
 }
 
 html, body {
@@ -31,6 +32,7 @@ table {
   display: block;
   overflow: scroll;
   height: 100%;
+  font-size: var(--cds-body-compact-01-font-size)
   // margin-top: 1rem;
   // font-size: medium;
 }
@@ -40,20 +42,28 @@ th {
   left: 0;
   z-index: 10;
   background-color: var(--cds-layer-02);
-  border: var(--cds-border-tile-02);
+  border-color: var(--cds-border-tile-02);
 }
 th[scope="col"] {
-  max-width: 180px;
-  min-width: 180px;
+  width: 10rem;
   padding: 0.5rem;
 }
 td {
   background-color: var(--cds-layer-01);
-  border: var(--cds-border-tile-01);
+  border-color: var(--cds-border-tile-01);
 }
 th, td {
   border-width: 1px;
   border-style: solid;
+}
+.program-table-hour {
+  height: var(--height-per-hour);
+  width: 2rem;
+  padding-top: 1rem;
+  // vertical-align: middle;
+  border-color: var(--cds-border-tile-02);
+  border-style: solid;
+  border-bottom-width: 1px;
 }
 
 // /* system preference theme by default */

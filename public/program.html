@@ -1,0 +1,132 @@
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <link rel="stylesheet" href="./css/siemens-ix.css">
+    <script type="module" src="./js/ix.js"></script>
+    <script type="module" src="./js/program.js"></script>
+    <title>番組表 | miraview</title>
+    <style type="text/css">
+      :root {
+        --height-per-hour: 240px
+      }
+      /* html, body {
+        width: 100%;
+        height: 100%;
+      } */
+      table {
+        display: block;
+        overflow: scroll;
+        height: calc(100% - 1rem);
+        /* width: calc(100% - 1rem); */
+      }
+      th {
+        position: sticky;
+        text-align: center;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        background-color: var(--theme-color-2);
+      }
+      th[scope="col"] {
+        min-width: 10rem;
+        max-width: 10rem;
+        padding: 0.5rem;
+      }
+      th, td {
+        border-color: var(--theme-color-std-bdr);
+        border-width: 1px;
+      }
+      .program-table-hour {
+        height: var(--height-per-hour);
+        width: 2rem;
+        padding-top: 1rem;
+        border-color: var(--theme-color-std-bdr);
+        border-style: solid;
+        border-width: 0px 0px 1px 0px;
+      }
+    </style>
+  </head>
+  <body class="theme-classic-dark">
+    <ix-basic-navigation application-name="番組表">
+      <ix-menu>
+        <ix-menu-item icon="table" active="true">番組表</ix-menu-item>
+        <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
+        <ix-menu-item icon="search">番組検索</ix-menu-item>
+        <ix-menu-item icon="history">タイムシフト</ix-menu-item>
+        <ix-menu-item icon="scheduler" notifications="100">録画予約リスト</ix-menu-item>
+        <ix-menu-item icon="radio-waves">チューナー</ix-menu-item>
+        <!-- <ix-menu-item icon="cogwheel" bottom>設定</ix-menu-item>
+        <ix-menu-item icon="about" bottom>概要</ix-menu-item> -->
+        <ix-menu-about>
+          <ix-menu-about-item label="Tab 1">Content 1</ix-menu-about-item>
+          <ix-menu-about-item label="Tab 2">Content 2</ix-menu-about-item>
+        </ix-menu-about>
+        <ix-menu-settings>
+          <ix-menu-settings-item label="Example Setting 1"></ix-menu-settings-item>
+          <ix-menu-settings-item label="Example Setting 2"></ix-menu-settings-item>
+        </ix-menu-settings>
+      </ix-menu>
+      <ix-content>
+        <div slot="header">
+          <ix-select id="day-dropdown" hide-list-header></ix-select>
+          <ix-select id="day-dropdown" value="gr" hide-list-header style="margin-left: 1rem;">
+            <ix-select-item label="GR" value="gr"></ix-select-item>
+            <ix-select-item label="BS" value="bs"></ix-select-item>
+            <ix-select-item label="CS" value="cs"></ix-select-item>
+            <ix-select-item label="SKY" value="sky"></ix-select-item>
+          </ix-select>
+        </div>
+        <table class="typography-body">
+          <thead>
+            <tr id="service-header">
+              <th></th>
+              <th scope="col">ＮＨＫ総合１・東京</th>
+              <th scope="col">ＮＨＫＥテレ１東京</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+              <th scope="col">日テレ１</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">
+                <div class="program-table-hour">5</div>
+                <div class="program-table-hour">6</div>
+                <div class="program-table-hour">7</div>
+                <div class="program-table-hour">8</div>
+                <div class="program-table-hour">9</div>
+                <div class="program-table-hour">10</div>
+                <div class="program-table-hour">11</div>
+                <div class="program-table-hour">12</div>
+                <div class="program-table-hour">13</div>
+                <div class="program-table-hour">14</div>
+                <div class="program-table-hour">15</div>
+                <div class="program-table-hour">16</div>
+                <div class="program-table-hour">17</div>
+                <div class="program-table-hour">18</div>
+                <div class="program-table-hour">19</div>
+                <div class="program-table-hour">20</div>
+                <div class="program-table-hour">21</div>
+                <div class="program-table-hour">22</div>
+                <div class="program-table-hour">23</div>
+                <div class="program-table-hour">0</div>
+                <div class="program-table-hour">1</div>
+                <div class="program-table-hour">2</div>
+                <div class="program-table-hour">3</div>
+                <div class="program-table-hour">4</div>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </ix-content>
+    </ix-basic-navigation>
+  </body>
+</html>

@@ -8,7 +8,7 @@ build.tar.gz
 /public/js
 /public/css
 # Dummy data
-/public/api
+/api
 # dependencies
 /node_modules
 /.pnp
