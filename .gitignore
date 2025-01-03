@@ -5,8 +5,11 @@ build.tar.gz
 /test
 
 # Transpiled files
+/public/ix
 /public/js
 /public/css
+# Packages
+/public/openapi-fetch
 # Dummy data
 /api
 # dependencies

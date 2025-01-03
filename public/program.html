@@ -1,12 +1,30 @@
+<!--
+SPDX-FileCopyrightText: 2022 maeda577
+
+SPDX-License-Identifier: MIT
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+-->
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <link rel="stylesheet" href="./css/siemens-ix.css">
-    <script type="module" src="./js/ix.js"></script>
+    <link rel="stylesheet" href="./ix/siemens-ix.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "openapi-fetch": "./openapi-fetch/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="./ix/ix.js"></script>
     <script type="module" src="./js/program.js"></script>
     <title>番組表 | miraview</title>
     <style type="text/css">
+      ix-basic-navigation:not(:defined), ix-content:not(:defined) {
+        display: none;
+      }
       :root {
         --height-per-hour: 240px
       }
@@ -14,6 +32,9 @@
         width: 100%;
         height: 100%;
       } */
+      ix-tab-item {
+        width: 4rem;
+      }
       table {
         display: block;
         overflow: scroll;
@@ -33,6 +54,12 @@
         max-width: 10rem;
         padding: 0.5rem;
       }
+      td {
+        position: sticky;
+        top: 0;
+        padding: 0 5px;   /* 上下のpaddingをつけると番組表の時刻がずれる */
+        overflow: hidden;
+      }
       th, td {
         border-color: var(--theme-color-std-bdr);
         border-width: 1px;
@@ -49,7 +76,7 @@
   </head>
   <body class="theme-classic-dark">
     <ix-basic-navigation application-name="番組表">
-      <ix-menu>
+      <ix-menu enable-toggle-theme>
         <ix-menu-item icon="table" active="true">番組表</ix-menu-item>
         <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
         <ix-menu-item icon="search">番組検索</ix-menu-item>
@@ -68,18 +95,18 @@
         </ix-menu-settings>
       </ix-menu>
       <ix-content>
-        <div slot="header">
-          <ix-select id="day-dropdown" hide-list-header></ix-select>
-          <ix-select id="day-dropdown" value="gr" hide-list-header style="margin-left: 1rem;">
-            <ix-select-item label="GR" value="gr"></ix-select-item>
-            <ix-select-item label="BS" value="bs"></ix-select-item>
-            <ix-select-item label="CS" value="cs"></ix-select-item>
-            <ix-select-item label="SKY" value="sky"></ix-select-item>
-          </ix-select>
+        <div id="input-header" slot="header" style="display: flex;">
+          <ix-select id="day-dropdown" hide-list-header style="width: 8rem; margin-right: 1rem;"></ix-select>
+          <ix-tabs id="channel-type-tabs" small>
+            <ix-tab-item>GR</ix-tab-item>
+            <ix-tab-item>BS</ix-tab-item>
+            <ix-tab-item>CS</ix-tab-item>
+            <ix-tab-item>SKY</ix-tab-item>
+          </ix-tabs>
         </div>
         <table class="typography-body">
           <thead>
-            <tr id="service-header">
+            <tr id="service-header-row">
               <th></th>
               <th scope="col">ＮＨＫ総合１・東京</th>
               <th scope="col">ＮＨＫＥテレ１東京</th>
@@ -96,7 +123,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr id="program-row">
               <th scope="row">
                 <div class="program-table-hour">5</div>
                 <div class="program-table-hour">6</div>

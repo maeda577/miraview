@@ -1,4 +1,12 @@
-import type { components } from "./api/mirakc";
+/*
+ * SPDX-FileCopyrightText: 2022 maeda577
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import type { components } from "./api/mirakc.js";
 
 // 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
