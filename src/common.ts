@@ -8,6 +8,196 @@
  */
 import type { components } from "./api/mirakc.js";
 
+// AudioのcomponentType これもARIB STD-B10の[Table 6-5 stream_content and component_type]に書いてある
+// http://www.arib.or.jp/english/html/overview/doc/6-STD-B10v4_6-E2.pdf#page=114
+export const audio_component_types = new Map<number, string>([
+  [0x01, 'single mono'],
+  [0x02, 'dual mono'],
+  [0x03, 'stereo'],
+  [0x04, '2/1 mode'],
+  [0x05, '3/0 mode'],
+  [0x06, '2/2 mode'],
+  [0x07, '3/1 mode'],
+  [0x08, '3/2 mode'],
+  [0x09, '3/2+LFE mode'],
+  [0x40, 'Audio description for the visually impaired'],
+  [0x41, 'Audio for the hard of hearing'],
+]);
+
+// lv1の番号の対応表 Large genre classification
+// http://www.arib.or.jp/english/html/overview/doc/6-STD-B10v4_6-E2.pdf#page=197
+export const genre_large = new Map<number, string>([
+  [0x0, 'News, report'],
+  [0x1, 'Sports'],
+  [0x2, 'Information/tabloid show'],
+  [0x3, 'Drama'],
+  [0x4, 'Music'],
+  [0x5, 'Variety show'],
+  [0x6, 'Movies'],
+  [0x7, 'Animation/special effect movies'],
+  [0x8, 'Documentary/culture'],
+  [0x9, 'Theatre/public performance'],
+  [0xA, 'Hobby/education'],
+  [0xB, 'Welfare'],
+  [0xE, 'For extension'],   // これの場合はuser_nibbleを見ないといけないはず
+  [0xF, 'Others'],
+]);
+
+// lv2の番号の対応表 Middle genre classification
+export const genre_middle = new Map<number, Map<number, string>>([
+  // News/reports
+  [0x0, new Map<number, string>([
+    [0x0, 'Regular, general'],
+    [0x1, 'Weather report'],
+    [0x2, 'Special program, documentary'],
+    [0x3, 'Politics, national assembly'],
+    [0x4, 'Economics, market report'],
+    [0x5, 'Overseas, international report'],
+    [0x6, 'News analysis'],
+    [0x7, 'Discussion, conference'],
+    [0x8, 'Special report'],
+    [0x9, 'Local program'],
+    [0xA, 'Traffic report'],
+    [0xF, 'Others'],
+  ])],
+  // Sports
+  [0x1, new Map<number, string>([
+    [0x0, 'Sports news'],
+    [0x1, 'Baseball'],
+    [0x2, 'Soccer'],
+    [0x3, 'Golf'],
+    [0x4, 'Other ball games'],
+    [0x5, 'Sumo, combative sports'],
+    [0x6, 'Olympic, international games'],
+    [0x7, 'Marathon, athletic sports, swimming'],
+    [0x8, 'Motor sports'],
+    [0x9, 'Marine sports, winter sports'],
+    [0xA, 'Horse race, public race'],
+    [0xF, 'Others'],
+  ])],
+  // Information/tabloid show
+  [0x2, new Map<number, string>([
+    [0x0, 'Gossip/tabloid show'],
+    [0x1, 'Fashion'],
+    [0x2, 'Living, home'],
+    [0x3, 'Health, medical treatment'],
+    [0x4, 'Shopping, mail-order business'],
+    [0x5, 'Gourmet, cocking'],
+    [0x6, 'Events'],
+    [0x7, 'Program guide, information'],
+    [0xF, 'Others'],
+  ])],
+  // Dramas
+  [0x3, new Map<number, string>([
+    [0x0, 'Japanese dramas'],
+    [0x1, 'Overseas dramas'],
+    [0x2, 'Period dramas'],
+    [0xF, 'Others'],
+  ])],
+  // Music
+  [0x4, new Map<number, string>([
+    [0x0, 'Japanese rock, pop music'],
+    [0x1, 'Overseas rock, pop music'],
+    [0x2, 'Classic, opera'],
+    [0x3, 'Jazz, fusion'],
+    [0x4, 'Popular songs, Japanese popular songs (enka songs)'],
+    [0x5, 'Live concert'],
+    [0x6, 'Ranking, request music'],
+    [0x7, 'Karaoke, amateur singing contests'],
+    [0x8, 'Japanese ballad, Japanese traditional music'],
+    [0x9, "Children's song"],
+    [0xA, 'Folk music, world music'],
+    [0xF, 'Others'],
+  ])],
+  // Variety
+  [0x5, new Map<number, string>([
+    [0x0, 'Quiz'],
+    [0x1, 'Game'],
+    [0x2, 'Talk variety'],
+    [0x3, 'Comedy program'],
+    [0x4, 'Music variety'],
+    [0x5, 'Tour variety'],
+    [0x6, 'Cocking variety'],
+    [0xF, 'Others'],
+  ])],
+  // Movies
+  [0x6, new Map<number, string>([
+    [0x0, 'Overseas movies'],
+    [0x1, 'Japanese movies'],
+    [0x2, 'Animation'],
+    [0xF, 'Others'],
+  ])],
+  // Animation, special effects
+  [0x7, new Map<number, string>([
+    [0x0, 'Japanese animation'],
+    [0x1, 'Overseas animation'],
+    [0x2, 'Special effects'],
+    [0xF, 'Others'],
+  ])],
+  // Documentary/culture
+  [0x8, new Map<number, string>([
+    [0x0, 'Social, current events'],
+    [0x1, 'History, travel record'],
+    [0x2, 'Nature, animal, environment'],
+    [0x3, 'Space, science, medical science'],
+    [0x4, 'Culture, traditional culture'],
+    [0x5, 'Literature, literary art'],
+    [0x6, 'Sports'],
+    [0x7, 'Total documentary'],
+    [0x8, 'Interviews, discussions'],
+    [0xF, 'Others'],
+  ])],
+  // Theatre, public performance
+  [0x9, new Map<number, string>([
+    [0x0, 'Modern drama, Western-style drama'],
+    [0x1, 'Musical'],
+    [0x2, 'Dance, ballet'],
+    [0x3, 'Comic story, entertainment'],
+    [0x4, 'Kabuki, classical drama'],
+    [0xF, 'Others'],
+  ])],
+  // Hobby/education
+  [0xA, new Map<number, string>([
+    [0x0, 'Trip, fishing, outdoor entertainment'],
+    [0x1, 'Gardening, pet, handicrafts'],
+    [0x2, 'Music, art, industrial art'],
+    [0x3, 'Japanese chess (shogi) and "go"'],
+    [0x4, 'Mah-jong, pinball games'],
+    [0x5, 'Cars, motorbikes'],
+    [0x6, 'Computer, TV games'],
+    [0x7, 'Conversation, languages'],
+    [0x8, 'Little children, schoolchildren'],
+    [0x9, 'Junior high school and high school students'],
+    [0xA, 'University students, examinations'],
+    [0xB, 'Lifelong education, qualifications'],
+    [0xC, 'Educational problem'],
+    [0xF, 'Others'],
+  ])],
+  // Welfare
+  [0xB, new Map<number, string>([
+    [0x0, 'Old aged persons'],
+    [0x1, 'Handicapped persons'],
+    [0x2, 'Social welfare'],
+    [0x3, 'Volunteers'],
+    [0x4, 'Sign language'],
+    [0x5, 'Text (subtitles)'],
+    [0x6, 'Explanation on sound multiplex broadcast'],
+    [0xF, 'Others'],
+  ])],
+  // Extension これの場合はuser_nibbleを見ないといけないはず
+  [0xE, new Map<number, string>([
+    [0x0, 'Appendix information for BS/terrestrial digital broadcast program'],
+    [0x1, 'Extension for broadband CS digital broadcasting'],
+    [0x2, 'Extension for digital satellite sound broadcasting'],
+    [0x3, 'Appendix information for server-type program'],
+    [0x4, 'Appendix information for IP broadcast program'],
+  ])],
+  // Others
+  [0xF, new Map<number, string>([
+    [0xF, 'Others'],
+  ])],
+]);
+
 // 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
 // http://www.arib.or.jp/english/html/overview/doc/8-TR-B15v4_6-2p4-E1.pdf#page=39

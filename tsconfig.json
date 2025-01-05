@@ -1,7 +1,9 @@
 // このファイルは npx tsc --init で出る
 {
   "files": [
-    "src/program.ts",
+//    "src/program.ts",
+    "src/programs.ts",
+    "src/setting.ts",
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

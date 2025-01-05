@@ -7,7 +7,7 @@ build.tar.gz
 # Transpiled files
 /public/ix
 /public/js
-/public/css
+/public/carbon
 # Packages
 /public/openapi-fetch
 # Dummy data

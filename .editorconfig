@@ -3,7 +3,7 @@
 # top-most EditorConfig file
 root = true
 
-[{src/*,{js,ts},public/*.html}]
+[{src/*,{js,ts},public/*.html,public/css/*}]
 indent_style = space
 indent_size = 2
 end_of_line = lf

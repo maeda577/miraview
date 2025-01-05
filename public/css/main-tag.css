@@ -1,0 +1,16 @@
+/* mainタグを上部ヘッダー・左メニュー分ずらす */
+html, body {
+  width: 100%;
+  height: calc(100% - 3rem);  /* 上メニューと左メニューで作りが違う？ */
+}
+main {
+  margin-top: 4rem;
+  margin-left: 4rem;
+  width: calc(100% - 5rem);
+  height: 100%;
+}
+
+/* 一旦要素を隠す */
+.hidden {
+  display: none !important;
+}

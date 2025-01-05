@@ -32,7 +32,9 @@
     "setup-ix": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --inlineDynamicImports --file public/ix/ix.js --input src/ix.js",
     "setup-ix-css": "cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/",
     "setup-fetch": "mkdir -p public/openapi-fetch/ && cp node_modules/openapi-fetch/dist/index.js node_modules/openapi-fetch/LICENSE public/openapi-fetch/",
-    "build": "npx sass --load-path=node_modules src/carbon.scss public/css/carbon.css && npx rollup --config rollup.config.mjs",
+    "setup.carbon": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --file public/carbon/carbon.js --input src/carbon.js",
+    "setup.carbon-css": "npx sass --load-path=node_modules src/carbon.scss public/carbon/carbon.css",
+    "build": " && npx rollup --config rollup.config.mjs",
     "serve": "npx serve --no-clipboard ./"
   }
 }
