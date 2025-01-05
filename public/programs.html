@@ -1,4 +1,5 @@
 <html lang="ja">
+
   <head>
     <meta charset="UTF-8" />
     <script type="importmap">
@@ -10,12 +11,15 @@
     </script>
     <script type="module" src="./carbon/carbon.js"></script>
     <script type="module" src="./js/programs.js"></script>
-    <link rel="stylesheet" href="./carbon/carbon.css"/>
-    <link rel="stylesheet" href="./css/main-tag.css"/>
+    <link rel="stylesheet" href="./carbon/carbon.css" />
+    <link rel="stylesheet" href="./css/main-tag.css" />
     <style type="text/css">
-      cds-header:not(:defined), cds-side-nav:not(:defined), cds-modal:not(:defined) {
+      cds-header:not(:defined),
+      cds-side-nav:not(:defined),
+      cds-modal:not(:defined) {
         display: none;
       }
+
       body {
         /* 1時間あたりの高さ */
         --height-per-hour: 240px;
@@ -40,10 +44,13 @@
         height: calc(100% - 3rem);
         font-size: var(--cds-body-compact-01-font-size);
       }
-      .pgtable-container th, .pgtable-container td {
+
+      .pgtable-container th,
+      .pgtable-container td {
         vertical-align: top;
       }
-      .pgtable-container th{
+
+      .pgtable-container th {
         position: sticky;
         top: 0px;
         left: 0px;
@@ -51,27 +58,36 @@
       }
 
       /* 各種div用 チャンネルヘッダ・左の時刻・各番組・右上の何も無いセル */
-      .pgtable-ch-header, .pgtable-hour, .pgtable-item, .pgtable-first-cell {
+      .pgtable-ch-header,
+      .pgtable-hour,
+      .pgtable-item,
+      .pgtable-first-cell {
         position: sticky;
         border-width: 1px;
         border-style: solid;
         border-color: var(--cds-border-tile-01);
       }
-      .pgtable-ch-header, .pgtable-hour, .pgtable-first-cell {
+
+      .pgtable-ch-header,
+      .pgtable-hour,
+      .pgtable-first-cell {
         background-color: var(--cds-layer-02);
       }
+
       .pgtable-ch-header {
         height: var(--channel-header-height);
         min-width: var(--channel-header-width);
         max-width: var(--channel-header-width);
         padding-top: calc((var(--channel-header-height) - 1rem) / 2);
       }
+
       .pgtable-hour {
         top: var(--channel-header-height);
         height: var(--height-per-hour);
         width: var(--hour-header-width);
         padding-top: 1rem;
       }
+
       .pgtable-first-cell {
         height: var(--channel-header-height);
       }
@@ -79,18 +95,22 @@
       /* 1個の番組情報 */
       .pgtable-item {
         top: var(--channel-header-height);
-        padding: 0 5px;   /* 上下のpaddingをつけると番組表の時刻がずれる */
+        padding: 0 5px;
+        /* 上下のpaddingをつけると番組表の時刻がずれる */
         overflow: hidden;
         background-color: var(--cds-layer-01);
       }
+
       /* ダミー番組の場合は背景を暗くする */
       .pgtable-item:not(:has(a)) {
         background-color: var(--cds-layer-00);
       }
+
       /* 番組情報のリンク */
       .pgtable-item a {
         color: var(--cds-text-primary);
       }
+
       .pgtable-item a:hover {
         cursor: pointer;
         text-decoration: underline;
@@ -111,6 +131,7 @@
     </style>
     <title>番組表 | miraview</title>
   </head>
+
   <body>
     <!-- ヘッダとメニュー 各画面で共通 -->
     <cds-header>
@@ -159,9 +180,15 @@
         </cds-content-switcher>
         <cds-tabs id="day-tabs"></cds-tabs>
       </div>
-      <!-- <cds-skeleton-placeholder style="height: 50%; width: 50%;"></cds-skeleton-placeholder> -->
+      <!-- ロード中のプレースホルダー サイズ調整の仕方が分からないので連打している -->
+      <div id="loading-container">
+        <cds-skeleton-placeholder></cds-skeleton-placeholder>
+        <cds-skeleton-placeholder></cds-skeleton-placeholder>
+        <cds-skeleton-placeholder></cds-skeleton-placeholder>
+        <cds-skeleton-placeholder></cds-skeleton-placeholder>
+      </div>
       <!-- 番組表 -->
-      <div class="pgtable-container">
+      <div id="pgtable-container" class="pgtable-container hidden">
         <!-- 現在時刻の横棒 -->
         <hr id="now-line" class="pgtable-now-line" />
         <table>
@@ -269,4 +296,5 @@
       </div>
     </template>
   </body>
+
 </html>

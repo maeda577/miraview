@@ -11,11 +11,9 @@
   "author": "maeda577",
   "type": "module",
   "devDependencies": {
-
     "@carbon/icon-helpers": "^10.54.0",
     "@carbon/icons": "^11.53.0",
     "@carbon/web-components": "^2.19.0",
-
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-typescript": "^12.1.2",
     "@siemens/ix": "^2.6.1",

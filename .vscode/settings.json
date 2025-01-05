@@ -1,0 +1,5 @@
+{
+    "html.format.indentInnerHtml": true,
+    "html.format.wrapAttributes": "preserve",
+    "typescript.format.semicolons": "insert",
+}

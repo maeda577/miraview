@@ -1,23 +1,24 @@
-import '@carbon/web-components/es/components/ui-shell/index.js';
-import '@carbon/web-components/es/components/tabs/index.js';
-import '@carbon/web-components/es/components/dropdown/index.js';
-import '@carbon/web-components/es/components/content-switcher/index.js';
-import '@carbon/web-components/es/components/modal/index.js';
 import '@carbon/web-components/es/components/button/index.js';
-import '@carbon/web-components/es/components/stack/index.js';
-import '@carbon/web-components/es/components/text-input/index.js';
+import '@carbon/web-components/es/components/content-switcher/index.js';
+import '@carbon/web-components/es/components/dropdown/index.js';
+import '@carbon/web-components/es/components/form-group/index.js';
+import '@carbon/web-components/es/components/modal/index.js';
 import '@carbon/web-components/es/components/radio-button/index.js';
 import '@carbon/web-components/es/components/skeleton-placeholder/index.js';
+import '@carbon/web-components/es/components/stack/index.js';
+import '@carbon/web-components/es/components/tabs/index.js';
+import '@carbon/web-components/es/components/text-input/index.js';
+import '@carbon/web-components/es/components/ui-shell/index.js';
 import { toSVG } from '@carbon/icon-helpers';
 import {
-    TableSplit20,
-    VideoPlayer20,
-    Search20,
-    RecentlyViewed20,
-    EventSchedule20,
-    Video20,
-    Radio20,
-    Settings20,
+  EventSchedule20,
+  Radio20,
+  RecentlyViewed20,
+  Search20,
+  Settings20,
+  TableSplit20,
+  Video20,
+  VideoPlayer20,
 } from '@carbon/icons';
 
 const attrs = {

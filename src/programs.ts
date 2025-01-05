@@ -1,7 +1,7 @@
 import createClient from 'openapi-fetch';
-import type { CDSTabs, CDSTab, CDSContentSwitcher, CDSContentSwitcherItem } from '@carbon/web-components/es/index.d.ts'
+import type { CDSTabs, CDSTab, CDSContentSwitcher, CDSContentSwitcherItem } from '@carbon/web-components/es/index.d.ts';
 import type { paths, components } from './api/mirakc';
-import { audio_component_types, genre_large, genre_middle, groupPrograms } from './common.js'
+import { audio_component_types, genre_large, genre_middle, groupPrograms } from './common.js';
 
 // 必要なAPIを叩く
 const client = createClient<paths>({ baseUrl: "../api/" });
@@ -12,9 +12,9 @@ const response = await Promise.all([
 const [programs, services] = response;
 // エラーがあればコンソールに出してから処理止める
 response.forEach(res => {
-  if(res.error !== undefined){
-    console.error(res.error)
-    return
+  if (res.error !== undefined) {
+    console.error(res.error);
+    return;
   }
 });
 
@@ -25,12 +25,12 @@ const groupedPrograms = groupPrograms(programs.data);
 const tabDateFormat = new Intl.DateTimeFormat(undefined, { month: '2-digit', day: '2-digit', weekday: 'narrow' });
 const dayTabs = document.getElementById('day-tabs') as CDSTabs | undefined;
 [...groupedPrograms.keys()].filter(day => day >= new Date(Date.now() - (5 * 60 * 60 * 1000)).setHours(0, 0, 0, 0))
-.sort().forEach(day => {
-  const item = document.createElement('cds-tab') as CDSTab;
-  item.value = day.toString();
-  item.innerText = tabDateFormat.format(day);
-  dayTabs?.appendChild(item)
-});
+  .sort().forEach(day => {
+    const item = document.createElement('cds-tab') as CDSTab;
+    item.value = day.toString();
+    item.innerText = tabDateFormat.format(day);
+    dayTabs?.appendChild(item);
+  });
 
 // 放送波タブの受信していないタブを無効化し、有効なものの先頭を選択状態にする
 const channelTypeSet = new Set(services.data?.map(e => e.channel.type));
@@ -39,7 +39,7 @@ typeSwitcher?.querySelectorAll('cds-content-switcher-item')?.forEach(item => {
   const switcherItem = item as CDSContentSwitcherItem;
   if (channelTypeSet.has(switcherItem.value as components['schemas']['ChannelType'])) {
     switcherItem.disabled = false;
-    if (typeSwitcher.value === ''){
+    if (typeSwitcher.value === '') {
       typeSwitcher.value = switcherItem.value;
     }
   }
@@ -52,8 +52,8 @@ function refreshTable() {
   const selectedType = (document.getElementById('channel-type-switcher') as CDSContentSwitcher | undefined)?.value as components['schemas']['ChannelType'] | undefined;
   const selectedDay = (document.getElementById('day-tabs') as CDSTabs | undefined)?.value;
   // 番組情報を詰める行を取得
-  const rowHeader = document.getElementById('row-header')
-  const rowProgram = document.getElementById('row-program')
+  const rowHeader = document.getElementById('row-header');
+  const rowProgram = document.getElementById('row-program');
   // 各種HTMLのテンプレート
   const templateChHeader = document.getElementById('template-pgtable-ch-header') as HTMLTemplateElement | undefined;
   const templatePrgItem = document.getElementById('template-pgtable-item') as HTMLTemplateElement | undefined;
@@ -83,10 +83,10 @@ function refreshTable() {
   // IDはネットワークIDとサービスIDを組み合わせたものが入っている
   // TODO: GR/BSはこれで良さそう。CSとSKYの場合これでいいのか分からない
   if (selectedType === 'GR') {
-    serviceList = serviceList?.sort((a, b) => a.remoteControlKeyId! - b.remoteControlKeyId!)
+    serviceList = serviceList?.sort((a, b) => a.remoteControlKeyId! - b.remoteControlKeyId!);
   }
   else {
-    serviceList = serviceList?.sort((a, b) => a.id - b.id)
+    serviceList = serviceList?.sort((a, b) => a.id - b.id);
   }
 
   // 1列目を残してすべて消してから詰めていく
@@ -100,14 +100,14 @@ function refreshTable() {
     rowHeader!.appendChild(chHeader);
 
     // 番組を入れるセル
-    const svcProgramsElem = document.createElement('td')
+    const svcProgramsElem = document.createElement('td');
     rowProgram!.appendChild(svcProgramsElem);
 
     // セルに番組を詰める
     programs?.get(svc.networkId)?.get(svc.serviceId)?.forEach(prg => {
       const programsElem = templatePrgItem!.content.cloneNode(true) as DocumentFragment;
-      programsElem.querySelector('div')?.style.setProperty('height', `calc(${prg.duration} / 1000 / 60 / 60 * var(--height-per-hour))`)
-      if (prg.id !== -1){
+      programsElem.querySelector('div')?.style.setProperty('height', `calc(${prg.duration} / 1000 / 60 / 60 * var(--height-per-hour))`);
+      if (prg.id !== -1) {
         const prgLink = programsElem.querySelector('a')!;
         prgLink.innerText = programTimeFormat.format(prg.startAt) + ' ' + (prg.name ?? '');
         prgLink.addEventListener('click', () => showModal(prg, svc));
@@ -116,20 +116,20 @@ function refreshTable() {
         programsElem.querySelector('div')!.replaceChildren();
       }
       svcProgramsElem.appendChild(programsElem);
-    })
+    });
   });
 }
 
 // ダイアログの表示関数
 const programDatetimeFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'narrow', hour: '2-digit', minute: '2-digit' });
-function showModal(program: components['schemas']['MirakurunProgram'], service: components['schemas']['MirakurunService']){
+function showModal(program: components['schemas']['MirakurunProgram'], service: components['schemas']['MirakurunService']) {
   // タイトルなど
   document.getElementById('modal-title')!.innerText = program.name!;
   document.getElementById('modal-time')!.innerText = programDatetimeFormat.format(program.startAt) + ' - ' + programTimeFormat.format(program.startAt + program.duration);
   document.getElementById('modal-description')!.innerText = program.description ?? '';
 
   // extendedだけはプロパティが特殊
-  const extended = document.getElementById('modal-extended')!
+  const extended = document.getElementById('modal-extended')!;
   if (program.extended) {
     Object.entries(program.extended).map(ext => extended.innerText += ext.join(': '));
     extended.hidden = false;
@@ -146,7 +146,7 @@ function showModal(program: components['schemas']['MirakurunProgram'], service: 
   document.getElementById('modal-service-id')!.innerText = program.serviceId.toString();
 
   // ダイアログ表示
-  document.getElementById('modal-program')?.setAttribute('open', 'true')
+  document.getElementById('modal-program')?.setAttribute('open', 'true');
 }
 
 // 今日のタブを選ぶ 午前5時までは深夜と見なして前日扱いにする
@@ -159,6 +159,10 @@ await window.customElements.whenDefined('cds-tabs');
 await window.customElements.whenDefined('cds-tab');
 refreshTable();
 
+// ローディング画面から戻す
+document.getElementById('loading-container')?.classList.add('hidden');
+document.getElementById('pgtable-container')?.classList.remove('hidden');
+
 // 変更イベントに画面更新を紐づける
 document.getElementById('channel-type-switcher')?.addEventListener('cds-content-switcher-selected', refreshTable);
 document.getElementById('day-tabs')?.addEventListener('cds-tabs-selected', refreshTable);
@@ -167,7 +171,7 @@ document.getElementById('day-tabs')?.addEventListener('cds-tabs-selected', refre
 function updateCssVariableNowTime() {
   const now = Date.now();
   const today5 = new Date(now - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
-  document.body.style.setProperty('--now-msec-from-5am', (now - today5).toString())
+  document.body.style.setProperty('--now-msec-from-5am', (now - today5).toString());
 }
 
 // 今すぐ一回書き換えた後、1分ごとに書き換える

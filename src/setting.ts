@@ -1,12 +1,17 @@
-import '@carbon/web-components/es/components/ui-shell/index.js';
-import '@carbon/web-components/es/components/form-group/index.js';
-import '@carbon/web-components/es/components/stack/index.js';
-import '@carbon/web-components/es/components/button/index.js';
-import '@carbon/web-components/es/components/radio-button/index.js';
-import '@carbon/web-components/es/components/text-input/index.js';
-import '@carbon/web-components/es/components/tooltip/index.js';
-// import Information16 from '@carbon/icons/lib/information/16.js';
-import './icon.js'
+import type { CDSTextInput } from '@carbon/web-components/es/index.d.ts';
 
-// const response = fetch('/public/api/programs')
+function validateInputEndpoint() {
+  const inputEndpoint = document.getElementById('input-endpoint') as CDSTextInput;
+  inputEndpoint.warn = !inputEndpoint.value;
+  inputEndpoint.invalid = !!inputEndpoint.value && !URL.canParse(inputEndpoint.value);
+  return !inputEndpoint.invalid;
+}
 
+function saveConfig() {
+  validateInputEndpoint();
+}
+
+// const currentConfig = loadConfig();
+
+document.getElementById('input-endpoint')?.addEventListener('input', validateInputEndpoint);
+document.getElementById('button-save')?.addEventListener('click', saveConfig);

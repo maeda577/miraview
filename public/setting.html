@@ -1,87 +1,75 @@
 <html lang="ja">
+
   <head>
     <meta charset="UTF-8" />
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./ix/siemens-ix.css"> -->
-    <link rel="stylesheet" href="./css/carbon.css"/>
+    <script type="importmap">
+      {
+        "imports": {
+          "openapi-fetch": "./openapi-fetch/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="./carbon/carbon.js"></script>
     <script type="module" src="./js/setting.js"></script>
+    <link rel="stylesheet" href="./carbon/carbon.css" />
+    <link rel="stylesheet" href="./css/main-tag.css" />
     <style type="text/css">
-      cds-header:not(:defined), cds-side-nav:not(:defined) {
+      cds-header:not(:defined),
+      cds-side-nav:not(:defined) {
         display: none;
       }
     </style>
     <title>設定 | miraview</title>
   </head>
+
   <body>
     <cds-header>
       <cds-header-menu-button></cds-header-menu-button>
       <cds-header-name prefix="miraview">[設定]</cds-header-name>
-      <div style="display: flex; flex: auto; justify-content: flex-end;">
-        <cds-header-global-action aria-label="Search" tooltip-text="Search" kind="primary" size="lg" tooltip-alignment="" tooltip-position="bottom" type="button">
-          <svg focusable="false" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" width="20" height="20" viewBox="0 0 32 32" slot="icon">
-            <path d="M29,27.5859l-7.5521-7.5521a11.0177,11.0177,0,1,0-1.4141,1.4141L27.5859,29ZM4,13a9,9,0,1,1,9,9A9.01,9.01,0,0,1,4,13Z" />
-          </svg>
-        </cds-header-global-action>
-      </div>
+      <cds-side-nav collapse-mode="rail">
+        <cds-side-nav-items>
+          <cds-side-nav-link id="menu-link-program" href="./programs.html" large>
+            <span>番組表</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-live" href="#" large>
+            <span>ライブ視聴</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-search" href="#" large>
+            <span>番組検索</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-timeshift" href="#" large>
+            <span>タイムシフト</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-schedule" href="#" large>
+            <span>録画予約</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-recorded" href="#" large>
+            <span>録画一覧</span>
+          </cds-side-nav-link>
+          <cds-side-nav-link id="menu-link-tuner" href="#" large>
+            <span>チューナー</span>
+          </cds-side-nav-link>
+          <cds-side-nav-divider></cds-side-nav-divider>
+          <cds-side-nav-link id="menu-link-setting" href="#" large active>
+            <span>設定</span>
+          </cds-side-nav-link>
+        </cds-side-nav-items>
+      </cds-side-nav>
     </cds-header>
-    <cds-side-nav collapse-mode="rail">
-      <cds-side-nav-items>
-        <cds-side-nav-link id="menu-link-program" href="./programs.html" large>
-          <span>番組表</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-live" href="#" large>
-          <span>ライブ視聴</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-search" href="#" large>
-          <span>番組検索</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-timeshift" href="#" large>
-          <span>タイムシフト</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-schedule" href="#" large>
-          <span>録画予約</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-recorded" href="#" large>
-          <span>録画一覧</span>
-        </cds-side-nav-link>
-        <cds-side-nav-link id="menu-link-tuner" href="#" large>
-          <span>チューナー</span>
-        </cds-side-nav-link>
-        <cds-side-nav-divider></cds-side-nav-divider>
-        <cds-side-nav-link id="menu-link-setting" href="#" large active>
-          <span>設定</span>
-        </cds-side-nav-link>
-      </cds-side-nav-items>
-    </cds-side-nav>
     <main>
-      <cds-form-group legend-text="FormGroup Legend">
-        <cds-stack gap="7">
-          <cds-text-input
-            label="接続先mirakcのAPIエンドポイント"
-            placeholder="../api/"
-            helper-text="デフォルト値は ../api/ です。通常変更する必要はありません。"
-          ></cds-text-input>
-          <cds-text-input label="Last Name"></cds-text-input>
-          <cds-radio-button-group
-            legend-text="Radio button heading"
-            name="radio-button-group"
-            value="radio-1">
-            <cds-radio-button
-              label-text="Option 1"
-              value="radio-1"
-              id="radio-1"></cds-radio-button>
-            <cds-radio-button
-              label-text="Option 2"
-              value="radio-2"
-              id="radio-2"></cds-radio-button>
-            <cds-radio-button
-              label-text="Option 3"
-              value="radio-3"
-              id="radio-3"></cds-radio-button>
-          </cds-radio-button-group>
-          <cds-button>Submit</cds-button>
-        </cds-stack>
-      </cds-form-group>
+      <!-- 入力フォーム cds-form-groupを使ってもバリデーションは動かなかった 頑張ってJS側で検証する -->
+      <cds-stack gap="7">
+        <h4>接続先mirakc設定</h4>
+        <cds-text-input id="input-endpoint"
+          label="接続先mirakcのAPIエンドポイント"
+          helper-text="デフォルト値はこのmiraviewが動いているホストです。通常変更する必要はありません。変更する際はブラウザのCORS制限に注意してください。"
+          warn-text="空欄の場合はデフォルト値に置き換えられます"
+          invalid-text="URL形式が不正です"></cds-text-input>
+        <div>
+          <cds-button id="button-save" type="submit">保存</cds-button>
+        </div>
+      </cds-stack>
     </main>
   </body>
+
 </html>
