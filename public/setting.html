@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="./css/main-tag.css" />
     <style type="text/css">
       cds-header:not(:defined),
-      cds-side-nav:not(:defined) {
+      cds-side-nav:not(:defined),
+      cds-button:not(:defined) {
         display: none;
       }
     </style>
@@ -57,14 +58,21 @@
       </cds-side-nav>
     </cds-header>
     <main>
-      <!-- 入力フォーム cds-form-groupを使ってもバリデーションは動かなかった 頑張ってJS側で検証する -->
+      <!-- 入力フォーム cds-form-groupを使ってもrequiredバリデーションは動かなかった 頑張ってJS側で検証する -->
       <cds-stack gap="7">
         <h4>接続先mirakc設定</h4>
         <cds-text-input id="input-endpoint"
           label="接続先mirakcのAPIエンドポイント"
           helper-text="デフォルト値はこのmiraviewが動いているホストです。通常変更する必要はありません。変更する際はブラウザのCORS制限に注意してください。"
           warn-text="空欄の場合はデフォルト値に置き換えられます"
-          invalid-text="URL形式が不正です"></cds-text-input>
+          invalid-text="URL形式が不正です">
+        </cds-text-input>
+        <cds-inline-notification
+          id="notification-save"
+          class="hidden"
+          title="Notification title"
+          subtitle="Subtitle text goes here.">
+        </cds-inline-notification>
         <div>
           <cds-button id="button-save" type="submit">保存</cds-button>
         </div>

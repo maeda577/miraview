@@ -15,24 +15,24 @@ const STORAGE_KEYS = {
 
 // 設定情報
 export type MiraviewConfig = {
-  apiEndpoint: URL | undefined;
+  apiEndpoint: string | undefined;
 };
 
 // デフォルト値のconfig
-function getDefaultConfig(): MiraviewConfig {
+function createDefaultConfig(): MiraviewConfig {
   return {
-    apiEndpoint: new URL('api/', window.location.origin),
+    apiEndpoint: new URL('api/', window.location.origin).toString(),
   };
 }
 
 // configをlocal storageから読み取る local storageの利用はいろいろリスクがあるらしいが、さほど重要な情報でもないので使う
-export function loadConfig(): MiraviewConfig {
-  const config = getDefaultConfig();
+export function loadConfigFromStorage(): MiraviewConfig {
+  const config = createDefaultConfig();
   try {
     // URLの読み取り。有効な値がなければデフォルト値のままになる
     const mirakcUrlString = localStorage.getItem(STORAGE_KEYS.API_ENDPOINT);
     if (mirakcUrlString && URL.canParse(mirakcUrlString)) {
-      config.apiEndpoint = new URL(mirakcUrlString);
+      config.apiEndpoint = mirakcUrlString;
     }
 
     return config;
@@ -42,15 +42,15 @@ export function loadConfig(): MiraviewConfig {
       console.error(error.message);
     }
     // 何かエラーがあったらconfig読み込みは諦める
-    return getDefaultConfig();
+    return createDefaultConfig();
   }
 }
 
-// configを保存する エラーハンドリングは呼び出し元でやる
-export function saveConfig(config: MiraviewConfig) {
+// configを保存する
+export function saveConfigToStorage(config: MiraviewConfig) {
   // APIエンドポイントは指定されていれば入れ、なければ消す（config読む際にデフォルト値に戻る）
   if (config.apiEndpoint) {
-    localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint!.toString());
+    localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint);
   }
   else {
     localStorage.removeItem(STORAGE_KEYS.API_ENDPOINT);
