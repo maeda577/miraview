@@ -1,12 +1,8 @@
-import type { CDSInlineNotification, CDSTextInput } from '@carbon/web-components/es/index.d.ts';
+import type { CDSTextInput } from '@carbon/web-components/es/index.d.ts';
 import { loadConfigFromStorage, saveConfigToStorage } from './config.js';
 
 // エンドポイント接続先の入力欄
 const inputEndpoint = document.getElementById('input-endpoint') as CDSTextInput;
-// メッセージ欄
-const inlineNotification = document.getElementById('notification-save') as CDSInlineNotification;
-inlineNotification.open = false;
-inlineNotification.classList.remove('hidden');
 
 // エンドポイント接続先の検証
 function validateInputEndpoint() {
@@ -29,17 +25,20 @@ function loadConfig() {
 
 // config保存
 function onSaveConfig() {
-  inlineNotification.open = false;
   if (!validateInputEndpoint()) {
     return false;
   }
   const conf = {
     apiEndpoint: inputEndpoint.value,
   };
-  saveConfigToStorage(conf);
-  inlineNotification.open = true;
-  loadConfig();
-  validateAllInputs();
+  try {
+    saveConfigToStorage(conf);
+    window.alert('設定を保存しました');
+    loadConfig();
+    validateAllInputs();
+  } catch (error) {
+    window.alert('設定の保存に失敗しました\nWebブラウザのコンソールを確認してください');
+  }
 }
 
 // 初回読み込みと画面更新

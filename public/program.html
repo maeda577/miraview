@@ -7,27 +7,32 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 -->
 <html lang="ja">
+
   <head>
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <link rel="stylesheet" href="./ix/siemens-ix.css">
+    <link rel="stylesheet" href="../node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css">
     <script type="importmap">
       {
         "imports": {
-          "openapi-fetch": "./openapi-fetch/index.js"
+          "openapi-fetch/": "../node_modules/openapi-fetch/",
+          "@siemens/": "../node_modules/@siemens/"
         }
       }
     </script>
-    <script type="module" src="./ix/ix.js"></script>
+    <script type="module" src="./ix/ixtest.js"></script>
     <script type="module" src="./js/program.js"></script>
     <title>番組表 | miraview</title>
     <style type="text/css">
-      ix-basic-navigation:not(:defined), ix-content:not(:defined) {
+      ix-basic-navigation:not(:defined),
+      ix-content:not(:defined) {
         display: none;
       }
+
       :root {
         --height-per-hour: 240px
       }
+
       /* html, body {
         width: 100%;
         height: 100%;
@@ -35,12 +40,14 @@ LICENSE file in the root directory of this source tree.
       ix-tab-item {
         width: 4rem;
       }
+
       table {
         display: block;
         overflow: scroll;
         height: calc(100% - 1rem);
         /* width: calc(100% - 1rem); */
       }
+
       th {
         position: sticky;
         text-align: center;
@@ -49,21 +56,27 @@ LICENSE file in the root directory of this source tree.
         z-index: 10;
         background-color: var(--theme-color-2);
       }
+
       th[scope="col"] {
         min-width: 10rem;
         max-width: 10rem;
         padding: 0.5rem;
       }
+
       td {
         position: sticky;
         top: 0;
-        padding: 0 5px;   /* 上下のpaddingをつけると番組表の時刻がずれる */
+        padding: 0 5px;
+        /* 上下のpaddingをつけると番組表の時刻がずれる */
         overflow: hidden;
       }
-      th, td {
+
+      th,
+      td {
         border-color: var(--theme-color-std-bdr);
         border-width: 1px;
       }
+
       .program-table-hour {
         height: var(--height-per-hour);
         width: 2rem;
@@ -74,6 +87,7 @@ LICENSE file in the root directory of this source tree.
       }
     </style>
   </head>
+
   <body class="theme-classic-dark">
     <ix-basic-navigation application-name="番組表">
       <ix-menu enable-toggle-theme>
@@ -156,4 +170,5 @@ LICENSE file in the root directory of this source tree.
       </ix-content>
     </ix-basic-navigation>
   </body>
+
 </html>

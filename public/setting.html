@@ -5,7 +5,7 @@
     <script type="importmap">
       {
         "imports": {
-          "openapi-fetch": "./openapi-fetch/index.js"
+          "openapi-fetch/": "./node_modules/openapi-fetch/"
         }
       }
     </script>
@@ -67,12 +67,6 @@
           warn-text="空欄の場合はデフォルト値に置き換えられます"
           invalid-text="URL形式が不正です">
         </cds-text-input>
-        <cds-inline-notification
-          id="notification-save"
-          class="hidden"
-          title="Notification title"
-          subtitle="Subtitle text goes here.">
-        </cds-inline-notification>
         <div>
           <cds-button id="button-save" type="submit">保存</cds-button>
         </div>

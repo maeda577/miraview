@@ -1,10 +1,12 @@
-import createClient from 'openapi-fetch';
+import createClient from 'openapi-fetch/dist/index.js';
 import type { CDSTabs, CDSTab, CDSContentSwitcher, CDSContentSwitcherItem } from '@carbon/web-components/es/index.d.ts';
-import type { paths, components } from './api/mirakc';
+import type { paths, components } from './api/mirakc.d.ts';
 import { audio_component_types, genre_large, genre_middle, groupPrograms } from './common.js';
+import { loadConfigFromStorage } from './config.js';
 
-// 必要なAPIを叩く
-const client = createClient<paths>({ baseUrl: "../api/" });
+// configを読んでから必要なAPIを叩く
+const config = loadConfigFromStorage();
+const client = createClient<paths>({ baseUrl: config.apiEndpoint });
 const response = await Promise.all([
   client.GET("/programs"),
   client.GET("/services"),

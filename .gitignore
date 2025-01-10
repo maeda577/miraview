@@ -10,6 +10,7 @@ build.tar.gz
 /public/carbon
 # Packages
 /public/openapi-fetch
+/public/node_modules
 # Dummy data
 /api
 # dependencies
