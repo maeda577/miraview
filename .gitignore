@@ -5,12 +5,9 @@ build.tar.gz
 /test
 
 # Transpiled files
-/public/ix
-/public/js
-/public/carbon
+/src/js
 # Packages
-/public/openapi-fetch
-/public/node_modules
+/src/modules
 # Dummy data
 /api
 # dependencies

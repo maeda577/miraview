@@ -1,5 +1,5 @@
 import type { CDSTextInput } from '@carbon/web-components/es/index.d.ts';
-import { loadConfigFromStorage, saveConfigToStorage } from './config.js';
+import { loadConfigFromStorage, saveConfigToStorage } from './utils/config';
 
 // エンドポイント接続先の入力欄
 const inputEndpoint = document.getElementById('input-endpoint') as CDSTextInput;
