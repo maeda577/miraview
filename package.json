@@ -1,16 +1,10 @@
 {
-  "name": "miraview",
-  "version": "3.2.0",
-  "description": "A web frontend for mirakc.",
-  "keywords": [],
-  "homepage": "https://github.com/maeda577/miraview",
-  "bugs": {
-    "url": "https://github.com/maeda577/miraview/issues"
-  },
-  "license": "MIT",
-  "author": "maeda577",
-  "type": "module",
   "files": [],
+  "dependencies": {
+    "openapi-fetch": "^0.13.3",
+    "@siemens/ix": "^2.6.1",
+    "@siemens/ix-icons": "^2.2.0"
+  },
   "devDependencies": {
     "@carbon/icon-helpers": "^10.54.0",
     "@carbon/icons": "^11.53.0",
@@ -19,7 +13,7 @@
     "@rollup/plugin-typescript": "^12.1.2",
     "@siemens/ix": "^2.6.1",
     "@siemens/ix-icons": "^2.2.0",
-    "openapi-fetch": "^0.13.3",
+    "license-checker": "^25.0.1",
     "openapi-typescript": "^7.4.4",
     "rollup": "^4.24.0",
     "sass": "^1.83.0",
@@ -38,6 +32,7 @@
     "download.ix": "curl --silent https://registry.npmjs.org/@siemens/ix/-/ix-2.6.1.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix",
     "download.ix-icons": "curl --silent https://registry.npmjs.org/@siemens/ix-icons/-/ix-icons-2.2.0.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix-icons",
     "download.openapi-fetch": "curl --silent https://registry.npmjs.org/openapi-fetch/-/openapi-fetch-0.13.4.tgz | tar --extract --gzip --verbose --directory ./src/modules/ && mv ./src/modules/package ./src/modules/openapi-fetch",
+    "check-license": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":'  > src/json/license.json",
     "serve": "npx serve --no-clipboard ./",
     "watch": "npx tsc --watch"
   }
