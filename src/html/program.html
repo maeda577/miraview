@@ -11,163 +11,168 @@ LICENSE file in the root directory of this source tree.
   <head>
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <link rel="stylesheet" href="../modules/@siemens/ix/dist/siemens-ix/siemens-ix.css">
     <script type="importmap">
       {
         "imports": {
           "openapi-fetch/": "../modules/openapi-fetch/",
-          "@siemens/": "../modules/@siemens/"
+          "@siemens/": "../modules/@siemens/",
+          "@siemens/ix": "../modules/@siemens/ix/dist/esm/index.js"
         }
       }
     </script>
     <script type="module" src="../js/program.js"></script>
-    <title>番組表 | miraview</title>
+    <link rel="stylesheet" href="../modules/@siemens/ix/dist/siemens-ix/siemens-ix.css">
+    <link rel="stylesheet" href="../css/pgtable.css">
     <style type="text/css">
       ix-basic-navigation:not(:defined),
       ix-content:not(:defined) {
         display: none;
       }
-
-      :root {
-        --height-per-hour: 240px
-      }
-
-      /* html, body {
-        width: 100%;
-        height: 100%;
-      } */
-      ix-tab-item {
-        width: 4rem;
-      }
-
-      table {
-        display: block;
-        overflow: scroll;
-        height: calc(100% - 1rem);
-        /* width: calc(100% - 1rem); */
-      }
-
-      th {
-        position: sticky;
-        text-align: center;
-        top: 0;
-        left: 0;
-        z-index: 10;
-        background-color: var(--theme-color-2);
-      }
-
-      th[scope="col"] {
-        min-width: 10rem;
-        max-width: 10rem;
-        padding: 0.5rem;
-      }
-
-      td {
-        position: sticky;
-        top: 0;
-        padding: 0 5px;
-        /* 上下のpaddingをつけると番組表の時刻がずれる */
-        overflow: hidden;
-      }
-
-      th,
-      td {
-        border-color: var(--theme-color-std-bdr);
-        border-width: 1px;
-      }
-
-      .program-table-hour {
-        height: var(--height-per-hour);
-        width: 2rem;
-        padding-top: 1rem;
-        border-color: var(--theme-color-std-bdr);
-        border-style: solid;
-        border-width: 0px 0px 1px 0px;
-      }
     </style>
+    <title>番組表 | miraview</title>
   </head>
 
   <body class="theme-classic-dark">
-    <ix-basic-navigation application-name="番組表">
-      <ix-menu enable-toggle-theme>
-        <ix-menu-item icon="table" active="true">番組表</ix-menu-item>
+    <ix-basic-navigation hide-header>
+      <!-- 左メニュー 各画面で共通 -->
+      <ix-menu enable-toggle-theme i-1-8n-toggle-theme="テーマ切り替え" i-1-8n-legal="バージョン情報">
+        <ix-menu-item icon="table" active>番組表</ix-menu-item>
         <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
         <ix-menu-item icon="search">番組検索</ix-menu-item>
         <ix-menu-item icon="history">タイムシフト</ix-menu-item>
-        <ix-menu-item icon="scheduler" notifications="100">録画予約リスト</ix-menu-item>
+        <ix-menu-item icon="scheduler" notifications="100">録画予約</ix-menu-item>
+        <ix-menu-item icon="video-file">録画一覧</ix-menu-item>
         <ix-menu-item icon="radio-waves">チューナー</ix-menu-item>
-        <!-- <ix-menu-item icon="cogwheel" bottom>設定</ix-menu-item>
-        <ix-menu-item icon="about" bottom>概要</ix-menu-item> -->
+        <ix-menu-item icon="cogwheel" bottom>設定</ix-menu-item>
         <ix-menu-about>
           <ix-menu-about-item label="Tab 1">Content 1</ix-menu-about-item>
           <ix-menu-about-item label="Tab 2">Content 2</ix-menu-about-item>
         </ix-menu-about>
-        <ix-menu-settings>
-          <ix-menu-settings-item label="Example Setting 1"></ix-menu-settings-item>
-          <ix-menu-settings-item label="Example Setting 2"></ix-menu-settings-item>
-        </ix-menu-settings>
       </ix-menu>
+      <!-- コンテンツ領域 -->
       <ix-content>
-        <div id="input-header" slot="header" style="display: flex;">
-          <ix-select id="day-dropdown" hide-list-header style="width: 8rem; margin-right: 1rem;"></ix-select>
-          <ix-tabs id="channel-type-tabs" small>
+        <!-- ヘッダ -->
+        <ix-content-header slot="header" header-title="番組表">
+          <ix-select id="dropdown-pgtable-day" hide-list-header></ix-select>
+          <ix-tabs id="tab-pgtable-type" small>
             <ix-tab-item>GR</ix-tab-item>
             <ix-tab-item>BS</ix-tab-item>
             <ix-tab-item>CS</ix-tab-item>
             <ix-tab-item>SKY</ix-tab-item>
           </ix-tabs>
+        </ix-content-header>
+        <!-- ロード中画面 -->
+        <ix-spinner id="cover-loading" size="large" class="flex-center"></ix-spinner>
+        <!-- 番組が見つからなかった画面 -->
+        <ix-empty-state id="cover-not-found" class="flex-center" hidden
+          header="番組情報が見つかりません"
+          sub-header="設定を確認してください"
+          icon="alarm">
+        </ix-empty-state>
+        <!-- 通常の画面 番組表 -->
+        <div id="pgtable-container" class="pgtable-container" hidden>
+          <!-- 現在時刻の横棒 -->
+          <hr id="now-line" class="pgtable-now-line" />
+          <!-- 番組表本体 -->
+          <table class="typography-body">
+            <thead>
+              <tr id="row-header">
+                <th>
+                  <div class="pgtable-first-cell"></div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="row-program">
+                <th>
+                  <div class="pgtable-hour">5</div>
+                  <div class="pgtable-hour">6</div>
+                  <div class="pgtable-hour">7</div>
+                  <div class="pgtable-hour">8</div>
+                  <div class="pgtable-hour">9</div>
+                  <div class="pgtable-hour">10</div>
+                  <div class="pgtable-hour">11</div>
+                  <div class="pgtable-hour">12</div>
+                  <div class="pgtable-hour">13</div>
+                  <div class="pgtable-hour">14</div>
+                  <div class="pgtable-hour">15</div>
+                  <div class="pgtable-hour">16</div>
+                  <div class="pgtable-hour">17</div>
+                  <div class="pgtable-hour">18</div>
+                  <div class="pgtable-hour">19</div>
+                  <div class="pgtable-hour">20</div>
+                  <div class="pgtable-hour">21</div>
+                  <div class="pgtable-hour">22</div>
+                  <div class="pgtable-hour">23</div>
+                  <div class="pgtable-hour">0</div>
+                  <div class="pgtable-hour">1</div>
+                  <div class="pgtable-hour">2</div>
+                  <div class="pgtable-hour">3</div>
+                  <div class="pgtable-hour">4</div>
+                </th>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="typography-body">
-          <thead>
-            <tr id="service-header-row">
-              <th></th>
-              <th scope="col">ＮＨＫ総合１・東京</th>
-              <th scope="col">ＮＨＫＥテレ１東京</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-              <th scope="col">日テレ１</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="program-row">
-              <th scope="row">
-                <div class="program-table-hour">5</div>
-                <div class="program-table-hour">6</div>
-                <div class="program-table-hour">7</div>
-                <div class="program-table-hour">8</div>
-                <div class="program-table-hour">9</div>
-                <div class="program-table-hour">10</div>
-                <div class="program-table-hour">11</div>
-                <div class="program-table-hour">12</div>
-                <div class="program-table-hour">13</div>
-                <div class="program-table-hour">14</div>
-                <div class="program-table-hour">15</div>
-                <div class="program-table-hour">16</div>
-                <div class="program-table-hour">17</div>
-                <div class="program-table-hour">18</div>
-                <div class="program-table-hour">19</div>
-                <div class="program-table-hour">20</div>
-                <div class="program-table-hour">21</div>
-                <div class="program-table-hour">22</div>
-                <div class="program-table-hour">23</div>
-                <div class="program-table-hour">0</div>
-                <div class="program-table-hour">1</div>
-                <div class="program-table-hour">2</div>
-                <div class="program-table-hour">3</div>
-                <div class="program-table-hour">4</div>
-              </th>
-            </tr>
-          </tbody>
-        </table>
       </ix-content>
     </ix-basic-navigation>
+    <!-- テンプレート チャンネル名を出すセル -->
+    <template id="template-pgtable-ch-header">
+      <th>
+        <div class="pgtable-ch-header flex-center">
+          <span>xx放送</span>
+        </div>
+      </th>
+    </template>
+    <!-- テンプレート 番組情報 高さとクリックイベントはJavascriptで設定する -->
+    <template id="template-pgtable-item">
+      <div class="pgtable-item">
+        <a>xx:xx ニュース</a>
+      </div>
+    </template>
+    <!-- テンプレート 番組詳細のダイアログ -->
+    <template id="template-pgtable-modal">
+      <div>
+        <ix-modal-header id="modal-title"></ix-modal-header>
+        <ix-modal-content style="max-height: 60vh;">
+          <p id="modal-pay-tv" hidden>[有料放送]</p>
+          <div id="modal-description"></div>
+          <table style="margin-top: 1rem;">
+            <tbody>
+              <tr>
+                <td>Video</td>
+                <td style="padding-right: 1rem;">:</td>
+                <td id="modal-video"></td>
+              </tr>
+              <tr>
+                <td>Audio</td>
+                <td style="padding-right: 1rem;">:</td>
+                <td id="modal-audio"></td>
+              </tr>
+              <tr>
+                <td>Genre</td>
+                <td style="padding-right: 1rem;">:</td>
+                <td id="modal-genre"></td>
+              </tr>
+              <tr>
+                <td>Program ID</td>
+                <td style="padding-right: 1rem;">:</td>
+                <td id="modal-program-id"></td>
+              </tr>
+              <tr>
+                <td>Service ID</td>
+                <td style="padding-right: 1rem;">:</td>
+                <td id="modal-service-id"></td>
+              </tr>
+            </tbody>
+          </table>
+        </ix-modal-content>
+        <ix-modal-footer>
+          <ix-button id="modal-button-close" outline>閉じる</ix-button>
+          <ix-button id="modal-button-rec" hidden>録画予約</ix-button>
+        </ix-modal-footer>
+      </div>
+    </template>
   </body>
 
 </html>

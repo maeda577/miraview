@@ -11,17 +11,21 @@
 const STORAGE_KEYS = {
   // mirakcのAPIエンドポイント
   API_ENDPOINT: 'miraview.config.mirakcApiEndpoint',
+  // 番組表で並べ替えを無効化するか
+  DISABLE_SERVICE_SORTING: 'miraview.config.disableServiceSorting',
 } as const;
 
 // 設定情報
 export type MiraviewConfig = {
   apiEndpoint: string | undefined;
+  disableServiceSorting: boolean;
 };
 
 // デフォルト値のconfig
 function createDefaultConfig(): MiraviewConfig {
   return {
     apiEndpoint: new URL('api/', window.location.origin).toString(),
+    disableServiceSorting: false,
   };
 }
 
@@ -34,6 +38,8 @@ export function loadConfigFromStorage(): MiraviewConfig {
     if (mirakcUrlString && URL.canParse(mirakcUrlString)) {
       config.apiEndpoint = mirakcUrlString;
     }
+    // 並べ替えの無効化。falseの場合は値自体が無くなるので、何らかの文字があればtrue
+    config.disableServiceSorting = !!localStorage.getItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
 
     return config;
   }
@@ -54,5 +60,12 @@ export function saveConfigToStorage(config: MiraviewConfig) {
   }
   else {
     localStorage.removeItem(STORAGE_KEYS.API_ENDPOINT);
+  }
+  // 並べ替えの無効化がされていれば文字を入れる。文字は何でもいい。なければ消す
+  if (config.disableServiceSorting) {
+    localStorage.setItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING, 'true');
+  }
+  else {
+    localStorage.removeItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
   }
 }

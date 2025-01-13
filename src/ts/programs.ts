@@ -1,7 +1,8 @@
 import createClient from 'openapi-fetch/dist/index.js';
 import type { CDSTabs, CDSTab, CDSContentSwitcher, CDSContentSwitcherItem } from '@carbon/web-components/es/index.d.ts';
 import type { paths, components } from './types/mirakc';
-import { audio_component_types, genre_large, genre_middle, groupPrograms } from './utils/common.js';
+import { audio_component_types, genre_large, genre_middle } from './utils/const.js';
+import { groupPrograms } from './utils/pgtable.js';
 import { loadConfigFromStorage } from './utils/config.js';
 
 // configを読んでから必要なAPIを叩く

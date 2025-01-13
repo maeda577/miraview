@@ -2,8 +2,8 @@
 {
   "files": [
     "src/ts/program.ts",
-    "src/ts/programs.ts",
-    "src/ts/settings.ts",
+    // "src/ts/programs.ts",
+    // "src/ts/settings.ts",
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
