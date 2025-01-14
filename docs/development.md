@@ -15,11 +15,6 @@
 * 勉強のため、極力プレーンな作りにする
     * 流行りのViteは使わない
 
-## アイコンのソース
-
-* 「Google FontsのIconsのDvr」に色をつけたもの
-    * https://fonts.google.com/icons をDvrで検索
-
 ## APIクライアントのコード
 
 [OpenAPI TypeScript](https://openapi-ts.dev/) で生成されている
