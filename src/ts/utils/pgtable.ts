@@ -1,4 +1,4 @@
-import { loadConfigFromStorage } from './config.js';
+import { loadConfigFromStorage } from './configManager.js';
 import { type ModalConfig, showModal, closeModal } from '@siemens/ix';
 import { audio_component_types, genre_large, genre_middle } from './const.js';
 import type { components } from '../types/mirakc.d.ts';
@@ -9,7 +9,7 @@ import type { } from '@siemens/ix/dist/types/components.d.ts';
 const programTimeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 const programDatetimeFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'narrow', hour: '2-digit', minute: '2-digit' });
 
-// 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
+/** 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id */
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
 // http://www.arib.or.jp/english/html/overview/doc/8-TR-B15v4_6-2p4-E1.pdf#page=39
 function groupPrograms(programs: components['schemas']['MirakurunProgram'][]): Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>> {
@@ -262,7 +262,7 @@ function updateCssVariableNowTime() {
   document.body.style.setProperty('--now-msec-from-5am', (now - today5).toString());
 }
 
-// 番組情報を読み込む
+/** 番組表を初期化する */
 export async function initPgTable(programs?: components['schemas']['MirakurunProgram'][], services?: components['schemas']['MirakurunService'][]) {
   const coverLoading = document.getElementById('cover-loading');
   const coverNotFound = document.getElementById('cover-not-found');

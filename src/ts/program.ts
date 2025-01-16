@@ -8,13 +8,13 @@
  */
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from './types/mirakc.d.ts';
-import { loadConfigFromStorage } from './utils/config.js';
+import { loadConfigFromStorage } from './utils/configManager.js';
 import { initPgTable } from './utils/pgtable.js';
 import './utils/ix.js';
 
 // configを読んでから必要なAPIを叩く
 const config = loadConfigFromStorage();
-const client = createClient<paths>({ baseUrl: config.apiEndpoint });
+const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
 const response = await Promise.all([
   client.GET("/programs"),
   client.GET("/services"),

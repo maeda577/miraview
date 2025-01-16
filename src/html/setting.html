@@ -1,0 +1,90 @@
+<!--
+SPDX-FileCopyrightText: 2022 maeda577
+
+SPDX-License-Identifier: MIT
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+-->
+<html lang="ja">
+
+  <head>
+    <meta charset="UTF-8" />
+    <script type="importmap">
+      {
+        "imports": {
+          "openapi-fetch/": "../modules/openapi-fetch/",
+          "@siemens/": "../modules/@siemens/",
+          "@siemens/ix": "../modules/@siemens/ix/dist/esm/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="../js/setting.js"></script>
+    <link rel="stylesheet" href="../modules/@siemens/ix/dist/siemens-ix/siemens-ix.css" />
+    <link rel="icon" href="../icon/screen.svg" sizes="any" type="image/svg+xml" />
+    <style type="text/css">
+      ix-basic-navigation:not(:defined),
+      ix-content:not(:defined) {
+        display: none;
+      }
+    </style>
+    <title>設定 | miraview</title>
+  </head>
+
+  <body>
+    <ix-basic-navigation hide-header>
+      <!-- 左メニュー 各画面で共通 -->
+      <ix-menu i-1-8n-legal="バージョン情報">
+        <ix-menu-item icon="table">番組表</ix-menu-item>
+        <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
+        <ix-menu-item icon="search">番組検索</ix-menu-item>
+        <ix-menu-item icon="history">タイムシフト</ix-menu-item>
+        <ix-menu-item icon="scheduler">録画予約</ix-menu-item>
+        <ix-menu-item icon="video-file">録画一覧</ix-menu-item>
+        <ix-menu-item icon="radio-waves">チューナー</ix-menu-item>
+        <ix-menu-item icon="cogwheel" bottom active>設定</ix-menu-item>
+        <ix-menu-about label="バージョン情報">
+          <ix-menu-about-item label="バージョン">
+            <p class="typography-label-lg"><span>mirakc version: </span><span id="mirakc-version"></span></p>
+            <p class="typography-label-lg"><span>miraview version: </span><span id="miraview-version"></span></p>
+          </ix-menu-about-item>
+          <ix-menu-about-item id="menu-license" label="ライセンス"
+            style="height: 80vh; overflow-x: scroll;"></ix-menu-about-item>
+        </ix-menu-about>
+      </ix-menu>
+      <!-- コンテンツ領域 -->
+      <ix-content>
+        <!-- ヘッダ -->
+        <ix-content-header slot="header" header-title="設定"></ix-content-header>
+        <ix-layout-auto style="max-width: 500px;">
+          <span class="typography-h4">一般</span>
+          <ix-select id="select-theme" label="画面テーマ" hide-list-header>
+            <ix-select-item label="システム設定を使用する" value="system"></ix-select-item>
+            <ix-select-item label="ダーク" value="theme-classic-dark"></ix-select-item>
+            <ix-select-item label="ライト" value="theme-classic-light"></ix-select-item>
+          </ix-select>
+          <ix-custom-field label="番組表のチャンネルを並べ替えず取得順に表示する">
+            <ix-toggle id="toggle-sorting" text-off="並べ替えて表示" text-on="取得順に表示"></ix-toggle>
+          </ix-custom-field>
+          <span class="typography-h4">実験的</span>
+          <ix-input id="input-api-endpoint"
+            type="url"
+            label="接続先mirakcのAPIエンドポイント"
+            placeholder="例) http://<mirakcのIPアドレス or ドメイン>:40772/api/"
+            invalid-text="URL形式が不正です">
+            <ix-icon name="info" size="16" slot="end"></ix-icon>
+          </ix-input>
+          <ix-tooltip placement="bottom" for="#input-api-endpoint ix-icon">
+            接続するmirakcのURLを指定します<br />
+            変更した場合、ブラウザのCORS制限により動作しない場合があります<br />
+            ブラウザのCORS制限を無効化することで動作する可能性がありますが、セキュリティ上のリスクを認識した上で無効化してください<br />
+            空欄にした場合、このmiraviewが動いているホストを参照します
+          </ix-tooltip>
+          <ix-button id="button-save">保存</ix-button>
+        </ix-layout-auto>
+
+      </ix-content>
+    </ix-basic-navigation>
+  </body>
+
+</html>

@@ -7,40 +7,44 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// 設定をlocal storageに書き込む時のキー リバースプロキシ経由で起動される可能性もあるので名前は長めにする
+// 設定をlocal storageに書き込む時のキー
 const STORAGE_KEYS = {
   // mirakcのAPIエンドポイント
   API_ENDPOINT: 'miraview.config.mirakcApiEndpoint',
   // 番組表で並べ替えを無効化するか
   DISABLE_SERVICE_SORTING: 'miraview.config.disableServiceSorting',
+  // テーマの名前
+  THEME: 'miraview.config.theme',
 } as const;
 
-// 設定情報
-export type MiraviewConfig = {
+/** 設定情報 */
+export class MiraviewConfig {
+  /** mirakcのAPI接続先 */
   apiEndpoint: string | undefined;
-  disableServiceSorting: boolean;
-};
+  /** 番組一覧の並べ替えてを無効化するか */
+  disableServiceSorting: boolean = false;
+  /** テーマ */
+  theme: 'theme-classic-dark' | 'theme-classic-light' | undefined;
 
-// デフォルト値のconfig
-function createDefaultConfig(): MiraviewConfig {
-  return {
-    apiEndpoint: new URL('api/', window.location.origin).toString(),
-    disableServiceSorting: false,
-  };
+  /** mirakcのAPI接続先 未指定だったらデフォルト値を返す */
+  getApiEndpoint() {
+    return this.apiEndpoint ?? new URL('api/', window.location.origin).toString();
+  }
 }
 
 // configをlocal storageから読み取る local storageの利用はいろいろリスクがあるらしいが、さほど重要な情報でもないので使う
 export function loadConfigFromStorage(): MiraviewConfig {
-  const config = createDefaultConfig();
+  const config = new MiraviewConfig();
   try {
-    // URLの読み取り。有効な値がなければデフォルト値のままになる
+    // URLの読み取り
     const mirakcUrlString = localStorage.getItem(STORAGE_KEYS.API_ENDPOINT);
-    if (mirakcUrlString && URL.canParse(mirakcUrlString)) {
-      config.apiEndpoint = mirakcUrlString;
-    }
+    config.apiEndpoint = (mirakcUrlString && URL.canParse(mirakcUrlString)) ? mirakcUrlString : undefined;
+
     // 並べ替えの無効化。falseの場合は値自体が無くなるので、何らかの文字があればtrue
     config.disableServiceSorting = !!localStorage.getItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
 
+    // テーマ文字列
+    config.theme = localStorage.getItem(STORAGE_KEYS.THEME) as 'theme-classic-dark' | 'theme-classic-light' | undefined;
     return config;
   }
   catch (error) {
@@ -48,7 +52,7 @@ export function loadConfigFromStorage(): MiraviewConfig {
       console.error(error.message);
     }
     // 何かエラーがあったらconfig読み込みは諦める
-    return createDefaultConfig();
+    return new MiraviewConfig();
   }
 }
 
@@ -68,4 +72,15 @@ export function saveConfigToStorage(config: MiraviewConfig) {
   else {
     localStorage.removeItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
   }
+  // テーマの文字列
+  if (config.theme) {
+    localStorage.setItem(STORAGE_KEYS.THEME, config.theme);
+  }
+  else {
+    localStorage.removeItem(STORAGE_KEYS.THEME);
+  }
+}
+
+export function getTheme() {
+
 }
