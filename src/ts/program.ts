@@ -19,12 +19,15 @@ const response = await Promise.all([
   client.GET("/programs"),
   client.GET("/services"),
 ]);
-// エラーがあればコンソールに出してから処理止める
+// エラーがあればコンソールに出す
+let hasError = false;
 response.forEach(res => {
   if (res.error !== undefined) {
     console.error(res.error);
-    return;
+    hasError = true;
   }
 });
 
-initPgTable(response[0].data, response[1].data);
+if (!hasError) {
+  initPgTable(response[0].data, response[1].data);
+}

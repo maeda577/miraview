@@ -1,0 +1,17 @@
+<!-- このiconはchatGPTで生成したものを加工しています -->
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 色はCSSのtheme-color-primaryの値 -->
+  <style>
+    .fill {
+      fill: #0cc;
+    }
+    @media (prefers-color-scheme: dark) {
+      .fill {
+        fill: #00bde3;
+      }
+    }
+  </style>
+  <rect class="fill" x="8" y="12" width="48" height="32"/>
+  <rect x="15" y="17" width="34" height="22" fill="rgba(0, 0, 0, 0.5)"/>
+  <polygon points="26,22 40,28 26,34" fill="rgb(255, 255, 255)"/>
+</svg>

@@ -207,15 +207,13 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
   const modal = (templateModal.content.cloneNode(true) as DocumentFragment).querySelector('div')!;
 
   // タイトル
-  (modal.querySelector('#modal-title') as HTMLElement).innerText = program.name!;
+  (modal.querySelector('.modal-title') as HTMLElement).innerText = program.name!;
 
   // 詳細などはdivの中にpタグを足していく
-  const descriptionDiv = modal.querySelector('#modal-description') as HTMLElement;
+  const descriptionDiv = modal.querySelector('.modal-description') as HTMLElement;
 
   // 放送時間
-  const timeP = document.createElement('p');
-  timeP.innerText = programDatetimeFormat.format(program.startAt) + ' - ' + programTimeFormat.format(program.startAt + program.duration);
-  descriptionDiv.appendChild(timeP);
+  (modal.querySelector('.modal-time') as HTMLElement).innerText = programDatetimeFormat.format(program.startAt) + ' - ' + programTimeFormat.format(program.startAt + program.duration);
 
   // 詳細情報
   if (program.description) {
@@ -234,16 +232,16 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
   }
 
   // テーブル形式で各種プロパティを出す
-  (modal.querySelector('#modal-pay-tv') as HTMLElement).hidden = program.isFree;
-  (modal.querySelector('#modal-video') as HTMLElement).innerText = program.video?.type + ' ' + program.video?.resolution;
-  (modal.querySelector('#modal-audio') as HTMLElement).innerText = program.audios?.map(audio => `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`).join('\n') ?? '';
-  (modal.querySelector('#modal-genre') as HTMLElement).innerText = program.genres?.map(genre => `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`).join('\n') ?? '';
-  (modal.querySelector('#modal-program-id') as HTMLElement).innerText = program.id.toString();
-  (modal.querySelector('#modal-service-id') as HTMLElement).innerText = program.serviceId.toString();
+  (modal.querySelector('.modal-pay-tv') as HTMLElement).hidden = program.isFree;
+  (modal.querySelector('.modal-video') as HTMLElement).innerText = program.video?.type + ' ' + program.video?.resolution;
+  (modal.querySelector('.modal-audio') as HTMLElement).innerText = program.audios?.map(audio => `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`).join('\n') ?? '';
+  (modal.querySelector('.modal-genre') as HTMLElement).innerText = program.genres?.map(genre => `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`).join('\n') ?? '';
+  (modal.querySelector('.modal-program-id') as HTMLElement).innerText = program.id.toString();
+  (modal.querySelector('.modal-service-id') as HTMLElement).innerText = program.serviceId.toString();
 
   // ボタン操作
-  modal.querySelector('#modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));
-  modal.querySelector('#modal-button-rec')?.addEventListener('click', () => closeModal(modal, undefined));
+  modal.querySelector('.modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));
+  modal.querySelector('.modal-button-rec')?.addEventListener('click', () => closeModal(modal, undefined));
 
   // ダイアログ表示
   const modalConfig: ModalConfig = {

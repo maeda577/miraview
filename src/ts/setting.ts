@@ -13,7 +13,7 @@ const toggleSort = document.getElementById('toggle-sorting') as HTMLIxToggleElem
 // エンドポイント接続先の入力欄
 const inputEndpoint = document.getElementById('input-api-endpoint') as HTMLIxInputElement;
 
-// ローカルストレージのconfigを読み込む
+// ローカルストレージのconfigを読み込んで画面に反映する
 function loadConfigToForms() {
   const currentConfig = loadConfigFromStorage();
   inputEndpoint.value = currentConfig.apiEndpoint ?? '';
@@ -39,7 +39,7 @@ function onSaveConfig() {
 
   try {
     saveConfigToStorage(createConfigFromForms());
-    window.alert('設定を保存しました');
+    window.alert('設定を保存しました\nWebページを再読み込みすると設定が反映されます');
   } catch (error) {
     window.alert('設定の保存に失敗しました\nWebブラウザのコンソールを確認してください');
   }

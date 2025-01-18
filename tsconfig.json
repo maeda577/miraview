@@ -3,6 +3,7 @@
   "files": [
     "src/ts/program.ts",
     "src/ts/setting.ts",
+    "src/ts/tuner.ts",
     // "src/ts/programs.ts",
     // "src/ts/settings.ts",
   ],

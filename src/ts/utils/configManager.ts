@@ -80,7 +80,3 @@ export function saveConfigToStorage(config: MiraviewConfig) {
     localStorage.removeItem(STORAGE_KEYS.THEME);
   }
 }
-
-export function getTheme() {
-
-}
