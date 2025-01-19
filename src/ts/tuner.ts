@@ -39,11 +39,9 @@ async function refreshTuners() {
     // チューナーの利用状況
     if (tuner.isFree) {
       (card.querySelector('.pill-free') as HTMLElement).hidden = false;
-    }
-    else if (Math.max(...tuner.users.map(u => u.priority)) <= 0) {
+    } else if (Math.max(...tuner.users.map(u => u.priority)) <= 0) {
       (card.querySelector('.pill-scanning') as HTMLElement).hidden = false;
-    }
-    else {
+    } else {
       (card.querySelector('.pill-recording') as HTMLElement).hidden = false;
     }
 

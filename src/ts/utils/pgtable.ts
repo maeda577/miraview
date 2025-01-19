@@ -9,6 +9,11 @@ import type { } from '@siemens/ix/dist/types/components.d.ts';
 const programTimeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 const programDatetimeFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'narrow', hour: '2-digit', minute: '2-digit' });
 
+// 表示・非表示を切り替える画面要素
+const containerLoading = document.getElementById('cover-loading') as HTMLIxSpinnerElement;
+const containerNotFound = document.getElementById('cover-not-found') as HTMLIxEmptyStateElement;
+const containerPgTable = document.getElementById('pgtable-container') as HTMLDivElement;
+
 /** 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id */
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
 // http://www.arib.or.jp/english/html/overview/doc/8-TR-B15v4_6-2p4-E1.pdf#page=39
@@ -159,11 +164,9 @@ function refreshTable(
   // TODO: GR/BSはこれで良さそう。CSとSKYの場合これでいいのか分からない
   if (loadConfigFromStorage().disableServiceSorting) {
     // 何もしない
-  }
-  else if (selectedType === 'GR') {
+  } else if (selectedType === 'GR') {
     serviceList = serviceList?.sort((a, b) => a.remoteControlKeyId! - b.remoteControlKeyId!);
-  }
-  else {
+  } else {
     serviceList = serviceList?.sort((a, b) => a.id - b.id);
   }
 
@@ -262,14 +265,9 @@ function updateCssVariableNowTime() {
 
 /** 番組表を初期化する */
 export async function initPgTable(programs?: components['schemas']['MirakurunProgram'][], services?: components['schemas']['MirakurunService'][]) {
-  const coverLoading = document.getElementById('cover-loading');
-  const coverNotFound = document.getElementById('cover-not-found');
-  const pgTable = document.getElementById('pgtable-container');
-
   // 番組が無い
   if (!programs || !services || programs.length === 0 || services.length === 0) {
-    coverLoading!.hidden = true;
-    coverNotFound!.hidden = false;
+    showErrorMessage('番組情報が見つかりません');
     return;
   }
 
@@ -302,8 +300,9 @@ export async function initPgTable(programs?: components['schemas']['MirakurunPro
   refreshTable(groupedPrograms, services);
 
   // ロード中の画面を外す
-  coverLoading!.hidden = true;
-  pgTable!.hidden = false;
+  containerLoading.hidden = true;
+  containerPgTable.hidden = false;
+  containerNotFound.hidden = true;
 
   // 現在時刻の横棒を今すぐ一回書き換えた後、1分ごとに書き換える
   updateCssVariableNowTime();
@@ -312,4 +311,14 @@ export async function initPgTable(programs?: components['schemas']['MirakurunPro
 
   // 初回だけ現在時刻のラインまでスクロールする
   document.getElementById('now-line')?.scrollIntoView({ block: 'center', behavior: 'auto' });
+}
+
+/** エラーメッセージを出す */
+export async function showErrorMessage(header: string, subHeader?: string) {
+  containerNotFound.header = header;
+  containerNotFound.subHeader = subHeader ?? '設定を確認してください';
+
+  containerLoading.hidden = true;
+  containerPgTable.hidden = true;
+  containerNotFound.hidden = false;
 }

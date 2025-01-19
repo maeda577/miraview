@@ -46,8 +46,7 @@ export function loadConfigFromStorage(): MiraviewConfig {
     // テーマ文字列
     config.theme = localStorage.getItem(STORAGE_KEYS.THEME) as 'theme-classic-dark' | 'theme-classic-light' | undefined;
     return config;
-  }
-  catch (error) {
+  } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);
     }
@@ -61,22 +60,19 @@ export function saveConfigToStorage(config: MiraviewConfig) {
   // APIエンドポイントは指定されていれば入れ、なければ消す（config読む際にデフォルト値に戻る）
   if (config.apiEndpoint) {
     localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint);
-  }
-  else {
+  } else {
     localStorage.removeItem(STORAGE_KEYS.API_ENDPOINT);
   }
   // 並べ替えの無効化がされていれば文字を入れる。文字は何でもいい。なければ消す
   if (config.disableServiceSorting) {
     localStorage.setItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING, 'true');
-  }
-  else {
+  } else {
     localStorage.removeItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
   }
   // テーマの文字列
   if (config.theme) {
     localStorage.setItem(STORAGE_KEYS.THEME, config.theme);
-  }
-  else {
+  } else {
     localStorage.removeItem(STORAGE_KEYS.THEME);
   }
 }

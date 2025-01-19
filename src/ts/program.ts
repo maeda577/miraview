@@ -9,25 +9,18 @@
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from './types/mirakc.d.ts';
 import { loadConfigFromStorage } from './utils/configManager.js';
-import { initPgTable } from './utils/pgtable.js';
+import { initPgTable, showErrorMessage } from './utils/pgtable.js';
 import './utils/ix.js';
 
 // configを読んでから必要なAPIを叩く
 const config = loadConfigFromStorage();
 const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
-const response = await Promise.all([
-  client.GET("/programs"),
-  client.GET("/services"),
-]);
-// エラーがあればコンソールに出す
-let hasError = false;
-response.forEach(res => {
-  if (res.error !== undefined) {
-    console.error(res.error);
-    hasError = true;
-  }
-});
-
-if (!hasError) {
+try {
+  const response = await Promise.all([
+    client.GET("/programs"),
+    client.GET("/services"),
+  ]);
   initPgTable(response[0].data, response[1].data);
+} catch (error) {
+  showErrorMessage('mirakc APIへのアクセスに失敗しました');
 }

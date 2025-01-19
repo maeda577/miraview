@@ -42,22 +42,28 @@ document.querySelectorAll('ix-menu-item').forEach(item => {
 
 // configを読んでから必要なAPIを叩く
 const config = loadConfigFromStorage();
-const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
-const version = await client.GET("/version");
 
 // 画面テーマの切り替え
 if (config.theme) {
   themeSwitcher.setTheme(config.theme);
-}
-else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
   themeSwitcher.setTheme('theme-classic-dark');
-}
-else {
+} else {
   themeSwitcher.setTheme('theme-classic-light');
 }
 
-// バージョン情報
-(document.getElementById('mirakc-version') as HTMLIxKeyValueElement).value = version.data?.current ?? 'バージョン情報の取得に失敗しました';
+// mirakcバージョン情報取得
+let mirakcVersion = '';
+const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
+try {
+  const version = await client.GET("/version");
+  mirakcVersion = version.data!.current;
+} catch {
+  mirakcVersion = 'バージョン情報の取得に失敗しました';
+}
+
+// バージョン情報を表示
+(document.getElementById('mirakc-version') as HTMLIxKeyValueElement).value = mirakcVersion;
 (document.getElementById('miraview-version') as HTMLIxKeyValueElement).value = miraviewVersion;
 
 // 依存ライセンスの情報を出す

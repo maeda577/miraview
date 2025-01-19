@@ -6,33 +6,18 @@
     "@siemens/ix-icons": "^2.2.0"
   },
   "devDependencies": {
-    "@carbon/icon-helpers": "^10.54.0",
-    "@carbon/icons": "^11.53.0",
-    "@carbon/web-components": "^2.19.0",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@siemens/ix": "^2.6.1",
-    "@siemens/ix-icons": "^2.2.0",
     "license-checker": "^25.0.1",
     "openapi-typescript": "^7.4.4",
-    "rollup": "^4.24.0",
-    "sass": "^1.83.0",
     "serve": "^14.2.4",
     "typescript": "^5.6.3"
   },
   "scripts": {
     "clean.js": "find ./src/js/ -type f -name '*.js' -delete",
-    "setup-ix": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --inlineDynamicImports --file public/ix/ix.js --input src/ix.js",
-    "setup-ix-css": "cp node_modules/@siemens/ix/dist/siemens-ix/siemens-ix.css public/ix/",
-    "setup.fetch": "npm --prefix ./public install --no-save --include prod .",
-    "setup.carbon": "npx rollup --plugin @rollup/plugin-node-resolve --format esm --file public/carbon/carbon.js --input src/carbon.js",
-    "setup.carbon-css": "npx sass --load-path=node_modules src/carbon.scss public/carbon/carbon.css",
-    "build": "npx rollup --config rollup.config.mjs",
     "download": "mkdir -p ./src/modules/@siemens && npm run download.ix && npm run download.ix-icons && npm run download.openapi-fetch",
     "download.ix": "curl --silent https://registry.npmjs.org/@siemens/ix/-/ix-2.6.1.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix",
     "download.ix-icons": "curl --silent https://registry.npmjs.org/@siemens/ix-icons/-/ix-icons-2.2.0.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix-icons",
     "download.openapi-fetch": "curl --silent https://registry.npmjs.org/openapi-fetch/-/openapi-fetch-0.13.4.tgz | tar --extract --gzip --verbose --directory ./src/modules/ && mv ./src/modules/package ./src/modules/openapi-fetch",
-    "check-license": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":'  > src/json/license.json",
+    "update-license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":'  > src/json/license.json",
     "serve": "npx serve --no-clipboard ./",
     "watch": "npx tsc --watch"
   }
