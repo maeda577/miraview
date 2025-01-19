@@ -145,35 +145,9 @@ LICENSE file in the root directory of this source tree.
           <span class="modal-time"></span>
           <ix-pill class="modal-pay-tv" hidden style="margin-left: 1rem;">有料放送</ix-pill>
           <div class="modal-description" style="margin-top: 1rem; margin-bottom: 1rem;"></div>
-          <table>
-            <tbody>
-              <tr>
-                <td>Video</td>
-                <td style="padding-right: 1rem;">:</td>
-                <td class="modal-video"></td>
-              </tr>
-              <tr>
-                <td>Audio</td>
-                <td style="padding-right: 1rem;">:</td>
-                <td class="modal-audio"></td>
-              </tr>
-              <tr>
-                <td>Genre</td>
-                <td style="padding-right: 1rem;">:</td>
-                <td class="modal-genre"></td>
-              </tr>
-              <tr>
-                <td>Program ID</td>
-                <td style="padding-right: 1rem;">:</td>
-                <td class="modal-program-id"></td>
-              </tr>
-              <tr>
-                <td>Service ID</td>
-                <td style="padding-right: 1rem;">:</td>
-                <td class="modal-service-id"></td>
-              </tr>
-            </tbody>
-          </table>
+          <ix-blind variant="outline" label="詳細情報" collapsed>
+            <ix-key-value-list class="modal-kv-list"></ix-key-value-list>
+          </ix-blind>
         </ix-modal-content>
         <ix-modal-footer>
           <ix-button class="modal-button-close" outline>閉じる</ix-button>

@@ -8,8 +8,8 @@
  */
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from './types/mirakc.d.ts';
-import { loadConfigFromStorage } from './utils/configManager.js';
-import { createIxKeyValue } from './utils/ix.js';
+import { loadConfigFromStorage, createIxKeyValue } from './utils/common.js';
+import './utils/ix.js';
 
 // configを読んでから必要なAPIを叩く
 const config = loadConfigFromStorage();

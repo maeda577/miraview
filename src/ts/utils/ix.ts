@@ -2,7 +2,7 @@ import { defineCustomElements } from '@siemens/ix/loader/index.js';
 import { defineCustomElements as defineIxIconCustomElement } from '@siemens/ix-icons/loader/index.js';
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from '../types/mirakc.d.ts';
-import { loadConfigFromStorage } from './configManager.js';
+import { loadConfigFromStorage } from './common.js';
 import { themeSwitcher } from '@siemens/ix';
 
 import license from '../../json/license.json' with { type: "json" };
@@ -13,14 +13,6 @@ const miraviewVersion = '3.2.0';
 // WebComponentsの定義
 defineIxIconCustomElement();
 defineCustomElements();
-
-/** ix-key-value の要素を作る */
-export function createIxKeyValue(label: string, value: string) {
-  const itemCommand = document.createElement('ix-key-value');
-  itemCommand.label = label;
-  itemCommand.value = value;
-  return itemCommand;
-}
 
 // breakpointを切る(smになると左メニューが消えるので避ける)
 document.querySelector('ix-basic-navigation')!.breakpoints = ['md'];

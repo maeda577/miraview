@@ -8,7 +8,7 @@
  */
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from './types/mirakc.d.ts';
-import { loadConfigFromStorage } from './utils/configManager.js';
+import { loadConfigFromStorage } from './utils/common.js';
 import { initPgTable, showErrorMessage } from './utils/pgtable.js';
 import './utils/ix.js';
 

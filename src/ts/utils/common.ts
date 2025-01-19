@@ -32,7 +32,7 @@ export class MiraviewConfig {
   }
 }
 
-// configをlocal storageから読み取る local storageの利用はいろいろリスクがあるらしいが、さほど重要な情報でもないので使う
+/** configをローカルストレージからよみこむ */
 export function loadConfigFromStorage(): MiraviewConfig {
   const config = new MiraviewConfig();
   try {
@@ -55,7 +55,7 @@ export function loadConfigFromStorage(): MiraviewConfig {
   }
 }
 
-// configを保存する
+/** configをローカルストレージに書き込む */
 export function saveConfigToStorage(config: MiraviewConfig) {
   // APIエンドポイントは指定されていれば入れ、なければ消す（config読む際にデフォルト値に戻る）
   if (config.apiEndpoint) {
@@ -75,4 +75,12 @@ export function saveConfigToStorage(config: MiraviewConfig) {
   } else {
     localStorage.removeItem(STORAGE_KEYS.THEME);
   }
+}
+
+/** ix-key-value の要素を作る */
+export function createIxKeyValue(label: string, value: string) {
+  const itemCommand = document.createElement('ix-key-value');
+  itemCommand.label = label;
+  itemCommand.value = value;
+  return itemCommand;
 }

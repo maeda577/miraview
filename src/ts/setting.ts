@@ -1,4 +1,4 @@
-import { loadConfigFromStorage, saveConfigToStorage, MiraviewConfig } from './utils/configManager.js';
+import { loadConfigFromStorage, saveConfigToStorage, MiraviewConfig } from './utils/common.js';
 import './utils/ix.js';
 // declare globalで定義されているtypeを読みたいだけなので変なimportになっている
 import type { } from '@siemens/ix/dist/types/components.d.ts';

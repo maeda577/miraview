@@ -1,4 +1,4 @@
-import { loadConfigFromStorage } from './configManager.js';
+import { loadConfigFromStorage, createIxKeyValue } from './common.js';
 import { type ModalConfig, showModal, closeModal } from '@siemens/ix';
 import { audio_component_types, genre_large, genre_middle } from './const.js';
 import type { components } from '../types/mirakc.d.ts';
@@ -211,12 +211,13 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
 
   // タイトル
   (modal.querySelector('.modal-title') as HTMLElement).innerText = program.name!;
-
-  // 詳細などはdivの中にpタグを足していく
-  const descriptionDiv = modal.querySelector('.modal-description') as HTMLElement;
-
   // 放送時間
   (modal.querySelector('.modal-time') as HTMLElement).innerText = programDatetimeFormat.format(program.startAt) + ' - ' + programTimeFormat.format(program.startAt + program.duration);
+  // 有料放送アイコン
+  (modal.querySelector('.modal-pay-tv') as HTMLElement).hidden = program.isFree;
+
+  // 詳細とextendedはdivの中にpタグを足していく
+  const descriptionDiv = modal.querySelector('.modal-description') as HTMLElement;
 
   // 詳細情報
   if (program.description) {
@@ -234,13 +235,24 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
     });
   }
 
-  // テーブル形式で各種プロパティを出す
-  (modal.querySelector('.modal-pay-tv') as HTMLElement).hidden = program.isFree;
-  (modal.querySelector('.modal-video') as HTMLElement).innerText = program.video?.type + ' ' + program.video?.resolution;
-  (modal.querySelector('.modal-audio') as HTMLElement).innerText = program.audios?.map(audio => `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`).join('\n') ?? '';
-  (modal.querySelector('.modal-genre') as HTMLElement).innerText = program.genres?.map(genre => `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`).join('\n') ?? '';
-  (modal.querySelector('.modal-program-id') as HTMLElement).innerText = program.id.toString();
-  (modal.querySelector('.modal-service-id') as HTMLElement).innerText = program.serviceId.toString();
+  // 各種プロパティを出す
+  const kvList = modal.querySelector('.modal-kv-list') as HTMLIxKeyValueListElement;
+  kvList.appendChild(createIxKeyValue('Video', program.video?.type + ' ' + program.video?.resolution));
+
+  const audioLength = program.audios?.length ?? 0;
+  program.audios?.map((audio, idx) => {
+    const key = audioLength === 1 ? 'Audio' : `Audio [${idx + 1}]`;
+    const str = `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`;
+    kvList.appendChild(createIxKeyValue(key, str));
+  });
+  const genreLength = program.genres?.length ?? 0;
+  program.genres?.map((genre, idx) => {
+    const key = genreLength === 1 ? 'Genre' : `Genre [${idx + 1}]`;
+    const str = `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`;
+    kvList.appendChild(createIxKeyValue(key, str));
+  });
+  kvList.appendChild(createIxKeyValue('Program ID', program.id.toString()));
+  kvList.appendChild(createIxKeyValue('Service ID', program.serviceId.toString()));
 
   // ボタン操作
   modal.querySelector('.modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));
