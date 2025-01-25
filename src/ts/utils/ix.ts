@@ -28,7 +28,7 @@ const urlmap = new Map<string, string>([
 await window.customElements.whenDefined('ix-menu-item');
 document.querySelectorAll('ix-menu-item').forEach(item => {
   if (!item.active && urlmap.has(item.textContent!)) {
-    item.addEventListener('click', () => window.location.href = `./${urlmap.get(item.textContent!)}`);
+    item.addEventListener('click', e => window.location.href = `./${urlmap.get(item.textContent!)}`);
   }
 });
 
@@ -61,14 +61,12 @@ try {
 // 依存ライセンスの情報を出す
 const licenseContainer = document.getElementById('menu-license');
 Object.entries(license).forEach(item => {
-  const nameLink = document.createElement('ix-link-button');
-  nameLink.innerText = item[0];
-  nameLink.url = item[1].repository;
-  nameLink.target = '_blank';
-  licenseContainer?.appendChild(nameLink);
-  const licenseTextP = document.createElement('p');
-  licenseTextP.innerText = item[1].licenseText;
-  licenseTextP.classList.add('typography-code');
-  licenseTextP.style.backgroundColor = 'var(--theme-color-1)';
-  licenseContainer?.appendChild(licenseTextP);
+  licenseContainer?.insertAdjacentHTML('beforeend', `
+    <ix-link-button target="_blank" url="${item[1].repository}">
+      ${item[0]}
+    </ix-link-button>
+    <p class="typography-code" style="background-color: var(--theme-color-1);">
+      ${item[1].licenseText.replaceAll('\n', '<br />')}
+    </p>`
+  );
 });

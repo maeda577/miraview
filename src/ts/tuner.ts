@@ -8,7 +8,7 @@
  */
 import createClient from 'openapi-fetch/dist/index.js';
 import type { paths } from './types/mirakc.d.ts';
-import { loadConfigFromStorage, createIxKeyValue } from './utils/common.js';
+import { loadConfigFromStorage } from './utils/common.js';
 import './utils/ix.js';
 
 // configを読んでから必要なAPIを叩く
@@ -47,14 +47,14 @@ async function refreshTuners() {
 
     const listStatus = card.querySelector('ix-key-value-list');
     if (tuner.command) {
-      listStatus?.appendChild(createIxKeyValue('Command', tuner.command));
+      listStatus?.insertAdjacentHTML('beforeend', `<ix-key-value label="Command" value="${tuner.command}"></ix-key-value>`);
     }
     // チューナーを利用している接続元の情報
     tuner.users.forEach(user => {
-      listStatus?.appendChild(createIxKeyValue('User ID', user.id));
-      listStatus?.appendChild(createIxKeyValue('Priority', user.priority.toString()));
+      listStatus?.insertAdjacentHTML('beforeend', `<ix-key-value label="User ID" value="${user.id}"></ix-key-value>`);
+      listStatus?.insertAdjacentHTML('beforeend', `<ix-key-value label="Priority" value="${user.priority}"></ix-key-value>`);
       if (user.agent) {
-        listStatus?.appendChild(createIxKeyValue('User Agent', user.agent));
+        listStatus?.insertAdjacentHTML('beforeend', `<ix-key-value label="User Agent" value="${user.agent}"></ix-key-value>`);
       }
     });
 

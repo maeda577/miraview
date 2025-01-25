@@ -1,4 +1,4 @@
-import { loadConfigFromStorage, createIxKeyValue } from './common.js';
+import { loadConfigFromStorage } from './common.js';
 import { type ModalConfig, showModal, closeModal } from '@siemens/ix';
 import { audio_component_types, genre_large, genre_middle } from './const.js';
 import type { components } from '../types/mirakc.d.ts';
@@ -237,22 +237,22 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
 
   // 各種プロパティを出す
   const kvList = modal.querySelector('.modal-kv-list') as HTMLIxKeyValueListElement;
-  kvList.appendChild(createIxKeyValue('Video', program.video?.type + ' ' + program.video?.resolution));
+  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Video" value="${program.video?.type + ' ' + program.video?.resolution}"></ix-key-value>`);
 
   const audioLength = program.audios?.length ?? 0;
   program.audios?.map((audio, idx) => {
     const key = audioLength === 1 ? 'Audio' : `Audio [${idx + 1}]`;
     const str = `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`;
-    kvList.appendChild(createIxKeyValue(key, str));
+    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="${key}" value="${str}"></ix-key-value>`);
   });
   const genreLength = program.genres?.length ?? 0;
   program.genres?.map((genre, idx) => {
     const key = genreLength === 1 ? 'Genre' : `Genre [${idx + 1}]`;
     const str = `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`;
-    kvList.appendChild(createIxKeyValue(key, str));
+    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="${key}" value="${str}"></ix-key-value>`);
   });
-  kvList.appendChild(createIxKeyValue('Program ID', program.id.toString()));
-  kvList.appendChild(createIxKeyValue('Service ID', program.serviceId.toString()));
+  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Program ID" value="${program.id}"></ix-key-value>`);
+  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Service ID" value="${program.serviceId}"></ix-key-value>`);
 
   // ボタン操作
   modal.querySelector('.modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));

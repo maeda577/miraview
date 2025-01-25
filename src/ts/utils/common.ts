@@ -76,11 +76,3 @@ export function saveConfigToStorage(config: MiraviewConfig) {
     localStorage.removeItem(STORAGE_KEYS.THEME);
   }
 }
-
-/** ix-key-value の要素を作る */
-export function createIxKeyValue(label: string, value: string) {
-  const itemCommand = document.createElement('ix-key-value');
-  itemCommand.label = label;
-  itemCommand.value = value;
-  return itemCommand;
-}
