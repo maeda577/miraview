@@ -299,10 +299,10 @@ export interface paths {
          *     When deleting recording schedules by a tag, recording schedules that meet
          *     any of the following conditions won't be deleted:
          *
-         *     * Recording schedules without the specified tag
-         *     * Recording schedules in the `tracking` or `recording` state
-         *     * Recording schedules in the `scheduled` state and will start recording
-         *     soon
+         *       * Recording schedules without the specified tag
+         *       * Recording schedules in the `tracking` or `recording` state
+         *       * Recording schedules in the `scheduled` state and will start recording
+         *         soon
          */
         delete: operations["deleteRecordingSchedules"];
         options?: never;
@@ -510,14 +510,14 @@ export interface components {
         };
         /** Program */
         MirakurunProgram: {
-            audio?: {
+            audio?: null | {
                 /** Format: int32 */
                 componentType: number;
                 isMain: boolean;
                 langs: string[];
                 /** Format: int32 */
                 samplingRate: number;
-            } | null;
+            };
             audios?: {
                 /** Format: int32 */
                 componentType: number;
@@ -557,7 +557,7 @@ export interface components {
                 serviceId: number;
                 type: string;
             }[];
-            series?: {
+            series?: null | {
                 /** Format: int32 */
                 episode: number;
                 /** Format: int64 */
@@ -571,19 +571,19 @@ export interface components {
                 pattern: number;
                 /** Format: int32 */
                 repeat: number;
-            } | null;
+            };
             /** Format: int32 */
             serviceId: number;
             /** Format: int64 */
             startAt: number;
-            video?: {
+            video?: null | {
                 /** Format: int32 */
                 componentType: number;
                 resolution?: string | null;
                 /** Format: int32 */
                 streamContent: number;
                 type?: string | null;
-            } | null;
+            };
         };
         /** Service */
         MirakurunService: {
@@ -708,8 +708,8 @@ export interface components {
          *     sections.
          */
         WebOnairProgram: {
-            current?: components["schemas"]["MirakurunProgram"] | null;
-            next?: components["schemas"]["MirakurunProgram"] | null;
+            current?: null | components["schemas"]["MirakurunProgram"];
+            next?: null | components["schemas"]["MirakurunProgram"];
             /**
              * Format: int64
              * @description Mirakurun service ID.
@@ -754,9 +754,12 @@ export interface components {
          * @description A recording schedule model.
          */
         WebRecordingSchedule: {
-            failedReason?: Omit<components["schemas"]["RecordingFailedReason"], "type"> | null;
+            failedReason?: null | components["schemas"]["RecordingFailedReason"];
+            /** @description Recording options. */
             options: components["schemas"]["RecordingOptions"];
+            /** @description Metadata of the target TV program. */
             program: components["schemas"]["MirakurunProgram"];
+            /** @description The current state of the recording schedule. */
             state: components["schemas"]["RecordingScheduleState"];
             /** @description A list of tags. */
             tags: string[];
@@ -766,6 +769,7 @@ export interface components {
          * @description Input data used when creating a recording schedule.
          */
         WebRecordingScheduleInput: {
+            /** @description Recording options. */
             options: components["schemas"]["RecordingOptions"];
             /**
              * Format: int64
@@ -790,6 +794,7 @@ export interface components {
              * @description A timeshift record ID.
              */
             id: number;
+            /** @description Metadata of the TV program. */
             program: components["schemas"]["MirakurunProgram"];
             /** @description `true` while recording, `false` otherwise. */
             recording: boolean;
@@ -844,6 +849,7 @@ export interface components {
              *     Users can still access the records even if this property returns
              *     `false`. */
             recording: boolean;
+            /** @description Metadata of the service to be recorded. */
             service: components["schemas"]["MirakurunService"];
             /**
              * Format: int64
@@ -1677,7 +1683,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Tag name */
-                tag?: string | null;
+                tag?: string;
             };
             header?: never;
             path?: never;
@@ -1861,7 +1867,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "image/png": unknown;
+                };
             };
             /** @description Not Found */
             404: {

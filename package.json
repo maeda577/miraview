@@ -12,12 +12,13 @@
     "typescript": "^5.6.3"
   },
   "scripts": {
-    "clean.js": "find ./src/js/ -type f -name '*.js' -delete",
+    "clean-js": "find ./src/js/ -type f -name '*.js' -delete",
     "download": "mkdir -p ./src/modules/@siemens && npm run download.ix && npm run download.ix-icons && npm run download.openapi-fetch",
     "download.ix": "curl --silent https://registry.npmjs.org/@siemens/ix/-/ix-2.6.1.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix",
     "download.ix-icons": "curl --silent https://registry.npmjs.org/@siemens/ix-icons/-/ix-icons-2.2.0.tgz | tar --extract --gzip --verbose --directory ./src/modules/@siemens/ && mv ./src/modules/@siemens/package ./src/modules/@siemens/ix-icons",
     "download.openapi-fetch": "curl --silent https://registry.npmjs.org/openapi-fetch/-/openapi-fetch-0.13.4.tgz | tar --extract --gzip --verbose --directory ./src/modules/ && mv ./src/modules/package ./src/modules/openapi-fetch",
     "update-license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":'  > src/json/license.json",
+    "update-mirakc.d.ts": "npx openapi-typescript http://127.0.0.1:40772/api/docs --output ./src/ts/types/mirakc.d.ts",
     "serve": "npx serve --no-clipboard ./",
     "watch": "npx tsc --watch"
   }
