@@ -221,17 +221,13 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
 
   // 詳細情報
   if (program.description) {
-    const descP = document.createElement('p');
-    descP.innerText = program.description;
-    descriptionDiv.appendChild(descP);
+    descriptionDiv.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
   }
 
   // extendedはプロパティが特殊
   if (program.extended) {
     Object.entries(program.extended).map(ext => {
-      const p = document.createElement('p');
-      p.innerText = ext.join(' : ');
-      descriptionDiv.appendChild(p);
+      descriptionDiv.insertAdjacentHTML('beforeend', `<p>${ext.join(' : ')}</p>`);
     });
   }
 
@@ -251,8 +247,10 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
     const str = `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`;
     kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="${key}" value="${str}"></ix-key-value>`);
   });
-  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Program ID" value="${program.id}"></ix-key-value>`);
-  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Service ID" value="${program.serviceId}"></ix-key-value>`);
+  kvList.insertAdjacentHTML('beforeend', `
+    <ix-key-value label="Program ID" value="${program.id}"></ix-key-value>
+    <ix-key-value label="Service ID" value="${program.serviceId}"></ix-key-value>`
+  );
 
   // ボタン操作
   modal.querySelector('.modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));
