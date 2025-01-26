@@ -19,9 +19,7 @@ LICENSE file in the root directory of this source tree.
         }
       }
     </script>
-    <script type="module" src="../js/program.js"></script>
     <link rel="stylesheet" href="../modules/@siemens/ix/dist/siemens-ix/siemens-ix.css" />
-    <link rel="stylesheet" href="../css/pgtable.css" />
     <link rel="icon" href="../icon/favicon.svg" sizes="any" type="image/svg+xml" />
     <style type="text/css">
       ix-basic-navigation:not(:defined),
@@ -29,33 +27,14 @@ LICENSE file in the root directory of this source tree.
         display: none;
       }
     </style>
+    <link rel="stylesheet" href="../css/pgtable.css" />
+    <script type="module" src="../js/program.js"></script>
     <title>番組表 | miraview</title>
   </head>
 
   <body class="theme-classic-dark">
+    <!-- 左メニューはJS側で入れる -->
     <ix-basic-navigation hide-header>
-      <!-- 左メニュー 各画面で共通 -->
-      <ix-menu i-1-8n-legal="バージョン情報">
-        <ix-menu-item icon="table" active>番組表</ix-menu-item>
-        <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
-        <ix-menu-item icon="search">番組検索</ix-menu-item>
-        <ix-menu-item icon="history">タイムシフト</ix-menu-item>
-        <ix-menu-item icon="scheduler">録画予約</ix-menu-item>
-        <ix-menu-item icon="video-file">録画一覧</ix-menu-item>
-        <ix-menu-item icon="radio-waves">チューナー</ix-menu-item>
-        <ix-menu-item icon="cogwheel">設定</ix-menu-item>
-        <ix-menu-about label="バージョン情報">
-          <ix-menu-about-item label="バージョン">
-            <ix-key-value-list>
-              <ix-key-value id="mirakc-version" label="mirakc"></ix-key-value>
-              <ix-key-value id="miraview-version" label="miraview"></ix-key-value>
-            </ix-key-value-list>
-          </ix-menu-about-item>
-          <ix-menu-about-item id="menu-license" label="ライセンス"
-            style="height: 80vh; overflow-x: scroll;">
-          </ix-menu-about-item>
-        </ix-menu-about>
-      </ix-menu>
       <!-- コンテンツ領域 -->
       <ix-content>
         <!-- ヘッダ -->

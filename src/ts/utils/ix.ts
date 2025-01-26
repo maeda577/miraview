@@ -8,32 +8,75 @@ import { themeSwitcher } from '@siemens/ix';
 import license from '../../json/license.json' with { type: "json" };
 
 // バージョン番号
-const miraviewVersion = '3.2.0';
+const miraviewVersion = '3.4.0';
+
+// 設定
+const config = loadConfigFromStorage();
 
 // WebComponentsの定義
 defineIxIconCustomElement();
 defineCustomElements();
 
-// breakpointを切る(smになると左メニューが消えるので避ける)
-document.querySelector('ix-basic-navigation')!.breakpoints = ['md'];
-
-// 左メニューの画面表示とHTMLファイル名のマップ
-const urlmap = new Map<string, string>([
-  ['番組表', 'program.html'],
-  ['チューナー', 'tuner.html'],
-  ['設定', 'setting.html'],
-]);
-
-// 左メニューにclickイベントを割り当てる
-await window.customElements.whenDefined('ix-menu-item');
-document.querySelectorAll('ix-menu-item').forEach(item => {
-  if (!item.active && urlmap.has(item.textContent!)) {
-    item.addEventListener('click', e => window.location.href = `./${urlmap.get(item.textContent!)}`);
+// mirakcバージョン情報取得
+async function getMirakcVersionString() {
+  const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
+  try {
+    const version = await client.GET("/version");
+    return version.data!.current;
+  } catch {
+    return 'バージョン情報の取得に失敗しました';
   }
-});
+}
 
-// configを読んでから必要なAPIを叩く
-const config = loadConfigFromStorage();
+// breakpointを切る(smになると左メニューが消えるので避ける)
+const navigation = document.querySelector('ix-basic-navigation');
+navigation!.breakpoints = ['md'];
+navigation!.insertAdjacentHTML('afterbegin', `
+  <ix-menu i-1-8n-legal="バージョン情報">
+    <ix-menu-item icon="table" data-html="program.html">番組表</ix-menu-item>
+    <ix-menu-item icon="circle-play">ライブ視聴</ix-menu-item>
+    <ix-menu-item icon="search">番組検索</ix-menu-item>
+    <ix-menu-item icon="history">タイムシフト</ix-menu-item>
+    <ix-menu-item icon="scheduler">録画予約</ix-menu-item>
+    <ix-menu-item icon="video-file">録画一覧</ix-menu-item>
+    <ix-menu-item icon="radio-waves" data-html="tuner.html">チューナー</ix-menu-item>
+    <ix-menu-item icon="cogwheel" data-html="setting.html">設定</ix-menu-item>
+    <ix-menu-about label="バージョン情報">
+      <ix-menu-about-item label="バージョン">
+        <ix-key-value-list>
+          <ix-key-value label="mirakc" value="${await getMirakcVersionString()}"></ix-key-value>
+          <ix-key-value label="miraview" value="${miraviewVersion}"></ix-key-value>
+        </ix-key-value-list>
+      </ix-menu-about-item>
+      <ix-menu-about-item id="menu-license" label="ライセンス" style="height: 80vh; overflow-x: scroll;">
+        ${Object.entries(license).map(item => `
+          <ix-link-button target="_blank" url="${item[1].repository}">
+            ${item[0]}
+          </ix-link-button>
+          <p class="typography-code" style="background-color: var(--theme-color-1);">
+            ${item[1].licenseText.replaceAll('\n', '<br />')}
+          </p>
+        `).join('')}
+      </ix-menu-about-item>
+    </ix-menu-about>
+  </ix-menu>`
+);
+
+// メニュークリック時のイベント
+function onMenuClick(e: Event) {
+  const item = e.currentTarget as HTMLIxMenuItemElement | undefined;
+  if (item && !item.active && item.dataset.html) {
+    window.location.href = `./${item.dataset.html}`;
+  }
+}
+
+// メニューへのクリックイベント割り当てとactive状態切り替えを行う
+const currentHtml = window.location.pathname.split('/').pop();
+await window.customElements.whenDefined('ix-menu-item');
+navigation?.querySelectorAll('ix-menu-item')?.forEach(item => {
+  item.addEventListener('click', onMenuClick);
+  item.active = item.dataset.html === currentHtml;
+});
 
 // 画面テーマの切り替え
 if (config.theme) {
@@ -43,30 +86,3 @@ if (config.theme) {
 } else {
   themeSwitcher.setTheme('theme-classic-light');
 }
-
-// mirakcバージョン情報取得
-let mirakcVersion = '';
-const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
-try {
-  const version = await client.GET("/version");
-  mirakcVersion = version.data!.current;
-} catch {
-  mirakcVersion = 'バージョン情報の取得に失敗しました';
-}
-
-// バージョン情報を表示
-(document.getElementById('mirakc-version') as HTMLIxKeyValueElement).value = mirakcVersion;
-(document.getElementById('miraview-version') as HTMLIxKeyValueElement).value = miraviewVersion;
-
-// 依存ライセンスの情報を出す
-const licenseContainer = document.getElementById('menu-license');
-Object.entries(license).forEach(item => {
-  licenseContainer?.insertAdjacentHTML('beforeend', `
-    <ix-link-button target="_blank" url="${item[1].repository}">
-      ${item[0]}
-    </ix-link-button>
-    <p class="typography-code" style="background-color: var(--theme-color-1);">
-      ${item[1].licenseText.replaceAll('\n', '<br />')}
-    </p>`
-  );
-});
