@@ -32,16 +32,18 @@ LICENSE file in the root directory of this source tree.
   </head>
 
   <body>
-    <!-- 左メニューはJS側で入れる -->
-    <ix-basic-navigation hide-header>
+    <ix-application>
+      <!-- ここに左メニューが入る -->
+      <!-- ヘッダ -->
+      <ix-application-header name="チューナー"></ix-application-header>
       <!-- コンテンツ領域 -->
       <ix-content>
-        <ix-content-header slot="header" header-title="チューナー"></ix-content-header>
         <ix-card-list id="card-list" suppress-overflow-handling>
-          <ix-action-card id="card-refresh" icon="refresh" heading="一覧を再読み込み"></ix-action-card>
+          <ix-action-card id="card-refresh" icon="refresh" heading="最新の情報に更新"></ix-action-card>
+          <!-- ここにチューナーが入る -->
         </ix-card-list>
       </ix-content>
-    </ix-basic-navigation>
+    </ix-application>
   </body>
 
 </html>

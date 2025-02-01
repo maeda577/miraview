@@ -32,12 +32,12 @@ LICENSE file in the root directory of this source tree.
   </head>
 
   <body>
-    <!-- 左メニューはJS側で入れる -->
-    <ix-basic-navigation hide-header>
+    <ix-application>
+      <!-- ここに左メニューが入る -->
+      <!-- ヘッダ -->
+      <ix-application-header name="設定"></ix-application-header>
       <!-- コンテンツ領域 -->
       <ix-content>
-        <!-- ヘッダ -->
-        <ix-content-header slot="header" header-title="設定"></ix-content-header>
         <ix-layout-auto style="max-width: 500px;">
           <span class="typography-h4">一般</span>
           <ix-select id="select-theme" label="画面テーマ" hide-list-header>
@@ -64,9 +64,8 @@ LICENSE file in the root directory of this source tree.
           </ix-tooltip>
           <ix-button id="button-save">保存</ix-button>
         </ix-layout-auto>
-
       </ix-content>
-    </ix-basic-navigation>
+    </ix-application>
   </body>
 
 </html>

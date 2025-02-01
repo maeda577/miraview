@@ -28,9 +28,11 @@ async function getMirakcVersionString() {
   }
 }
 
-// breakpointを切る(smになると左メニューが消えるので避ける)
-const navigation = document.querySelector('ix-basic-navigation');
-navigation!.breakpoints = ['md'];
+// breakpointを切る
+// md,lgだと番組表の横幅が崩れるのでsm固定にしている 直れば可変にする
+const navigation = document.querySelector('ix-application');
+navigation!.breakpoints = ['sm'];
+// メニューを作る
 navigation!.insertAdjacentHTML('afterbegin', `
   <ix-menu i-1-8n-legal="バージョン情報">
     <ix-menu-item icon="table" data-html="program.html">番組表</ix-menu-item>
