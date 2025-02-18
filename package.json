@@ -14,9 +14,9 @@
   "scripts": {
     "clean-js": "find ./src/js/ -type f -name '*.js' -delete",
     "cp-modules": "mkdir -p ./src/modules && cp --recursive node_modules/@siemens node_modules/openapi-fetch src/modules/",
-    "update_license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":'  > src/json/license.json",
+    "update_license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":' > src/json/license.json",
     "update_mirakc.d.ts": "npx openapi-typescript http://127.0.0.1:40772/api/docs --output ./src/ts/types/mirakc.d.ts",
-    "serve": "npx serve --no-clipboard ./",
+    "serve": "node ./serve.mjs",
     "watch": "npx tsc --watch"
   }
 }

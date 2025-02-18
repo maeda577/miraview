@@ -12,9 +12,10 @@ import { loadConfigFromStorage } from './utils/common.js';
 import { initPgTable, showErrorMessage } from './utils/pgtable.js';
 import './utils/ix.js';
 
-// configを読んでから必要なAPIを叩く
-const config = loadConfigFromStorage();
-const client = createClient<paths>({ baseUrl: config.getApiEndpoint() });
+const content = document.querySelector('ix-content');
+
+// APIを叩く
+const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint() });
 try {
   const response = await Promise.all([
     client.GET("/programs"),
@@ -22,5 +23,12 @@ try {
   ]);
   initPgTable(response[0].data, response[1].data);
 } catch (error) {
-  showErrorMessage('mirakc APIへのアクセスに失敗しました');
+  content?.replaceChildren();
+  content?.insertAdjacentHTML('afterbegin', `
+    <ix-empty-state class="flex-center"
+      icon="alarm"
+      header="mirakc APIへのアクセスに失敗しました"
+      sub-header="APIエンドポイントの指定を確認してください。また、CORSが無効化されているか確認してください">
+    </ix-empty-state>`
+  );
 }

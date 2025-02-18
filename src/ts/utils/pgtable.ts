@@ -1,7 +1,8 @@
 import { loadConfigFromStorage } from './common.js';
 import { type ModalConfig, showModal, closeModal } from '@siemens/ix';
 import { audio_component_types, genre_large, genre_middle } from './const.js';
-import type { components } from '../types/mirakc.d.ts';
+import createClient from 'openapi-fetch/dist/index.js';
+import type { components, paths } from '../types/mirakc.d.ts';
 // declare globalで定義されているtypeを読みたいだけなので変なimportになっている
 import type { } from '@siemens/ix/dist/types/components.d.ts';
 
@@ -254,7 +255,7 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
 
   // ボタン操作
   modal.querySelector('.modal-button-close')?.addEventListener('click', () => closeModal(modal, undefined));
-  modal.querySelector('.modal-button-rec')?.addEventListener('click', () => closeModal(modal, undefined));
+  modal.querySelector('.modal-button-rec')?.addEventListener('click', () => record(program.id));
 
   // ダイアログ表示
   const modalConfig: ModalConfig = {
@@ -331,4 +332,22 @@ export async function showErrorMessage(header: string, subHeader?: string) {
   containerLoading.hidden = true;
   containerPgTable.hidden = true;
   containerNotFound.hidden = false;
+}
+
+async function record(programId: number) {
+  const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint() });
+  try {
+    const response = await client.POST("/recording/schedules", {
+      body: {
+        programId: programId,
+        options: {
+          contentPath: `${programId}.m2ts`
+        },
+        tags: ['miraview', 'manual']
+      }
+    });
+    window.alert('録画しました:' + programId);
+  } catch (error) {
+
+  }
 }

@@ -5,8 +5,6 @@ import type { paths } from '../types/mirakc.d.ts';
 import { loadConfigFromStorage } from './common.js';
 import { themeSwitcher } from '@siemens/ix';
 
-import license from '../../json/license.json' with { type: "json" };
-
 // バージョン番号
 const miraviewVersion = '3.4.0';
 
@@ -27,6 +25,9 @@ async function getMirakcVersionString() {
     return 'バージョン情報の取得に失敗しました';
   }
 }
+
+// 依存ライブラリのライセンス情報が入っているjson
+const license = await fetch('../json/license.json').then(res => res.json());
 
 // breakpointを切る
 // md,lgだと番組表の横幅が崩れるのでsm固定にしている 直れば可変にする
@@ -51,7 +52,7 @@ navigation!.insertAdjacentHTML('afterbegin', `
         </ix-key-value-list>
       </ix-menu-about-item>
       <ix-menu-about-item id="menu-license" label="ライセンス" style="height: 80vh; overflow-x: scroll;">
-        ${Object.entries(license).map(item => `
+        ${Object.entries<{ repository: string; licenseText: string; }>(license).map(item => `
           <ix-link-button target="_blank" url="${item[1].repository}">
             ${item[0]}
           </ix-link-button>
