@@ -1,28 +1,15 @@
 {
     "name": "miraview",
     "image": "docker.io/library/node:22-bookworm",
-    "postCreateCommand": "apt update && apt install --yes git && npm install",
+    "postCreateCommand": "npm install && npm run cp-modules",
+    "forwardPorts": [3000],
 
     // https://containers.dev/supporting
     "customizations": {
         "vscode": {
-            "settings": {},
             "extensions": [
-                "ms-vscode.live-server",
-                "dbaeumer.vscode-eslint",
                 "editorconfig.editorconfig"
             ]
         }
-    },
-
-    // https://code.visualstudio.com/remote/advancedcontainers/docker-options#_podman
-    // M1Mac+Podmanではこれで動いた
-    "runArgs": [
-        "--userns=keep-id"
-    ],
-    "containerEnv": {
-        "HOME": "/root"
-    },
-    "containerUser": "root",
-    "remoteUser": "root"
+    }
 }

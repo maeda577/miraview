@@ -1,11 +1,13 @@
 {
   "files": [],
+  "type": "module",
   "dependencies": {
-    "openapi-fetch": "^0.13.3",
     "@siemens/ix": "^2.6.1",
-    "@siemens/ix-icons": "^2.2.0"
+    "@siemens/ix-icons": "^2.2.0",
+    "openapi-fetch": "^0.13.3"
   },
   "devDependencies": {
+    "@types/node": "^22.13.5",
     "license-checker": "^25.0.1",
     "openapi-typescript": "^7.4.4",
     "serve": "^14.2.4",
@@ -16,7 +18,7 @@
     "cp-modules": "mkdir -p ./src/modules && cp --recursive node_modules/@siemens node_modules/openapi-fetch src/modules/",
     "update_license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":' > src/json/license.json",
     "update_mirakc.d.ts": "npx openapi-typescript http://127.0.0.1:40772/api/docs --output ./src/ts/types/mirakc.d.ts",
-    "serve": "node ./serve.mjs",
+    "serve": "node --experimental-strip-types ./serve.ts",
     "watch": "npx tsc --watch"
   }
 }
