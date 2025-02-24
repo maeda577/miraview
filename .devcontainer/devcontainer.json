@@ -2,8 +2,9 @@
     "name": "miraview",
     "image": "docker.io/library/node:22-bookworm",
     "postCreateCommand": "npm install && npm run cp-modules",
-    "forwardPorts": [3000],
-
+    "forwardPorts": [
+        3000
+    ],
     // https://containers.dev/supporting
     "customizations": {
         "vscode": {
