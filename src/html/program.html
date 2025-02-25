@@ -34,7 +34,7 @@ LICENSE file in the root directory of this source tree.
   </head>
 
   <body>
-    <ix-application>
+    <ix-application style="height: 100vh;">
       <!-- ここに左メニューが入る -->
       <!-- ヘッダ -->
       <ix-application-header name="番組表"></ix-application-header>
@@ -42,7 +42,7 @@ LICENSE file in the root directory of this source tree.
       <ix-content>
         <!-- ヘッダ -->
         <ix-content-header slot="header" header-title="番組表">
-          <ix-select id="dropdown-pgtable-day" hide-list-header></ix-select>
+          <ix-select id="dropdown-pgtable-day" i-1-8n-placeholder="放送日" hide-list-header></ix-select>
           <ix-tabs id="tab-pgtable-type" small>
             <ix-tab-item>GR</ix-tab-item>
             <ix-tab-item>BS</ix-tab-item>
@@ -128,7 +128,7 @@ LICENSE file in the root directory of this source tree.
           <ix-pill class="modal-pay-tv" hidden style="margin-left: 1rem;">有料放送</ix-pill>
           <div class="modal-description" style="margin-top: 1rem; margin-bottom: 1rem;"></div>
           <ix-blind variant="outline" label="詳細情報" collapsed>
-            <ix-key-value-list class="modal-kv-list"></ix-key-value-list>
+            <ix-key-value-list striped="true" class="modal-kv-list"></ix-key-value-list>
           </ix-blind>
         </ix-modal-content>
         <ix-modal-footer>

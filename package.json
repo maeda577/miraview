@@ -18,7 +18,7 @@
     "cp-modules": "mkdir -p ./src/modules && cp --recursive node_modules/@siemens node_modules/openapi-fetch src/modules/",
     "update_license.json": "npx license-checker --production --json --customPath - --relativeLicensePath | grep -v '\"path\":' > src/json/license.json",
     "update_mirakc.d.ts": "npx openapi-typescript http://127.0.0.1:40772/api/docs --output ./src/ts/types/mirakc.d.ts",
-    "serve": "node --experimental-strip-types ./src/ts/dev_server.ts",
+    "serve": "node --experimental-strip-types ./src/ts/dev/serve.ts",
     "watch": "npx tsc --watch"
   }
 }

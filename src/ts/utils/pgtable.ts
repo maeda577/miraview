@@ -234,23 +234,23 @@ function showDetailModal(program: components['schemas']['MirakurunProgram'], ser
 
   // 各種プロパティを出す
   const kvList = modal.querySelector('.modal-kv-list') as HTMLIxKeyValueListElement;
-  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="Video" value="${program.video?.type + ' ' + program.video?.resolution}"></ix-key-value>`);
+  kvList.insertAdjacentHTML('beforeend', `<ix-key-value label-position="left" label="Video" value="${program.video?.type + ' ' + program.video?.resolution}"></ix-key-value>`);
 
   const audioLength = program.audios?.length ?? 0;
   program.audios?.map((audio, idx) => {
     const key = audioLength === 1 ? 'Audio' : `Audio [${idx + 1}]`;
     const str = `${audio_component_types.get(audio.componentType)} ${audio.samplingRate / 1000}kHz (${audio.langs.join(', ')})`;
-    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="${key}" value="${str}"></ix-key-value>`);
+    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label-position="left" label="${key}" value="${str}"></ix-key-value>`);
   });
   const genreLength = program.genres?.length ?? 0;
   program.genres?.map((genre, idx) => {
     const key = genreLength === 1 ? 'Genre' : `Genre [${idx + 1}]`;
     const str = `${genre_large.get(genre.lv1) ?? ''} - ${genre_middle.get(genre.lv1)?.get(genre.lv2) ?? ''}`;
-    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label="${key}" value="${str}"></ix-key-value>`);
+    kvList.insertAdjacentHTML('beforeend', `<ix-key-value label-position="left" label="${key}" value="${str}"></ix-key-value>`);
   });
   kvList.insertAdjacentHTML('beforeend', `
-    <ix-key-value label="Program ID" value="${program.id}"></ix-key-value>
-    <ix-key-value label="Service ID" value="${program.serviceId}"></ix-key-value>`
+    <ix-key-value label-position="left" label="Program ID" value="${program.id}"></ix-key-value>
+    <ix-key-value label-position="left" label="Service ID" value="${program.serviceId}"></ix-key-value>`
   );
 
   // ボタン操作

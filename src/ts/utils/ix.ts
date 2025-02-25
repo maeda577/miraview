@@ -47,8 +47,8 @@ navigation!.insertAdjacentHTML('afterbegin', `
     <ix-menu-about label="バージョン情報">
       <ix-menu-about-item label="バージョン">
         <ix-key-value-list>
-          <ix-key-value label="mirakc" value="${await getMirakcVersionString()}"></ix-key-value>
-          <ix-key-value label="miraview" value="${miraviewVersion}"></ix-key-value>
+          <ix-key-value label-position="left" label="mirakc" value="${await getMirakcVersionString()}"></ix-key-value>
+          <ix-key-value label-position="left" label="miraview" value="${miraviewVersion}"></ix-key-value>
         </ix-key-value-list>
       </ix-menu-about-item>
       <ix-menu-about-item id="menu-license" label="ライセンス" style="height: 80vh; overflow-x: scroll;">

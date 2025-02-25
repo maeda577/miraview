@@ -34,11 +34,13 @@ function getVariant(tuner: components['schemas']['MirakurunTuner']) {
 
 // 画面更新
 async function refreshTuners() {
-  const tuners = await getTuners();
   // 更新ボタンを残してチューナーの要素を全部消す
   const cardList = document.getElementById('card-list')!;
   cardList.replaceChildren(cardList.children[0]);
+  cardList.insertAdjacentHTML('beforeend', '<ix-spinner></ix-spinner>');
 
+  const tuners = await getTuners();
+  cardList.replaceChildren(cardList.children[0]);
   tuners?.forEach(tuner => {
     cardList.insertAdjacentHTML('beforeend', `
       <ix-card variant="filled">
