@@ -1,6 +1,19 @@
 {
-    "html.format.indentInnerHtml": true,
-    "html.format.wrapAttributes": "preserve",
-    "typescript.format.semicolons": "insert",
-    "editor.formatOnSave": true,
+  "html.format.indentInnerHtml": true,
+  "html.format.wrapAttributes": "preserve",
+  "js/ts.format.semicolons": "insert",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  // https://github.com/IgniteUI/igniteui-webcomponents?tab=readme-ov-file#additional-tooling
+  "html.customData": [
+    "node_modules/igniteui-webcomponents/igniteui-webcomponents.html-data.json"
+  ],
+  "css.customData": [
+    "node_modules/igniteui-webcomponents/igniteui-webcomponents.css-data.json"
+  ],
 }

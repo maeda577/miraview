@@ -1,16 +1,5 @@
 {
-    "name": "miraview",
-    "image": "docker.io/library/node:22-bookworm",
-    "postCreateCommand": "npm install && npm run cp-modules",
-    "forwardPorts": [
-        3000
-    ],
-    // https://containers.dev/supporting
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "editorconfig.editorconfig"
-            ]
-        }
-    }
+  "name": "miraview",
+  "image": "docker.io/denoland/deno:debian-2.7.4",
+  "postCreateCommand": "deno install && deno run download-icon"
 }

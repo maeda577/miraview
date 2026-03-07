@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Open miraview",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}/src/"
+    }
+  ]
+}

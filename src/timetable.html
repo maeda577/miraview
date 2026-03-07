@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./resources/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
+    <!-- <link id="theme-css" rel='stylesheet' href='./css/themes/light/material.css' /> -->
+    <link id="theme-css" rel='stylesheet' href='./themes/dark/material.css' />
+    <!-- <link rel="stylesheet" href="bundle/timetable.css" /> -->
+    <script type="module" src="./bundle/timetable.js"></script>
+    <style type="text/css">
+      ix-basic-navigation:not(:defined),
+      ix-content:not(:defined) {
+        display: none;
+      }
+
+      /* :root {
+        --ig-primary-500: rgb(45, 106, 7);
+      } */
+    </style>
+    <title>番組表 - miraview</title>
+  </head>
+
+  <body style="margin: 0px; background-color: var(--ig-gray-50);">
+    <igc-navbar class="navbar">
+      <igc-icon-button variant="flat" slot="start">
+        <span class="material-symbols-outlined">menu</span>
+      </igc-icon-button>
+      <span>番組表</span>
+      <!-- <igc-icon-button variant="flat" slot="end">
+        <span class="material-icons">
+          search
+        </span>
+      </igc-icon-button> -->
+    </igc-navbar>
+    <igc-nav-drawer position="start">
+      <igc-nav-drawer-header-item>miraview</igc-nav-drawer-header-item>
+      <!-- <igc-nav-drawer-item slot="mini" data-html="${item[2]}" id="target-button">
+        <span slot="icon" class="material-icons icon">home</span>
+      </igc-nav-drawer-item> -->
+    </igc-nav-drawer>
+    <div>
+      <igc-select style="width: 10rem; margin: 1rem;">
+        <igc-select-item value="orange">Orange</igc-select-item>
+        <igc-select-item value="apple">Apple</igc-select-item>
+        <igc-select-item value="banana">Banana</igc-select-item>
+        <igc-select-item value="mango">Mango</igc-select-item>
+      </igc-select>
+    </div>
+
+    <p>
+      hogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaa
+    </p>
+  </body>
+
+</html>

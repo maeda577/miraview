@@ -1,7 +1,8 @@
-import { defineCustomElements } from '@siemens/ix/loader/index.js';
-import { defineCustomElements as defineIxIconCustomElement } from '@siemens/ix-icons/loader/index.js';
-import createClient from 'openapi-fetch/dist/index.js';
-import type { paths } from '../types/mirakc.d.ts';
+import '@siemens/ix/dist/siemens-ix/siemens-ix.css';
+import { defineCustomElements } from '@siemens/ix/loader';
+import { defineCustomElements as defineIxIconCustomElement } from '@siemens/ix-icons/loader';
+import createClient from 'openapi-fetch';
+import type { paths } from './mirakc.d.ts';
 import { loadConfigFromStorage } from './common.js';
 import { themeSwitcher } from '@siemens/ix';
 
@@ -12,8 +13,10 @@ const miraviewVersion = '3.4.0';
 const config = loadConfigFromStorage();
 
 // WebComponentsの定義
-defineIxIconCustomElement();
-defineCustomElements();
+(async () => {
+  defineIxIconCustomElement();
+  defineCustomElements();
+})();
 
 // mirakcバージョン情報取得
 async function getMirakcVersionString() {

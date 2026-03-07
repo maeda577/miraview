@@ -4,10 +4,15 @@ package-lock.json
 build.tar.gz
 /test
 
+deno.lock
+
+/src/api
+/src/bundle
+/src/resources/*.woff2
+/src/themes
+
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # testing
 /coverage
@@ -21,7 +26,3 @@ build.tar.gz
 .env.development.local
 .env.test.local
 .env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
