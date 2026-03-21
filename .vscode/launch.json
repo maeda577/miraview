@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "msedge",
+      "type": "editor-browser",
       "request": "launch",
       "name": "Open miraview",
       "url": "http://localhost:8000",
