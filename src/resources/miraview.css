@@ -1,0 +1,26 @@
+/* 上部メニューのstart/endのどちらでもないものを中央寄せにする */
+/* igc-navbar::part(middle) {
+  justify-content: center;
+} */
+
+/* :root {
+  --ig-primary-500: rgb(45, 106, 7);
+} */
+
+body {
+  margin: 0px;
+}
+
+/* 画面全体 */
+.application-frame {
+  background-color: var(--ig-gray-50);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 上部バーを除いた、スクロールしていく部分 */
+.application-frame .application-content {
+  flex-grow: 1;
+  overflow: scroll;
+}

@@ -5,8 +5,8 @@
       "type": "editor-browser",
       "request": "launch",
       "name": "Open miraview",
-      "url": "http://localhost:8000",
-      "webRoot": "${workspaceFolder}/src/"
+      "url": "http://localhost:8000/",
+      "webRoot": "${workspaceFolder}/src/",
     }
   ]
 }

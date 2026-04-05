@@ -5,53 +5,137 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="./resources/favicon.svg" sizes="any" type="image/svg+xml" />
     <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
-    <!-- <link id="theme-css" rel='stylesheet' href='./css/themes/light/material.css' /> -->
+    <!-- <link id="theme-css" rel='stylesheet' href='./themes/light/material.css' /> -->
     <link id="theme-css" rel='stylesheet' href='./themes/dark/material.css' />
+    <link id="main-css" rel='stylesheet' href='./resources/miraview.css' />
     <!-- <link rel="stylesheet" href="bundle/timetable.css" /> -->
-    <script type="module" src="./bundle/timetable.js"></script>
     <style type="text/css">
-      ix-basic-navigation:not(:defined),
-      ix-content:not(:defined) {
+      igc-navbar:not(:defined),
+      igc-nav-drawer:not(:defined) {
         display: none;
       }
 
-      /* :root {
-        --ig-primary-500: rgb(45, 106, 7);
-      } */
+      :root {
+        --mrv-pgtable-header-height: 2rem;
+        /* 1時間あたりの高さ */
+        --mrv-pgtable-height-per-hour: 240px;
+
+        --mrv-pgtable-hour-width: 2rem;
+        --mrv-pgtable-header-width: 10rem;
+
+
+      }
+
+      .pgtable-header {
+        text-align: center;
+        background-color: var(--ig-gray-200);
+        border-width: 0 1px 1px 0;
+        border-style: solid;
+        border-color: var(--ig-gray-400);
+      }
+
+      .pgtable-hour-item {
+        min-height: var(--mrv-pgtable-height-per-hour);
+        max-height: var(--mrv-pgtable-height-per-hour);
+        min-width: var(--mrv-pgtable-hour-width);
+        max-width: var(--mrv-pgtable-hour-width);
+        padding-top: 1rem;
+      }
+
+      .pgtable-channel-item {
+        min-width: var(--mrv-pgtable-header-width);
+        max-width: var(--mrv-pgtable-header-width);
+      }
+
+      .pgtable-typography {
+        font-family: var(--ig-body-1-font-family, var(--ig-font-family));
+        font-size: var(--ig-body-1-font-size);
+        font-weight: var(--ig-body-1-font-weight);
+        font-style: var(--ig-body-1-font-style);
+        line-height: var(--ig-body-1-line-height);
+        letter-spacing: var(--ig-body-1-letter-spacing);
+        text-transform: var(--ig-body-1-text-transform);
+        color: var(--ig-primary-800-contrast);
+      }
+
+      .border {
+        border: 1px;
+        border-style: solid;
+        border-color: black;
+      }
     </style>
+    <script type="module" src="./bundle/timetable.js"></script>
     <title>番組表 - miraview</title>
   </head>
 
-  <body style="margin: 0px; background-color: var(--ig-gray-50);">
-    <igc-navbar class="navbar">
-      <igc-icon-button variant="flat" slot="start">
-        <span class="material-symbols-outlined">menu</span>
-      </igc-icon-button>
-      <span>番組表</span>
-      <!-- <igc-icon-button variant="flat" slot="end">
-        <span class="material-icons">
-          search
-        </span>
-      </igc-icon-button> -->
-    </igc-navbar>
-    <igc-nav-drawer position="start">
-      <igc-nav-drawer-header-item>miraview</igc-nav-drawer-header-item>
-      <!-- <igc-nav-drawer-item slot="mini" data-html="${item[2]}" id="target-button">
-        <span slot="icon" class="material-icons icon">home</span>
-      </igc-nav-drawer-item> -->
-    </igc-nav-drawer>
-    <div>
-      <igc-select style="width: 10rem; margin: 1rem;">
-        <igc-select-item value="orange">Orange</igc-select-item>
-        <igc-select-item value="apple">Apple</igc-select-item>
-        <igc-select-item value="banana">Banana</igc-select-item>
-        <igc-select-item value="mango">Mango</igc-select-item>
-      </igc-select>
+  <body>
+    <div class="application-frame">
+      <!-- 上部バー -->
+      <igc-navbar>
+        <igc-icon-button variant="flat" slot="start">
+          <span class="material-symbols-outlined">menu</span>
+        </igc-icon-button>
+        <span slot="start">番組表</span>
+      </igc-navbar>
+      <!-- 左メニュー -->
+      <igc-nav-drawer position="start">
+        <igc-nav-drawer-header-item>miraview</igc-nav-drawer-header-item>
+        <!-- ここに igc-nav-drawer-item が入る -->
+      </igc-nav-drawer>
+      <!-- 日付と放送波の切り替えバー -->
+      <div style="display: flex; justify-content: center; align-items:center; padding: 0.5rem;">
+        <igc-select id="dayselect" style="width: 10rem; margin-right: 1rem;"></igc-select>
+        <igc-button-group selection="single-required" style="--ig-size: var(--ig-size-large);">
+          <igc-toggle-button value="gr" selected>GR</igc-toggle-button>
+          <igc-toggle-button value="bs">BS</igc-toggle-button>
+          <igc-toggle-button value="cs">CS</igc-toggle-button>
+          <igc-toggle-button value="sky" disabled>SKY</igc-toggle-button>
+        </igc-button-group>
+      </div>
+      <!-- 番組表 -->
+      <div class="application-content pgtable-typography">
+        <div style="display: flex; position: sticky; top: 0; z-index: 10;">
+          <div class="pgtable-header"
+            style="min-width: var(--mrv-pgtable-hour-width); max-width: var(--mrv-pgtable-hour-width);"></div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+          <div class="pgtable-header pgtable-channel-item">NHK</div>
+        </div>
+        <div style="display: flex;">
+          <div style="position: sticky; left: 0;">
+            <div class="pgtable-header pgtable-hour-item">5</div>
+            <div class="pgtable-header pgtable-hour-item">6</div>
+            <div class="pgtable-header pgtable-hour-item">7</div>
+            <div class="pgtable-header pgtable-hour-item">8</div>
+            <div class="pgtable-header pgtable-hour-item">9</div>
+            <div class="pgtable-header pgtable-hour-item">10</div>
+            <div class="pgtable-header pgtable-hour-item">11</div>
+            <div class="pgtable-header pgtable-hour-item">12</div>
+            <div class="pgtable-header pgtable-hour-item">13</div>
+            <div class="pgtable-header pgtable-hour-item">14</div>
+            <div class="pgtable-header pgtable-hour-item">15</div>
+            <div class="pgtable-header pgtable-hour-item">16</div>
+            <div class="pgtable-header pgtable-hour-item">17</div>
+            <div class="pgtable-header pgtable-hour-item">18</div>
+            <div class="pgtable-header pgtable-hour-item">19</div>
+            <div class="pgtable-header pgtable-hour-item">20</div>
+            <div class="pgtable-header pgtable-hour-item">21</div>
+            <div class="pgtable-header pgtable-hour-item">22</div>
+            <div class="pgtable-header pgtable-hour-item">23</div>
+            <div class="pgtable-header pgtable-hour-item">0</div>
+            <div class="pgtable-header pgtable-hour-item">1</div>
+            <div class="pgtable-header pgtable-hour-item">2</div>
+            <div class="pgtable-header pgtable-hour-item">3</div>
+            <div class="pgtable-header pgtable-hour-item">4</div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <p>
-      hogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaahogehogeaaaaaaaaaaaaa
-    </p>
   </body>
 
 </html>

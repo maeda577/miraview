@@ -9,6 +9,7 @@ import {
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
+  IgcDialogComponent,
   // IgcTooltipComponent,
 } from 'igniteui-webcomponents';
 
@@ -22,6 +23,7 @@ defineComponents(
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
+  IgcDialogComponent,
   // IgcTooltipComponent,
 );
 
@@ -44,7 +46,7 @@ document.querySelector('igc-icon-button')?.addEventListener('click', e => drawer
 
 // メニューアイテムの操作
 const currentHtml = window.location.pathname.split('/').pop();
-document?.querySelectorAll('igc-nav-drawer-item')?.forEach(item => {
+drawer!.querySelectorAll('igc-nav-drawer-item')?.forEach(item => {
   // active状態切り替え
   item.active = item.dataset.html === currentHtml;
   // クリックイベント割り当て
