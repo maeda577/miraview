@@ -11,18 +11,19 @@ const programDatetimeFormat = new Intl.DateTimeFormat(undefined, { year: 'numeri
 /** 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id */
 export function groupPrograms(programs: components['schemas']['MirakurunProgram'][]): Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>> {
   // 番組情報をグループ化
-  const groupedPrograms = programs.reduce<Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>>((map, program) => {
+  const groupedPrograms = new Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>();
+  programs.forEach(program => {
     // 番組名や諸々のIDが入っていない番組を無視する
     if (!program.name || !program.networkId || !program.serviceId) {
-      return map;
+      return;
     }
     // 番組の放送日 午前5時00分までは前日と判定するため5時間引いておく
     const date = new Date(program.startAt - (5 * 60 * 60 * 1000)).setHours(0, 0, 0, 0);
     // 第一キーがなければMapを新規作成
-    if (!map.has(date)) {
-      map.set(date, new Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>());
+    if (!groupedPrograms.has(date)) {
+      groupedPrograms.set(date, new Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>());
     }
-    const mapPerDay = map.get(date)!;
+    const mapPerDay = groupedPrograms.get(date)!;
 
     // 第二キーがなければMapを新規作成
     if (!mapPerDay.has(program.networkId!)) {
@@ -35,9 +36,7 @@ export function groupPrograms(programs: components['schemas']['MirakurunProgram'
       mapPerNetwork.set(program.serviceId!, []);
     }
     mapPerNetwork.get(program.serviceId!)!.push(program);
-
-    return map;
-  }, new Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>());
+  });
 
   // グループ化した番組の後処理
   groupedPrograms.forEach((prgPerDay, day) => prgPerDay.forEach((prgPerNw, nwId) => prgPerNw.forEach((prgs, svcId) => {
@@ -83,4 +82,37 @@ export function groupPrograms(programs: components['schemas']['MirakurunProgram'
   })));
 
   return groupedPrograms;
+}
+
+/** サービス情報を便利にまとめる キーはチャンネルタイプ(GR/BS/CS/SKY) */
+export function groupServices(services: components['schemas']['MirakurunService'][]): Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]> {
+  const groupedServices = new Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]>();
+  services.forEach(service => {
+    if (!groupedServices.has(service.channel.type)) {
+      groupedServices.set(service.channel.type, []);
+    }
+    groupedServices.get(service.channel.type)!.push(service);
+  });
+
+  // グループ化した番組の後処理
+  groupedServices.forEach((servicesPerType, serviceType) => {
+    // 地上波ならリモコンIDで並び替え、それ以外は単純にIDで並び替える
+    if (serviceType === 'GR') {
+      servicesPerType.sort((a, b) => a.remoteControlKeyId && b.remoteControlKeyId && a.remoteControlKeyId !== b.remoteControlKeyId ?
+        a.remoteControlKeyId - b.remoteControlKeyId :
+        a.id - b.id);
+    }
+    else {
+      servicesPerType.sort((a, b) => a.id - b.id);
+    }
+  });
+
+  return groupedServices;
+};
+
+/** createElementをinsertAdjacentHTML風に使えるようにするラッパー 要素が複数あっても最初の1個だけを返す */
+export function createHTML(htmlString: string) {
+  const element = document.createElement('template');
+  element.innerHTML = htmlString;
+  return element.content.children[0];
 }

@@ -1,140 +1,117 @@
 /* 番組表用のCSSファイル */
-
 :root {
   /* 1時間あたりの高さ */
-  --height-per-hour: 240px;
-  /* チャンネルヘッダの高さ */
-  --channel-header-height: 2rem;
-  /* チャンネルヘッダの幅 */
-  --channel-header-width: 10rem;
-  /* 左端の時間表示の幅 */
-  --hour-header-width: 2rem;
-
-  /* 現在時刻の横棒のための変数 jsで随時更新する 一旦適当に1を入れている */
-  /* 午前5時を基準とした現在時刻 */
-  --now-msec-from-5am: 1;
-  /* 今表示されているチャンネル数 */
-  --service-count: 1;
+  --mrv-pgtable-height-per-hour: 240px;
+  --mrv-pgtable-now-msec-from-5am: 1000 * 60 * 60 * 15;
+  --mrv-pgtable-header-background-color: var(--ig-gray-200);
+  --mrv-pgtable-item-background-color: var(--ig-gray-100);
 }
 
-ix-content-header ix-select {
-  flex-grow: 1;
-  width: 8rem;
-  margin-right: 1rem;
-  display: inline-block;
-  vertical-align: middle;
+/* 番組表 */
+.mrv-pgtable {
+  color: var(--ig-gray-100-contrast);
+  /* 番組表はCSSグリッドで表現する */
+  display: grid;
+  grid-template-rows: minmax(1.5rem, auto) 1fr;
+  grid-template-columns: 2rem;
+  grid-auto-flow: column;
+  grid-auto-columns: 10rem;
+
+  & * {
+    box-sizing: border-box;
+  }
+
+  /* 直下にあるskelton以外のdivすべて */
+  &>div:not(.skelton) {
+    border-style: solid;
+    border-color: var(--ig-gray-600);
+    border-width: 0 1px 1px 0;
+  }
+
+  /* 上ヘッダのdiv nは0スタート */
+  &>div:nth-child(2n+1) {
+    position: sticky;
+    text-align: center;
+    background-color: var(--mrv-pgtable-header-background-color);
+    top: 0;
+    z-index: 10;
+  }
+
+  /* 左ヘッダのdiv */
+  &>div:nth-child(2) {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+
+    /* さらに下の1時間ごとのdiv */
+    &>div:not(.time-bar) {
+      height: var(--mrv-pgtable-height-per-hour);
+      padding-top: 1rem;
+      text-align: center;
+      background-color: var(--mrv-pgtable-header-background-color);
+      border-color: inherit;
+    }
+
+    /* 最初の1個以外、時刻バー以外は上に線を引く */
+    &>div:nth-child(n+2):not(.time-bar) {
+      border-top: 1px solid;
+    }
+
+    /* 現在時刻の横棒 */
+    & .time-bar {
+      border: 1px solid var(--ig-success-500);
+      position: absolute;
+      opacity: 0.7;
+      margin: 0;
+      top: calc(var(--mrv-pgtable-now-msec-from-5am) / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour) - 1px);
+      width: 100vw;
+    }
+  }
+
+  /* 4,6,8...部分のdivの下のdiv(番組アイテム部分) */
+  &>div:nth-child(2n+4) {
+    position: relative;
+    max-height: calc(var(--mrv-pgtable-height-per-hour) * 24);
+    overflow: hidden;
+
+    &>div:has(a) {
+      padding: 0.3rem;
+      text-align: left;
+      overflow: hidden;
+      background-color: var(--mrv-pgtable-item-background-color);
+      border-color: inherit;
+      position: absolute;
+      word-break: break-all;
+      width: 100%;
+
+      &>a:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+
+    &>div:nth-child(n+2) {
+      border-top: 1px solid;
+    }
+  }
+
+  /* ロード中に出すスケルトン */
+  &>div .skelton {
+    margin: 3px;
+    /* 40%から前・60%から後は単色 */
+    background-image: linear-gradient(90deg, var(--ig-gray-100) 40%, var(--ig-gray-200), var(--ig-gray-100) 60%);
+    /* 横300% 縦100% */
+    background-size: 300% 100%;
+    animation: skeleton-animation 1.5s linear infinite;
+  }
 }
 
-ix-content-header ix-tabs {
-  flex-grow: 1;
-  display: inline-block;
-  vertical-align: middle;
-}
+@keyframes skeleton-animation {
+  from {
+    background-position: right;
+  }
 
-ix-content-header ix-tabs ix-tab-item {
-  width: 3rem;
-}
-
-.flex-center {
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* 番組表のガワ部分 */
-.pgtable-container {
-  display: block;
-  overflow: scroll;
-  height: calc(100% - 1rem);
-}
-
-.pgtable-container th,
-.pgtable-container td {
-  vertical-align: top;
-  padding: 0;
-}
-
-.pgtable-container th {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  z-index: 10;
-}
-
-/*
-TODO: 番組表の一番下を午前5時できっちり終わらせたかったがレイアウト崩れた
-.pgtable-container td {
-  max-height: calc(var(--height-per-hour) * 24);
-  overflow: hidden;
-  display: block;
-} */
-
-/* 各種div用 チャンネルヘッダ・左の時刻・各番組・右上の何も無いセル */
-.pgtable-ch-header,
-.pgtable-hour,
-.pgtable-item,
-.pgtable-first-cell {
-  position: sticky;
-  border: var(--theme-std-bdr-1);
-  text-align: center;
-}
-
-.pgtable-ch-header,
-.pgtable-hour,
-.pgtable-first-cell {
-  background-color: var(--theme-color-3);
-}
-
-.pgtable-ch-header {
-  height: var(--channel-header-height);
-  min-width: var(--channel-header-width);
-  max-width: var(--channel-header-width);
-}
-
-.pgtable-item {
-  min-width: var(--channel-header-width);
-  max-width: var(--channel-header-width);
-}
-
-.pgtable-hour {
-  top: var(--channel-header-height);
-  height: var(--height-per-hour);
-  width: var(--hour-header-width);
-  padding-top: 1rem;
-}
-
-.pgtable-first-cell {
-  height: var(--channel-header-height);
-}
-
-/* 1個の番組情報 */
-.pgtable-item {
-  top: var(--channel-header-height);
-  padding: 0 5px;
-  text-align: left;
-  overflow: hidden;
-  background-color: var(--theme-color-2);
-}
-
-/* ダミー番組の場合は背景を暗くする */
-.pgtable-item:not(:has(a)) {
-  background-color: var(--theme-color-1);
-}
-
-/* 番組情報のリンク */
-.pgtable-item a:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* 現在時刻の横棒 */
-.pgtable-now-line {
-  border: var(--theme-primary-bdr-2);
-  position: relative;
-  opacity: 0.5;
-  z-index: 5;
-  margin: 0;
-  top: calc(var(--now-msec-from-5am) / 1000 / 60 / 60 * var(--height-per-hour) + var(--channel-header-height));
-  width: calc(var(--service-count) * var(--channel-header-width) + var(--hour-header-width));
+  to {
+    background-position: left;
+  }
 }
