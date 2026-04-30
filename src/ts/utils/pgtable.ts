@@ -39,46 +39,18 @@ export function groupPrograms(programs: components['schemas']['MirakurunProgram'
   });
 
   // グループ化した番組の後処理
-  groupedPrograms.forEach((prgPerDay, day) => prgPerDay.forEach((prgPerNw, nwId) => prgPerNw.forEach((prgs, svcId) => {
-    // 番組を放送順に並べ替える
+  groupedPrograms.forEach((prgPerDay, date) => prgPerDay.forEach(prgPerNw => prgPerNw.forEach(prgs => {
+    // 番組を放送順に並べ替える 並べ替えないと番組のz-indexの指定が必要になって面倒
     prgs.sort((a, b) => a.startAt - b.startAt);
-    // 午前5時ちょうどに始まる番組がない場合はダミーの放送情報を入れる
-    const dayStart = (new Date(day)).setHours(5, 0, 0, 0);
-    const timespan = prgs[0]!.startAt - dayStart;
-    if (timespan > 0) {
-      const dummy: components['schemas']['MirakurunProgram'] = {
-        networkId: nwId,
-        serviceId: svcId,
-        startAt: dayStart,
-        duration: timespan,
-        id: -1,
-        eventId: -1,
-        isFree: true,
-      };
-      prgs.unshift(dummy);
-    }
 
-    prgs.forEach((prg, idx, arr) => {
-      const nextPrg = arr.at(idx + 1);
-      if (!nextPrg) return;
-      // 放送時間が次の番組開始を越えるほどに長くなっている場合は短くする（野球など？）
-      if (prg.startAt + prg.duration > nextPrg.startAt) {
-        prg.duration = nextPrg.startAt - prg.startAt;
-      }
-      // 番組間に空き時間があった場合はダミーの放送情報を入れる
-      if (prg.startAt + prg.duration !== nextPrg.startAt) {
-        const dummy: components['schemas']['MirakurunProgram'] = {
-          networkId: nwId,
-          serviceId: svcId,
-          startAt: prg.startAt + prg.duration,
-          duration: nextPrg.startAt - (prg.startAt + prg.duration),
-          id: -1,
-          eventId: -1,
-          isFree: true,
-        };
-        arr.splice(idx + 1, 0, dummy);
-      }
-    });
+    // 翌日0時と5時のunixtime
+    const tommorrow0h = date + (1000 * 60 * 60 * 24);
+    const tommorrow5h = date + (1000 * 60 * 60 * 29);
+    // 最後の番組がAM5時をまたいでいる場合は翌日の番組リストにも加える
+    const lastPrg = prgs.at(-1);
+    if (lastPrg && (lastPrg.startAt + lastPrg.duration) > tommorrow5h) {
+      groupedPrograms.get(tommorrow0h)?.get(lastPrg.networkId)?.get(lastPrg.serviceId)?.unshift(lastPrg);
+    }
   })));
 
   return groupedPrograms;
@@ -109,10 +81,3 @@ export function groupServices(services: components['schemas']['MirakurunService'
 
   return groupedServices;
 };
-
-/** createElementをinsertAdjacentHTML風に使えるようにするラッパー 要素が複数あっても最初の1個だけを返す */
-export function createHTML(htmlString: string) {
-  const element = document.createElement('template');
-  element.innerHTML = htmlString;
-  return element.content.children[0];
-}

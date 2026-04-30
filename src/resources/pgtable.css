@@ -2,7 +2,8 @@
 :root {
   /* 1時間あたりの高さ */
   --mrv-pgtable-height-per-hour: 240px;
-  --mrv-pgtable-now-msec-from-5am: 1000 * 60 * 60 * 15;
+  /* 午前5時を起点とした現在時刻のミリ秒 Javascript側で動的に更新される */
+  --mrv-pgtable-now-msec-from-5am: 1;
   --mrv-pgtable-header-background-color: var(--ig-gray-200);
   --mrv-pgtable-item-background-color: var(--ig-gray-100);
 }
@@ -10,21 +11,29 @@
 /* 番組表 */
 .mrv-pgtable {
   color: var(--ig-gray-100-contrast);
+  font-family: var(--ig-font-family);
   /* 番組表はCSSグリッドで表現する */
   display: grid;
-  grid-template-rows: minmax(1.5rem, auto) 1fr;
+  /* 放送サービスの上ヘッダはサイズ指定し、残りを番組部分で埋める */
+  grid-template-rows: auto 1fr;
+  /* 時刻の左ヘッダだけサイズ指定 放送部分はauto-columnsで指定 */
   grid-template-columns: 2rem;
   grid-auto-flow: column;
   grid-auto-columns: 10rem;
 
   & * {
     box-sizing: border-box;
+    border-color: var(--ig-gray-600);
+  }
+
+  & a:hover {
+    cursor: pointer;
+    text-decoration: underline;
   }
 
   /* 直下にあるskelton以外のdivすべて */
   &>div:not(.skelton) {
     border-style: solid;
-    border-color: var(--ig-gray-600);
     border-width: 0 1px 1px 0;
   }
 
@@ -34,7 +43,8 @@
     text-align: center;
     background-color: var(--mrv-pgtable-header-background-color);
     top: 0;
-    z-index: 10;
+    z-index: 30;
+    padding: 0.25rem 0;
   }
 
   /* 左ヘッダのdiv */
@@ -49,7 +59,6 @@
       padding-top: 1rem;
       text-align: center;
       background-color: var(--mrv-pgtable-header-background-color);
-      border-color: inherit;
     }
 
     /* 最初の1個以外、時刻バー以外は上に線を引く */
@@ -74,24 +83,23 @@
     max-height: calc(var(--mrv-pgtable-height-per-hour) * 24);
     overflow: hidden;
 
+    /* a を含むdiv = 番組情報がちゃんと入っているdiv */
     &>div:has(a) {
       padding: 0.3rem;
+      font-size: 0.8rem;
       text-align: left;
       overflow: hidden;
       background-color: var(--mrv-pgtable-item-background-color);
-      border-color: inherit;
       position: absolute;
       word-break: break-all;
       width: 100%;
 
-      &>a:hover {
-        cursor: pointer;
-        text-decoration: underline;
-      }
-    }
+      border-width: 1px 0px;
+      border-style: solid;
 
-    &>div:nth-child(n+2) {
-      border-top: 1px solid;
+      &:hover {
+        z-index: 5;
+      }
     }
   }
 

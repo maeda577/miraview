@@ -11,15 +11,23 @@ const STORAGE_KEYS = {
 /** 設定情報 */
 export class MiraviewConfig {
   /** mirakcのAPI接続先 */
-  apiEndpoint: string | undefined;
+  apiEndpoint: URL | undefined;
   /** 番組一覧の並べ替えてを無効化するか */
   disableServiceSorting: boolean = false;
   /** テーマ */
   theme: 'theme-classic-dark' | 'theme-classic-light' | undefined;
 
   /** mirakcのAPI接続先 未指定だったらデフォルト値を返す */
-  getApiEndpoint() {
-    return this.apiEndpoint ?? new URL('api/', window.location.origin).toString();
+  getApiEndpoint(): URL {
+    if (!this.apiEndpoint) {
+      return new URL('api/', window.location.origin);
+    }
+    const result = new URL(this.apiEndpoint);
+    // 末尾に / が無ければつける
+    if (!result.pathname.endsWith('/')) {
+      result.pathname += '/';
+    }
+    return result;
   }
 }
 
@@ -29,7 +37,7 @@ export function loadConfigFromStorage(): MiraviewConfig {
   try {
     // URLの読み取り
     const mirakcUrlString = localStorage.getItem(STORAGE_KEYS.API_ENDPOINT);
-    config.apiEndpoint = (mirakcUrlString && URL.canParse(mirakcUrlString)) ? mirakcUrlString : undefined;
+    config.apiEndpoint = (mirakcUrlString && URL.canParse(mirakcUrlString)) ? new URL(mirakcUrlString) : undefined;
 
     // 並べ替えの無効化。falseの場合は値自体が無くなるので、何らかの文字があればtrue
     config.disableServiceSorting = !!localStorage.getItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
@@ -50,7 +58,7 @@ export function loadConfigFromStorage(): MiraviewConfig {
 export function saveConfigToStorage(config: MiraviewConfig) {
   // APIエンドポイントは指定されていれば入れ、なければ消す（config読む際にデフォルト値に戻る）
   if (config.apiEndpoint) {
-    localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint);
+    localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint.href);
   } else {
     localStorage.removeItem(STORAGE_KEYS.API_ENDPOINT);
   }

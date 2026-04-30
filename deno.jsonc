@@ -1,7 +1,7 @@
 // https://docs.deno.com/runtime/fundamentals/configuration/
 {
   "tasks": {
-    "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server --header \"Cache-Control: no-cache\" --no-cors --host localhost src/",
+    "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server --header 'Cache-Control: no-cache' --no-cors --host localhost src/",
     "watch": "deno bundle --outdir src/bundle/ --platform browser --sourcemap --watch src/ts/timetable.ts",
     // https://developers.google.com/fonts/docs/material_symbols
     "download-icon": "deno eval \"import { download } from 'https://deno.land/x/download/mod.ts'; await download('https://github.com/google/material-design-icons/raw/caeba1e66925218b1fd1464171f93e2656f9a0b9/variablefont/MaterialSymbolsOutlined%5BFILL,GRAD,opsz,wght%5D.woff2', {dir:'./src/resources/', file:'MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2'}) \""
