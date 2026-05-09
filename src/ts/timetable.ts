@@ -27,15 +27,15 @@ defineComponents(
  */
 function updateServiceButtons(serviceTypes: Set<components["schemas"]["ChannelType"]>): void {
   let isSelected = false;
-  const buttonGroup = document.querySelector("#pgtable-menu>igc-button-group") as IgcButtonGroupComponent;
-  buttonGroup.querySelectorAll("igc-toggle-button").forEach(toggleButton => {
+  const buttonGroup = document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group");
+  buttonGroup?.querySelectorAll("igc-toggle-button").forEach(toggleButton => {
     toggleButton.disabled = !serviceTypes.has(toggleButton.value as components["schemas"]["ChannelType"]);
     if (!toggleButton.disabled && !isSelected) {
       toggleButton.selected = true;
       isSelected = true;
     }
   });
-  buttonGroup.addEventListener('igcSelect', refreshTable);
+  buttonGroup?.addEventListener('igcSelect', refreshTable);
 }
 
 /**
@@ -141,22 +141,12 @@ function refreshTable(): void {
 
 // APIを叩く
 // 番組情報の第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
-const [programs, services]: [
-  Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>,
-  Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]>
-] = await getApiData();
+const [programs, services] = await getApiData();
 
 updateDateDropdown([...programs!.keys()]);
 
 // 放送タイプのボタングループの有効無効を切り替える
 updateServiceButtons(new Set(services.keys()));
-
-// ダミー画面を外す
-// const skelton = document.querySelector('.mrv-pgtable-skelton') as HTMLElement;
-// skelton.style.display = "none";
-const table = document.querySelector('.mrv-pgtable') as HTMLElement;
-// table.replaceChildren(table.children[0], table.children[1], table.children[2]);
-table.style.display = "";
 
 const timeHeader = document.createElement('div');
 for (let i = 5; i < 29; i++) {
@@ -164,6 +154,7 @@ for (let i = 5; i < 29; i++) {
 }
 timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
 
+const table = document.querySelector('.mrv-pgtable') as HTMLElement;
 table.replaceChildren(document.createElement('div'), timeHeader);
 
 refreshTable();
