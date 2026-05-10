@@ -1,0 +1,218 @@
+{
+  "@floating-ui/core@1.7.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/floating-ui/floating-ui",
+    "publisher": "atomiks",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@floating-ui/core/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2021-present Floating UI contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+    "copyright": "Copyright (c) 2021-present Floating UI contributors"
+  },
+  "@floating-ui/dom@1.7.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/floating-ui/floating-ui",
+    "publisher": "atomiks",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@floating-ui/dom/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2021-present Floating UI contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+    "copyright": "Copyright (c) 2021-present Floating UI contributors"
+  },
+  "@floating-ui/utils@0.2.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/floating-ui/floating-ui",
+    "publisher": "atomiks",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@floating-ui/utils/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2021-present Floating UI contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+    "copyright": "Copyright (c) 2021-present Floating UI contributors"
+  },
+  "@lit-labs/ssr-dom-shim@1.5.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@lit-labs/ssr-dom-shim/README.md",
+    "licenseText": "# @lit-labs/ssr-dom-shim\n\n## Overview\n\nThis package provides minimal implementations of `Element`, `HTMLElement`,\n`EventTarget`, `Event`, `CustomEvent`, `CustomElementRegistry`, and\n`customElements`, designed to be used when Server Side Rendering (SSR) web\ncomponents from Node, including Lit components.\n\n## Usage\n\n### Usage from Lit\n\nLit itself automatically imports these shims when running in Node, so Lit users\nshould typically not need to directly depend on or import from this package.\n\nSee the [lit.dev SSR docs](https://lit.dev/docs/ssr/overview/) for general\ninformation about server-side rendering with Lit.\n\n### Usage in other contexts\n\nOther libraries or frameworks who wish to support SSR are welcome to also depend\non these shims. (This package is planned to eventually move to\n`@webcomponents/ssr-dom-shim` to better reflect this use case). There are two\nmain patterns for providing access to these shims to users:\n\n1. Assigning shims to `globalThis`, ensuring that assignment occurs before\n   user-code runs.\n\n2. Importing shims directly from the module that provides your base class, using\n   the `node` [export\n   condition](https://nodejs.org/api/packages.html#conditional-exports) to\n   ensure this only happens when running in Node, and not in the browser.\n\nLit takes approach #2 for all of the shims except for `customElements`, `Event`\nand `CustomEvent`, so that users who have imported `lit` are able to call\n`customElements.define` or `new Event(...)`/`new CustomEvent(...)` in their\ncomponents from Node.\n\n### Exports\n\nThe main module exports the following values. Note that no globals are set by\nthis module.\n\n- [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)\n  - [`addEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)\n  - [`dispatchEvent`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent)\n  - [`removeEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener)\n- [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element)\n  - (Inherits from EventTarget)\n  - [`attachShadow`](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow)\n  - [`shadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/Element/shadowRoot)\n  - [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element/attributes)\n  - [`hasAttribute`](https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute)\n  - [`getAttribute`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttribute)\n  - [`setAttribute`](https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute)\n  - [`removeAttribute`](https://developer.mozilla.org/en-US/docs/Web/API/Element/removeAttribute)\n- [`HTMLElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)\n  - (Inherits from Element)\n- [`CustomElementRegistry`](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry)\n- [`customElements`](https://developer.mozilla.org/en-US/docs/Web/API/Window/customElements)\n- [`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event)\n- [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent)\n- [`MediaList`](https://developer.mozilla.org/en-US/docs/Web/API/MediaList)\n- [`StyleSheet`](https://developer.mozilla.org/en-US/docs/Web/API/StyleSheet)\n- [`CSSRule`](https://developer.mozilla.org/en-US/docs/Web/API/CSSRule)\n- [`CSSRuleList`](https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList)\n- [`CSSStyleSheet`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet)\n  - (Inherits from StyleSheet)\n  - [`replace`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet/replace)\n  - [`replaceSync`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet/replaceSync)\n\n### CSS Node.js customization hook\n\n`@lit-labs/ssr-dom-shim/register-css-hook.js` implements/registers a\n[Node.js customization hook](https://nodejs.org/api/module.html#customization-hooks)\n(Node.js >= 18.6.0) to import CSS files/modules as instances of `CSSStyleSheet`.\n\n```ts\nimport styles from 'my-styles.css' with {type: 'css'};\n// styles is now an instance of CSSStyleSheet\n```\n\nThis can either be used as a parameter with the Node.js CLI\n(e.g. `node --import @lit-labs/ssr-dom-shim/register-css-hook.js my-script.js` or via\nenvironment variable `NODE_OPTIONS=\"--import @lit-labs/ssr-dom-shim/register-css-hook.js\"`)\nor imported inline, and it will apply to any module dynamically imported afterwards\n(e.g. `import @lit-labs/ssr-dom-shim/register-css-hook.js` and\nsubsequently `await import('./my-component.js')`).\n\n- [Node.js Customization Hooks](https://nodejs.org/api/module.html#customization-hooks)\n- [Import Attributes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import/with)\n\n## Contributing\n\nPlease see [CONTRIBUTING.md](../../../CONTRIBUTING.md)."
+  },
+  "@lit-labs/virtualizer@2.1.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@lit-labs/virtualizer/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2017, Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n* Redistributions of source code must retain the above copyright notice, this\n  list of conditions and the following disclaimer.\n\n* Redistributions in binary form must reproduce the above copyright notice,\n  this list of conditions and the following disclaimer in the documentation\n  and/or other materials provided with the distribution.\n\n* Neither the name of the copyright holder nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2017, Google LLC. All rights reserved."
+  },
+  "@lit/context@1.1.6": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@lit/context/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2021 Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2021 Google LLC. All rights reserved."
+  },
+  "@lit/reactive-element@2.1.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@lit/reactive-element/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2017 Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2017 Google LLC. All rights reserved."
+  },
+  "@oxc-project/types@0.129.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/oxc-project/oxc",
+    "publisher": "Boshen and oxc contributors",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@oxc-project/types/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2024-present VoidZero Inc. & Contributors\nCopyright (c) 2023 Boshen\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+    "copyright": "Copyright (c) 2024-present VoidZero Inc. & Contributors. Copyright (c) 2023 Boshen"
+  },
+  "@rolldown/binding-darwin-arm64@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@rolldown/binding-darwin-arm64/README.md",
+    "licenseText": "# `@rolldown/binding-darwin-arm64`\n\nThis is the **aarch64-apple-darwin** binary for `@rolldown/binding`"
+  },
+  "@rolldown/pluginutils@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@rolldown/pluginutils/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2024-present VoidZero Inc. & Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\nend of terms and conditions\n\nThe licenses of externally maintained libraries from which parts of the Software is derived are listed [here](https://github.com/rolldown/rolldown/blob/main/THIRD-PARTY-LICENSE).",
+    "copyright": "Copyright (c) 2024-present VoidZero Inc. & Contributors"
+  },
+  "@types/trusted-types@2.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/@types/trusted-types/LICENSE",
+    "licenseText": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
+  },
+  "igniteui-i18n-core@1.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/IgniteUI/igniteui-i18n",
+    "publisher": "Infragistics",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/igniteui-i18n-core/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2025 INFRAGISTICS\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+    "copyright": "Copyright (c) 2025 INFRAGISTICS"
+  },
+  "igniteui-webcomponents@7.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/IgniteUI/igniteui-webcomponents",
+    "publisher": "Infragistics",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/igniteui-webcomponents/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2025 INFRAGISTICS\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+    "copyright": "Copyright (c) 2025 INFRAGISTICS"
+  },
+  "lit-element@4.2.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/lit-element/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2017 Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2017 Google LLC. All rights reserved."
+  },
+  "lit-html@3.3.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/lit-html/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2017 Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2017 Google LLC. All rights reserved."
+  },
+  "lit@3.3.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/lit/lit",
+    "publisher": "Google LLC",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/lit/LICENSE",
+    "licenseText": "BSD 3-Clause License\n\nCopyright (c) 2017 Google LLC. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "copyright": "Copyright (c) 2017 Google LLC. All rights reserved."
+  },
+  "openapi-fetch@0.17.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/openapi-ts/openapi-typescript",
+    "publisher": "Drew Powers",
+    "email": "drew@pow.rs",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/openapi-fetch/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2023 Drew Powers\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+    "copyright": "Copyright (c) 2023 Drew Powers"
+  },
+  "openapi-typescript-helpers@0.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/openapi-ts/openapi-typescript",
+    "publisher": "Drew Powers",
+    "email": "drew@pow.rs",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/openapi-typescript-helpers/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2023 Drew Powers\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+    "copyright": "Copyright (c) 2023 Drew Powers"
+  },
+  "rolldown@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/rolldown/LICENSE",
+    "licenseText": "MIT License\n\nCopyright (c) 2024-present VoidZero Inc. & Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\nend of terms and conditions\n\nThe licenses of externally maintained libraries from which parts of the Software is derived are listed [here](https://github.com/rolldown/rolldown/blob/main/THIRD-PARTY-LICENSE).",
+    "copyright": "Copyright (c) 2024-present VoidZero Inc. & Contributors"
+  },
+  "tslib@2.8.1": {
+    "licenses": "0BSD",
+    "repository": "https://github.com/Microsoft/tslib",
+    "publisher": "Microsoft Corp.",
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "licenseFile": "node_modules/tslib/LICENSE.txt",
+    "licenseText": "Copyright (c) Microsoft Corporation.\r\n\r\nPermission to use, copy, modify, and/or distribute this software for any\r\npurpose with or without fee is hereby granted.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\r\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY\r\nAND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\r\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\r\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\r\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\r\nPERFORMANCE OF THIS SOFTWARE.",
+    "copyright": "Copyright (c) Microsoft Corporation."
+  }
+}
+

@@ -1,6 +1,17 @@
 {
   "dependencies": {
-    "igniteui-webcomponents": "^6.5.1",
-    "openapi-fetch": "0.16.0"
+    "igniteui-webcomponents": "^7",
+    "openapi-fetch": "*",
+    "rolldown": "^1"
+  },
+  "scripts": {
+    "postinstall": "npm run copy-themes && npm run download-icon",
+    "copy-themes": "cp -r node_modules/igniteui-webcomponents/themes dist/",
+    "download-icon": "curl --location --output 'dist/resources/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2' 'https://github.com/google/material-design-icons/raw/caeba1e66925218b1fd1464171f93e2656f9a0b9/variablefont/MaterialSymbolsOutlined%5BFILL,GRAD,opsz,wght%5D.woff2'",
+    "clean-npx": "npm cache npx rm --force",
+    "serve": "npm exec serve dist/",
+    "watch": "rolldown --config --watch",
+    "update-license.json": "npm exec --package license-checker --call 'license-checker --production --json --customPath - --relativeLicensePath' | grep -v '\"path\":' > dist/resources/license.json",
+    "update-mirakc.d.ts": "npm exec openapi-typescript http://mirakc.local:40772/api/docs --output ./src/utils/mirakc.d.ts"
   }
 }

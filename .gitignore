@@ -1,15 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-package-lock.json
-build.tar.gz
 /test
 
 deno.lock
 
-/src/api
-/src/bundle
-/src/resources/*.woff2
-/src/themes
+/dist/api
+/dist/js
+/dist/resources/*.woff2
+/dist/themes
 
 # dependencies
 /node_modules
