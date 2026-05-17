@@ -8,6 +8,6 @@ export default defineConfig({
     dir: 'dist/js',
     cleanDir: true,
     preserveModules: true,
-    preserveModulesRoot: 'src/'
+    preserveModulesRoot: 'src/',
   },
 });

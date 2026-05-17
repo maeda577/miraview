@@ -14,3 +14,16 @@ body {
     overflow: scroll;
   }
 }
+
+igc-dialog::part(base):open {
+  display: flex;
+  flex-direction: column;
+}
+
+igc-dialog::part(content) {
+  overflow-y: scroll;
+  flex-grow: 1;
+
+  /* padding-top: 0;
+  padding-bottom: 0; */
+}

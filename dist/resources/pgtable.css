@@ -14,25 +14,40 @@
   font-family: var(--ig-font-family);
   /* 番組表はCSSグリッドで表現する */
   display: grid;
-  /* 放送サービスの上ヘッダはサイズ指定し、残りを番組部分で埋める */
-  grid-template-rows: auto 1fr;
+
   /* 時刻の左ヘッダだけサイズ指定 放送部分はauto-columnsで指定 */
   grid-template-columns: 2rem;
   grid-auto-flow: column;
   grid-auto-columns: 10rem;
+
+  &:has(.skelton) {
+    grid-template-rows: 1fr;
+  }
+
+  &:not(:has(.skelton)) {
+    grid-template-rows: auto 1fr;
+  }
 
   & * {
     box-sizing: border-box;
     border-color: var(--ig-gray-600);
   }
 
-  & a:hover {
-    cursor: pointer;
-    text-decoration: underline;
+  /* リンクの色を普通の文字と同じにする アンダーラインはホバー時のみ */
+  & a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: inherit;
+    }
   }
 
   /* 直下にあるskelton以外のdivすべて */
   &>div:not(.skelton) {
+    /* margin: 1px;   marginで線を引いてもいいかもしれない */
     border-style: solid;
     border-width: 0 1px 1px 0;
   }
@@ -104,7 +119,7 @@
   }
 
   /* ロード中に出すスケルトン */
-  &>div .skelton {
+  & .skelton {
     margin: 3px;
     /* 40%から前・60%から後は単色 */
     background-image: linear-gradient(90deg, var(--ig-gray-100) 40%, var(--ig-gray-200), var(--ig-gray-100) 60%);

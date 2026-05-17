@@ -5,14 +5,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="./resources/favicon.svg" sizes="any" type="image/svg+xml" />
     <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
+    <link rel='stylesheet' href='./resources/miraview.css' />
     <link rel="stylesheet" href="./resources/pgtable.css" />
     <!-- <link id="theme-css" rel='stylesheet' href='./themes/light/material.css' /> -->
     <link id="theme-css" rel='stylesheet' href='./themes/dark/material.css' />
-    <link id="main-css" rel='stylesheet' href='./resources/miraview.css' />
     <style type="text/css">
       igc-navbar:not(:defined),
-      igc-nav-drawer:not(:defined) {
+      igc-nav-drawer:not(:defined),
+      #dialog-programinfo div:empty {
         display: none;
+      }
+
+      #dialog-programinfo-paragraphs>p {
+        margin-block-start: 0;
       }
     </style>
     <script type="module" src="./js/timetable.js"></script>
@@ -51,8 +56,13 @@
       <div class="skelton"></div>
       <div class="skelton"></div>
     </div>
-    <!-- 各種メッセージのダイアログ -->
-    <igc-dialog></igc-dialog>
+    <!-- 番組クリックのダイアログ -->
+    <igc-dialog id="dialog-programinfo" close-on-outside-click>
+      <div id="dialog-programinfo-chips"></div>
+      <div id="dialog-programinfo-paragraphs"></div>
+      <igc-button id="dialog-programinfo-recbutton" variant="flat" slot="footer">録画予約</igc-button>
+      <igc-button id="dialog-programinfo-closebutton" variant="flat" slot="footer">OK</igc-button>
+    </igc-dialog>
   </body>
 
 </html>

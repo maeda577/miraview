@@ -1,6 +1,6 @@
 {
   "name": "miraview",
-  // https://hub.docker.com/r/denoland/deno
-  "image": "docker.io/denoland/deno:debian-2.7.4",
-  "postCreateCommand": "deno install && deno run download-icon && apt --update install --yes git"
+  // https://hub.docker.com/_/node
+  "image": "docker.io/library/node:26",
+  "postCreateCommand": "npm install"
 }

@@ -24,7 +24,9 @@ const menuItems = [
 ];
 
 // ハンバーガーボタンにイベントを割り当てる
-document.querySelector('igc-icon-button')?.addEventListener('click', e => drawer!.open = true);
+document.querySelector('igc-icon-button')?.addEventListener('click',
+  () => document.querySelector('igc-nav-drawer')?.show()
+);
 
 // 今表示しているHTML名
 const currentHtml = window.location.pathname.split('/').pop();
