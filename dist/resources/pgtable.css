@@ -9,7 +9,7 @@
 }
 
 /* 番組表 */
-.mrv-pgtable {
+mrv-pgtable {
   color: var(--ig-gray-100-contrast);
   font-family: var(--ig-font-family);
   /* 番組表はCSSグリッドで表現する */

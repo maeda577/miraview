@@ -44,8 +44,8 @@ menuItems.forEach(item => drawer!.insertAdjacentHTML('beforeend', `
 drawer!.querySelectorAll('igc-nav-drawer-item')?.forEach(item => {
   item.addEventListener('click', e => {
     const item = e.currentTarget as IgcNavDrawerItemComponent | undefined;
-    if (item && !item.active && item.dataset.html) {
-      window.location.href = `./${item.dataset.html}`;
+    if (item && !item.active && item.dataset['html']) {
+      window.location.href = `./${item.dataset['html']}`;
     }
   });
 });

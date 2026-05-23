@@ -1,10 +1,5 @@
 import { loadConfigFromStorage } from './localconfig';
-import { audio_component_types, genre_large, genre_middle } from './const';
-import type { components, paths } from './mirakc.d.ts';
-
-// 番組の時刻のフォーマット
-const programTimeFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
-const programDatetimeFormat = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'narrow', hour: '2-digit', minute: '2-digit' });
+import type { components } from './mirakc.d.ts';
 
 // service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
 // http://www.arib.or.jp/english/html/overview/doc/8-TR-B15v4_6-2p4-E1.pdf#page=39
@@ -81,3 +76,128 @@ export function groupServices(services: components['schemas']['MirakurunService'
 
   return groupedServices;
 };
+
+/**
+ * 番組表のWebComponent
+ * shadowRootを使っていないので、普通のHTML要素とほぼ同じ
+ */
+export class MrvPgTable extends HTMLElement {
+  // 番組IDから番組を探すためのキャッシュ
+  private idToProgram = new Map<number, components['schemas']['MirakurunProgram']>();
+
+  // 番組表の番組がクリックされた時に呼ばれる関数
+  public programClickedCallback: (program: components['schemas']['MirakurunProgram']) => void = () => { };
+
+  constructor() {
+    super();
+  }
+
+  // 要素がドキュメントに追加された時に呼ばれる関数 実質コンストラクタ
+  // https://developer.mozilla.org/ja/docs/Web/API/Web_components/Using_custom_elements
+  connectedCallback() {
+    this.showSkelton();
+    // 関数がイベントとして呼ばれた時にthisがイベント起点の要素になってしまうのを避ける
+    this.onProgramClick = this.onProgramClick.bind(this);
+
+    // 現在時刻の横棒を更新するメソッドを定期実行する
+    this.updateCssVariableNowTime();
+    const intervalId = setInterval(this.updateCssVariableNowTime, 1000 * 60);
+    window.addEventListener('beforeunload', () => clearInterval(intervalId));
+  }
+
+  /** 読み込み中のスケルトンを出す */
+  public showSkelton(): void {
+    const length = this.getAttribute('skelton-length') ?? '6';
+    this.replaceChildren();
+    for (let index = 0; index < parseInt(length); index++) {
+      this.insertAdjacentHTML('beforeend', '<div class="skelton"></div>');
+    }
+  }
+
+  /**
+   * CSSに設定した --mrv-pgtable-now-msec-from-5am の値を現在時刻に書き換える 現在時刻の横棒が動く
+   */
+  updateCssVariableNowTime() {
+    const now = Date.now();
+    const today5 = new Date(now - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
+    document.body.style.setProperty('--mrv-pgtable-now-msec-from-5am', (now - today5).toString());
+  }
+
+  /**
+   * 番組表を更新する
+   * @param selectedDay5AM - 選ばれている日の午前5時の値
+   */
+  public refreshTable(
+    services: components['schemas']['MirakurunService'][],
+    programs: Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>,
+    selectedDay5AM: number,
+  ): void {
+    // 時刻表示の左ヘッダを作る
+    const timeHeader = document.createElement('div');
+    for (let i = 5; i < 29; i++) {
+      timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
+    }
+    timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
+    this.replaceChildren(document.createElement('div'), timeHeader);
+
+    // 番組IDキャッシュを作り直す
+    this.idToProgram.clear();
+    programs.forEach(a => a.forEach(b => b.forEach(prg => this.idToProgram.set(prg.id, prg))));
+
+    // configを読む（番組ヘッダのリンク用）
+    const apiEndpoint = loadConfigFromStorage().getApiEndpoint();
+    // 番組divの日付フォーマット
+    const timeFormat = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
+
+    // チャンネルごとに列追加
+    services?.forEach(service => {
+      const programsPerService = programs?.get(service.networkId)?.get(service.serviceId);
+      // チャンネルに番組が無い
+      if (!programsPerService || programsPerService.length === 0) {
+        return;
+      }
+
+      // 番組ヘッダ 番組名が長いと表示が崩れるので、長さに応じて文字を小さくする
+      this.insertAdjacentHTML('beforeend', `
+      <div>
+        <a href="${apiEndpoint.href}services/${service.id}/stream"
+          style="font-size: ${Math.min(9 / service.name.length, 1)}rem;"
+        >
+          ${service.name}
+        </a>
+      </div>
+      `);
+
+      // 番組1個分のdiv
+      const programDiv = document.createElement('div');
+      this.appendChild(programDiv);
+      programsPerService.forEach(prg => {
+        // 日付またぎの番組用にstartAtとdurationを調整する
+        const startAt = prg.startAt >= selectedDay5AM ? prg.startAt : selectedDay5AM;
+        const duration = prg.startAt >= selectedDay5AM ? prg.duration : prg.duration - (selectedDay5AM - prg.startAt);
+        programDiv.insertAdjacentHTML('beforeend', `
+        <div style="
+          min-height: calc((${duration} / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour)) + 1px);
+          top: calc(${startAt - selectedDay5AM} / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour));
+        ">
+          <a data-prgid="${prg.id}">${timeFormat.format(prg.startAt)} ${prg.name}</a>
+        </div>
+        `);
+        // アロー関数を使うとメモリ食うらしいのでちゃんと関数を作っておく
+        // https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener#メモリーの問題
+        programDiv.lastElementChild?.querySelector('a')?.addEventListener('click', this.onProgramClick);
+      });
+    });
+  }
+
+  onProgramClick(ev: PointerEvent): void {
+    // 番組情報を探し、外部から設定されたcallbackを呼び出す
+    const prgid = (ev.target as HTMLElement).dataset['prgid'] ?? '';
+    const program = this.idToProgram.get(parseInt(prgid));
+    if (program) {
+      this.programClickedCallback(program);
+    }
+  }
+}
+
+customElements.define('mrv-pgtable', MrvPgTable);

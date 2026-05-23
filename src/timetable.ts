@@ -1,6 +1,7 @@
 import './utils/igniteui.ts';
 import { loadConfigFromStorage } from './utils/localconfig';
 import { groupPrograms, groupServices } from './utils/pgtable';
+import type { MrvPgTable } from './utils/pgtable';
 import { audio_component_types } from './utils/const.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
@@ -88,18 +89,10 @@ function updateDateDropdown(dateNumbers: number[]): void {
 }
 
 /**
- * CSSに設定した --mrv-pgtable-now-msec-from-5am の値を現在時刻に書き換える 現在時刻の横棒が動く
- */
-function updateCssVariableNowTime() {
-  const now = Date.now();
-  const today5 = new Date(now - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
-  document.body.style.setProperty('--mrv-pgtable-now-msec-from-5am', (now - today5).toString());
-}
-
-/**
  * 番組情報のダイアログを出す
  */
-function showProgramInfoDialog(program: components['schemas']['MirakurunProgram']) {
+function showProgramInfoDialog(program: components['schemas']['MirakurunProgram']): void {
+  // ダイアログに情報を埋めていく
   const dialog = document.querySelector<IgcDialogComponent>('#dialog-programinfo')!;
   // タイトル
   dialog.title = program.name ?? '';
@@ -142,11 +135,14 @@ function showProgramInfoDialog(program: components['schemas']['MirakurunProgram'
       pDiv?.insertAdjacentHTML('beforeend', `<p>${item.join(': ')}</p>`)
     );
   }
+  // 録画予約ボタン
+  document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();
 
   // ダイアログ表示
   dialog.show();
 }
 
+// 番組表を更新する
 function refreshTable(): void {
   const buttonGroup = document.querySelector("#pgtable-menu>igc-button-group") as IgcButtonGroupComponent;
   if (!buttonGroup || buttonGroup.selectedItems.length === 0) {
@@ -155,80 +151,38 @@ function refreshTable(): void {
   const channelType = buttonGroup.selectedItems[0] as components["schemas"]["ChannelType"];
 
   const daySelect = document.querySelector("#pgtable-menu>igc-select") as IgcSelectItemComponent;
-
-  const currentPrograms = programs.get(parseInt(daySelect.value));
-  const currentServices = services.get(channelType);
-
-  const table = document.querySelector('.mrv-pgtable') as HTMLElement;
-  table.replaceChildren(table.children[0], table.children[1]);
-
-  // 日付のフォーマット
-  const timeFormat = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
   // 選ばれている日の午前5時の値
   const today5am = new Date(parseInt(daySelect.value)).setHours(5, 0, 0, 0);
 
-  const apiEndpoint = loadConfigFromStorage().getApiEndpoint();
-  currentServices?.forEach(service => {
-    const programsPerService = currentPrograms?.get(service.networkId)?.get(service.serviceId);
-    if (!programsPerService) {
-      return;
-    }
-    table.insertAdjacentHTML('beforeend', `
-      <div>
-        <a href="${apiEndpoint.href}services/${service.id}/stream"
-          style="font-size: ${Math.min(9 / service.name.length, 1)}rem;"
-        >
-          ${service.name}
-        </a>
-      </div>
-    `);
-    const programDiv = document.createElement('div');
-    // programDiv.className = "ig-typography__caption";
-    table.appendChild(programDiv);
-    programsPerService.forEach((prg, i) => {
-      // 日付またぎの番組用にstartAtとdurationを調整する
-      const startAt = prg.startAt >= today5am ? prg.startAt : today5am;
-      const duration = prg.startAt >= today5am ? prg.duration : prg.duration - (today5am - prg.startAt);
-      programDiv.insertAdjacentHTML('beforeend', `
-      <div style="
-        min-height: calc((${duration} / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour)) + 1px);
-        top: calc(${startAt - today5am} / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour));
-      ">
-        <a>${timeFormat.format(prg.startAt)} ${prg.name}</a>
-      </div>
-      `);
-      programDiv.lastElementChild?.querySelector('a')?.addEventListener('click', () => showProgramInfoDialog(prg));
-    });
-  });
+  const currentPrograms = programs.get(parseInt(daySelect.value))!;
+  const currentServices = services.get(channelType)!;
+
+  document.querySelector<MrvPgTable>('mrv-pgtable')?.refreshTable(currentServices, currentPrograms, today5am);
 }
 
+// 日付ドロップダウンを作る
 updateDateDropdown([...programs!.keys()]);
 
 // 放送タイプのボタングループの有効無効を切り替える
 updateServiceButtons(new Set(services.keys()));
 
-const timeHeader = document.createElement('div');
-for (let i = 5; i < 29; i++) {
-  timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
-}
-timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
-
-const table = document.querySelector('.mrv-pgtable') as HTMLElement;
-table.replaceChildren(document.createElement('div'), timeHeader);
-
+// 初回の番組表更新を行う
 refreshTable();
-
-updateCssVariableNowTime();
-const intervalId = setInterval(updateCssVariableNowTime, 1000 * 60);
-window.addEventListener('beforeunload', () => clearInterval(intervalId));
 
 // 初回だけ現在時刻のラインまでスクロールする
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
 
+// 番組ダイアログの閉じるボタン
 document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('click',
   () => document.querySelector<IgcDialogComponent>('#dialog-programinfo')?.hide()
 );
 
+// 番組ダイアログの録画ボタン
 document.querySelector('#dialog-programinfo-recbutton')?.addEventListener('click',
-  e => document.querySelector<IgcDialogComponent>('#dialog-programinfo')?.hide()
+  () => window.alert('未実装')
 );
+
+// 番組リンクのクリック
+customElements.whenDefined('mrv-pgtable').then(() => {
+  document.querySelector<MrvPgTable>('mrv-pgtable')!.programClickedCallback = showProgramInfoDialog;
+});

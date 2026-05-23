@@ -12,7 +12,7 @@
     <style type="text/css">
       igc-navbar:not(:defined),
       igc-nav-drawer:not(:defined),
-      #dialog-programinfo div:empty {
+      igc-dialog:not(:defined) {
         display: none;
       }
 
@@ -48,14 +48,7 @@
       </igc-button-group>
     </div>
     <!-- 番組表 -->
-    <div class="main-content mrv-pgtable">
-      <div class="skelton"></div>
-      <div class="skelton"></div>
-      <div class="skelton"></div>
-      <div class="skelton"></div>
-      <div class="skelton"></div>
-      <div class="skelton"></div>
-    </div>
+    <mrv-pgtable class="main-content"></mrv-pgtable>
     <!-- 番組クリックのダイアログ -->
     <igc-dialog id="dialog-programinfo" close-on-outside-click>
       <div id="dialog-programinfo-chips"></div>
