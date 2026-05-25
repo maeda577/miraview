@@ -1,81 +1,64 @@
-import { loadConfigFromStorage } from './localconfig';
+import { loadConfigFromStorage } from './localconfig.ts';
+import { audio_component_types } from './const.ts';
+import { IgcDialogComponent } from 'igniteui-webcomponents';
 import type { components } from './mirakc.d.ts';
 
-// service_id単一では重複する可能性があり、ネットワーク内では一意。ARIB TR-B15のTable 5-9に書いてある
-// http://www.arib.or.jp/english/html/overview/doc/8-TR-B15v4_6-2p4-E1.pdf#page=39
-/** 番組情報を便利にまとめる 第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id */
-export function groupPrograms(programs: components['schemas']['MirakurunProgram'][]): Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>> {
-  // 番組情報をグループ化
-  const groupedPrograms = new Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>();
+export function getServiceId(program: components['schemas']['MirakurunProgram']): number {
+  return parseInt(program.networkId.toString() + program.serviceId.toString().padStart(5, '0'));
+}
+
+/**
+ * 番組情報を使いやすくまとめる
+ */
+export function groupPrograms(
+  programs: components['schemas']['MirakurunProgram'][],
+  services: components['schemas']['MirakurunService'][]
+): Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>> {
+  // サービスIDからサービスを探しやすくするmap
+  const serviceMap = new Map<number, components['schemas']['MirakurunService']>(
+    services.map(item => [item.id, item])
+  );
+
+  // 番組情報をグループ化した結果
+  const result = new Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>();
+
   programs.forEach(program => {
     // 番組名や諸々のIDが入っていない番組を無視する
     if (!program.name || !program.networkId || !program.serviceId) {
       return;
     }
-    // 番組の放送日 午前5時00分までは前日と判定するため5時間引いておく
-    const date = new Date(program.startAt - (5 * 60 * 60 * 1000)).setHours(0, 0, 0, 0);
+    // 番組の放送日の5時ちょうどのunixtime 午前4時59分までは前日と判定するため5時間引いておく
+    const date = new Date(program.startAt - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
     // 第一キーがなければMapを新規作成
-    if (!groupedPrograms.has(date)) {
-      groupedPrograms.set(date, new Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>());
+    if (!result.has(date)) {
+      result.set(date, new Map());
     }
-    const mapPerDay = groupedPrograms.get(date)!;
+    const mapPerDay = result.get(date)!;
 
-    // 第二キーがなければMapを新規作成
-    if (!mapPerDay.has(program.networkId!)) {
-      mapPerDay.set(program.networkId!, new Map<number, components['schemas']['MirakurunProgram'][]>());
+    // 第二キーがなければ配列を新規作成して追加
+    const service = serviceMap.get(getServiceId(program)!)!;
+    if (!mapPerDay.has(service)) {
+      mapPerDay.set(service, []);
     }
-    const mapPerNetwork = mapPerDay.get(program.networkId!)!;
-
-    // 第三キーがあるか確認してから番組情報を加える
-    if (!mapPerNetwork.has(program.serviceId!)) {
-      mapPerNetwork.set(program.serviceId!, []);
-    }
-    mapPerNetwork.get(program.serviceId!)!.push(program);
+    mapPerDay.get(service)!.push(program);
   });
 
   // グループ化した番組の後処理
-  groupedPrograms.forEach((prgPerDay, date) => prgPerDay.forEach(prgPerNw => prgPerNw.forEach(prgs => {
+  result.forEach((prgPerDay, date) => prgPerDay.forEach((prgs, service) => {
     // 番組を放送順に並べ替える 並べ替えないと番組のz-indexの指定が必要になって面倒
     prgs.sort((a, b) => a.startAt - b.startAt);
 
-    // 翌日0時と5時のunixtime
-    const tommorrow0h = date + (1000 * 60 * 60 * 24);
-    const tommorrow5h = date + (1000 * 60 * 60 * 29);
+    // 翌日5時のunixtime
+    const tomorrow5h = date + (1000 * 60 * 60 * 24);
     // 最後の番組がAM5時をまたいでいる場合は翌日の番組リストにも加える
     const lastPrg = prgs.at(-1);
-    if (lastPrg && (lastPrg.startAt + lastPrg.duration) > tommorrow5h) {
-      groupedPrograms.get(tommorrow0h)?.get(lastPrg.networkId)?.get(lastPrg.serviceId)?.unshift(lastPrg);
+    if (lastPrg && (lastPrg.startAt + lastPrg.duration) > tomorrow5h) {
+      result.get(tomorrow5h)?.get(service)?.unshift(lastPrg);
     }
-  })));
+  }));
 
-  return groupedPrograms;
+  return result;
 }
-
-/** サービス情報を便利にまとめる キーはチャンネルタイプ(GR/BS/CS/SKY) */
-export function groupServices(services: components['schemas']['MirakurunService'][]): Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]> {
-  const groupedServices = new Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]>();
-  services.forEach(service => {
-    if (!groupedServices.has(service.channel.type)) {
-      groupedServices.set(service.channel.type, []);
-    }
-    groupedServices.get(service.channel.type)!.push(service);
-  });
-
-  // グループ化した番組の後処理
-  groupedServices.forEach((servicesPerType, serviceType) => {
-    // 地上波ならリモコンIDで並び替え、それ以外は単純にIDで並び替える
-    if (serviceType === 'GR') {
-      servicesPerType.sort((a, b) => a.remoteControlKeyId && b.remoteControlKeyId && a.remoteControlKeyId !== b.remoteControlKeyId ?
-        a.remoteControlKeyId - b.remoteControlKeyId :
-        a.id - b.id);
-    }
-    else {
-      servicesPerType.sort((a, b) => a.id - b.id);
-    }
-  });
-
-  return groupedServices;
-};
 
 /**
  * 番組表のWebComponent
@@ -84,9 +67,6 @@ export function groupServices(services: components['schemas']['MirakurunService'
 export class MrvPgTable extends HTMLElement {
   // 番組IDから番組を探すためのキャッシュ
   private idToProgram = new Map<number, components['schemas']['MirakurunProgram']>();
-
-  // 番組表の番組がクリックされた時に呼ばれる関数
-  public programClickedCallback: (program: components['schemas']['MirakurunProgram']) => void = () => { };
 
   constructor() {
     super();
@@ -107,6 +87,7 @@ export class MrvPgTable extends HTMLElement {
 
   /** 読み込み中のスケルトンを出す */
   public showSkelton(): void {
+    // スケルトンの数が指定されていれば参照し、無ければ適当に6
     const length = this.getAttribute('skelton-length') ?? '6';
     this.replaceChildren();
     for (let index = 0; index < parseInt(length); index++) {
@@ -114,10 +95,8 @@ export class MrvPgTable extends HTMLElement {
     }
   }
 
-  /**
-   * CSSに設定した --mrv-pgtable-now-msec-from-5am の値を現在時刻に書き換える 現在時刻の横棒が動く
-   */
-  updateCssVariableNowTime() {
+  /** CSSに設定した --mrv-pgtable-now-msec-from-5am の値を現在時刻に書き換える 現在時刻の横棒が動く */
+  private updateCssVariableNowTime() {
     const now = Date.now();
     const today5 = new Date(now - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
     document.body.style.setProperty('--mrv-pgtable-now-msec-from-5am', (now - today5).toString());
@@ -128,8 +107,7 @@ export class MrvPgTable extends HTMLElement {
    * @param selectedDay5AM - 選ばれている日の午前5時の値
    */
   public refreshTable(
-    services: components['schemas']['MirakurunService'][],
-    programs: Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>,
+    programs: Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>,
     selectedDay5AM: number,
   ): void {
     // 時刻表示の左ヘッダを作る
@@ -142,7 +120,7 @@ export class MrvPgTable extends HTMLElement {
 
     // 番組IDキャッシュを作り直す
     this.idToProgram.clear();
-    programs.forEach(a => a.forEach(b => b.forEach(prg => this.idToProgram.set(prg.id, prg))));
+    programs.forEach(a => a.forEach(prg => this.idToProgram.set(prg.id, prg)));
 
     // configを読む（番組ヘッダのリンク用）
     const apiEndpoint = loadConfigFromStorage().getApiEndpoint();
@@ -150,8 +128,7 @@ export class MrvPgTable extends HTMLElement {
     const timeFormat = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
 
     // チャンネルごとに列追加
-    services?.forEach(service => {
-      const programsPerService = programs?.get(service.networkId)?.get(service.serviceId);
+    programs?.forEach((programsPerService, service) => {
       // チャンネルに番組が無い
       if (!programsPerService || programsPerService.length === 0) {
         return;
@@ -191,12 +168,63 @@ export class MrvPgTable extends HTMLElement {
   }
 
   onProgramClick(ev: PointerEvent): void {
-    // 番組情報を探し、外部から設定されたcallbackを呼び出す
+    // 番組情報を探す
     const prgid = (ev.target as HTMLElement).dataset['prgid'] ?? '';
     const program = this.idToProgram.get(parseInt(prgid));
-    if (program) {
-      this.programClickedCallback(program);
+    if (!program) { return; }
+
+    // 番組表用に定義されたダイアログを探す
+    const dialog = document.querySelector<IgcDialogComponent>('#mrv-pgtable-dialog');
+    if (!dialog) { return; }
+
+    // ダイアログの中身を作っていく
+    dialog.replaceChildren(...dialog.querySelectorAll('*[slot="footer"]'));
+    // タイトル
+    dialog.title = program.name ?? '';
+
+    // 各種チップを作るための情報を集める
+    const chipInfo: string[][] = [];
+    // 各種チップ 有料放送かどうか
+    if (!program.isFree) {
+      chipInfo.push(['currency_yen', '有料放送']);
     }
+    // 各種チップ 映像フォーマット
+    if (program.video) {
+      chipInfo.push(['movie', `${program.video.type} ${program.video.resolution}`]);
+    }
+    // 各種チップ 音声フォーマット
+    program.audios?.forEach(item => chipInfo.push([
+      'brand_awareness',
+      `${audio_component_types.get(item.componentType)} ${item.samplingRate / 1000}kHz ${item.langs.join(',')}`
+    ]));
+
+    // チップを作る
+    const chipDiv = document.createElement('div');
+    dialog.appendChild(chipDiv);
+    chipInfo.forEach(item => chipDiv.insertAdjacentHTML('beforeend', `
+      <igc-chip>
+        <span slot="start" class="material-symbols-outlined">${item[0]}</span>
+        <span>${item[1]}</span>
+      </igc-chip>`
+    ));
+
+    // 番組情報
+    const pDiv = document.createElement('div');
+    dialog.appendChild(pDiv);
+    if (program.description) {
+      pDiv.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
+    }
+    if (program.extended) {
+      Object.entries(program.extended).forEach(item =>
+        pDiv.insertAdjacentHTML('beforeend', `<p>${item.join(': ')}</p>`)
+      );
+    }
+
+    // 録画予約ボタン
+    document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();
+
+    // ダイアログ表示
+    dialog.show();
   }
 }
 

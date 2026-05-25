@@ -48,11 +48,10 @@
       </igc-button-group>
     </div>
     <!-- 番組表 -->
-    <mrv-pgtable class="main-content"></mrv-pgtable>
-    <!-- 番組クリックのダイアログ -->
-    <igc-dialog id="dialog-programinfo" close-on-outside-click>
-      <div id="dialog-programinfo-chips"></div>
-      <div id="dialog-programinfo-paragraphs"></div>
+    <mrv-pgtable class="main-content">
+    </mrv-pgtable>
+    <!-- 番組クリックのダイアログ slot="footer" がついていない要素は毎回消える -->
+    <igc-dialog id="mrv-pgtable-dialog" close-on-outside-click>
       <igc-button id="dialog-programinfo-recbutton" variant="flat" slot="footer">録画予約</igc-button>
       <igc-button id="dialog-programinfo-closebutton" variant="flat" slot="footer">OK</igc-button>
     </igc-dialog>

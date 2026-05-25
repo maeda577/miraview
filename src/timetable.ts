@@ -1,8 +1,6 @@
 import './utils/igniteui.ts';
-import { loadConfigFromStorage } from './utils/localconfig';
-import { groupPrograms, groupServices } from './utils/pgtable';
-import type { MrvPgTable } from './utils/pgtable';
-import { audio_component_types } from './utils/const.ts';
+import { loadConfigFromStorage } from './utils/localconfig.ts';
+import { groupPrograms, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
 
@@ -26,33 +24,13 @@ defineComponents(
 );
 
 // APIを叩く
-// 番組情報の第1キーは日付の0時ちょうどのunixtime、第2キーはnetwork_idで第3キーはservice_id
-const [programs, services] = await getApiData();
-
-/**
- * サービスタイプのボタンを更新する
- * @param serviceTypes - ボタンを有効化するサービスタイプ
- */
-function updateServiceButtons(serviceTypes: Set<components["schemas"]["ChannelType"]>): void {
-  let isSelected = false;
-  const buttonGroup = document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group");
-  buttonGroup?.querySelectorAll("igc-toggle-button").forEach(toggleButton => {
-    toggleButton.disabled = !serviceTypes.has(toggleButton.value as components["schemas"]["ChannelType"]);
-    if (!toggleButton.disabled && !isSelected) {
-      toggleButton.selected = true;
-      isSelected = true;
-    }
-  });
-  buttonGroup?.addEventListener('igcSelect', refreshTable);
-}
+// 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice
+const programs = await getApiData();
 
 /**
  * mirakcAPIを叩く
  */
-async function getApiData(): Promise<[
-  Map<number, Map<number, Map<number, components['schemas']['MirakurunProgram'][]>>>,
-  Map<components["schemas"]["ChannelType"], components['schemas']['MirakurunService'][]>
-]> {
+async function getApiData(): Promise<Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>> {
   try {
     const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint().href });
     const response = await Promise.all([
@@ -60,7 +38,7 @@ async function getApiData(): Promise<[
       client.GET("/services"),
     ]);
     // throw new Error();
-    return [groupPrograms(response[0].data!), groupServices(response[1].data!)];
+    return groupPrograms(response[0].data!, response[1].data!);
   } catch (error) {
     window.alert("mirakc APIへのアクセスに失敗しました。\nAPIエンドポイントの指定を確認してください。また、ブラウザのコンソールにエラーが出ていないか確認してください。");
     throw error;
@@ -71,110 +49,118 @@ async function getApiData(): Promise<[
  * 日付ドロップダウンを作る
  * @param dateNumbers - 日付の0時ちょうどのunixtime
  */
-function updateDateDropdown(dateNumbers: number[]): void {
+function createDateDropdown(dateNumbers: number[]): void {
   // 日付ドロップダウンのフォーマット
   const datetimeFormat = new Intl.DateTimeFormat(undefined, { month: 'numeric', day: 'numeric', weekday: 'narrow' });
-  // 今日の0時の値 午前5時までは深夜と見なして前日扱いにする
-  const today = new Date(Date.now() - (5 * 60 * 60 * 1000)).setHours(0, 0, 0, 0);
+  // 今日の5時の値 午前4時59分までは深夜と見なして前日扱いにする
+  const today = new Date(Date.now() - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
   // 日付ドロップダウンを作る
   const daySelect = document.querySelector("#pgtable-menu>igc-select") as IgcSelectComponent;
-  dateNumbers.filter(date => date >= today)
+  dateNumbers
+    .filter(date => date >= today)
     .sort()
     .forEach((dayUnixTime) => daySelect.insertAdjacentHTML('beforeend', `
       <igc-select-item value="${dayUnixTime}">${datetimeFormat.format(dayUnixTime)}</igc-select-item>
     `));
-  // ドロップダウンで今日を選んでからイベントを紐づける
+  // ドロップダウンで今日を選ぶ
   daySelect.select(today.toString());
-  daySelect.addEventListener('igcChange', refreshTable);
+  daySelect.addEventListener('igcChange', updateServiceButtons);
+  // イベント相当を手動で起こす
+  updateServiceButtons();
 }
 
 /**
- * 番組情報のダイアログを出す
+ * サービスタイプのボタンを更新する
+ * @param serviceTypes - ボタンを有効化するサービスタイプ
  */
-function showProgramInfoDialog(program: components['schemas']['MirakurunProgram']): void {
-  // ダイアログに情報を埋めていく
-  const dialog = document.querySelector<IgcDialogComponent>('#dialog-programinfo')!;
-  // タイトル
-  dialog.title = program.name ?? '';
-  // 各種チップ
-  const chipDiv = dialog.querySelector('#dialog-programinfo-chips');
-  chipDiv?.replaceChildren();
-  // 各種チップ 有料放送かどうか
-  if (!program.isFree) {
-    chipDiv?.insertAdjacentHTML('beforeend', `
-      <igc-chip>
-        <span slot="start" class="material-symbols-outlined">currency_yen</span>
-        <span>有料放送</span>
-      </igc-chip>`);
+function updateServiceButtons(): void {
+  // 選ばれている日
+  const daySelect = document.querySelector<IgcSelectItemComponent>("#pgtable-menu>igc-select");
+  if (!daySelect || daySelect.value === '') {
+    return;
   }
-  // 各種チップ 映像フォーマット
-  if (program.video) {
-    chipDiv?.insertAdjacentHTML('beforeend', `
-      <igc-chip>
-        <span slot="start" class="material-symbols-outlined">movie</span>
-        <span>${program.video.type} ${program.video.resolution}</span>
-      </igc-chip>`);
-  }
-  // 各種チップ 音声フォーマット
-  if (program.audios) {
-    program.audios.forEach(item =>
-      chipDiv?.insertAdjacentHTML('beforeend', `
-        <igc-chip>
-          <span slot="start" class="material-symbols-outlined">brand_awareness</span>
-          <span>${audio_component_types.get(item.componentType)} ${item.samplingRate / 1000}kHz ${item.langs.join(',')}</span>
-        </igc-chip>`));
-  }
-  // 番組情報
-  const pDiv = dialog.querySelector('#dialog-programinfo-paragraphs');
-  pDiv?.replaceChildren();
-  if (program.description) {
-    pDiv?.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
-  }
-  if (program.extended) {
-    Object.entries(program.extended).forEach(item =>
-      pDiv?.insertAdjacentHTML('beforeend', `<p>${item.join(': ')}</p>`)
-    );
-  }
-  // 録画予約ボタン
-  document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();
+  const selectedDay5am = parseInt(daySelect!.value);
+  // 選ばれている日に番組が存在する放送タイプ
+  const serviceTypes = new Set([...programs.get(selectedDay5am)!.keys()].map(item => item.channel.type));
 
-  // ダイアログ表示
-  dialog.show();
+  // 放送タイプのボタングループ
+  const buttonGroup = document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group");
+  if (!buttonGroup) {
+    return;
+  }
+
+  // 選ばれた日にある放送タイプを元にボタンの有効無効を切り替える 無効になる場合は選択状態も解除する
+  buttonGroup.querySelectorAll("igc-toggle-button").forEach(toggleButton => {
+    toggleButton.disabled = !serviceTypes.has(toggleButton.value as components["schemas"]["ChannelType"]);
+    if (toggleButton.disabled) {
+      toggleButton.selected = false;
+    }
+  });
+
+  // 何も選ばれていない場合、最初の有効なボタンを選択する
+  if (buttonGroup.selectedItems.length === 0) {
+    for (const button of buttonGroup.querySelectorAll("igc-toggle-button")) {
+      if (!button.disabled) {
+        button.selected = true;
+        break;
+      }
+    }
+  }
+  // 手動で画面更新をかける
+  refreshTable();
 }
 
 // 番組表を更新する
 function refreshTable(): void {
-  const buttonGroup = document.querySelector("#pgtable-menu>igc-button-group") as IgcButtonGroupComponent;
+  // console.debug(new Date() + ' timetable.ts refreshTable');
+  // 選ばれている日
+  const daySelect = document.querySelector<IgcSelectItemComponent>("#pgtable-menu>igc-select");
+  if (!daySelect || daySelect.value === '') {
+    return;
+  }
+  const selectedDay5am = parseInt(daySelect!.value);
+
+  // 選ばれている放送タイプ
+  const buttonGroup = document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group");
   if (!buttonGroup || buttonGroup.selectedItems.length === 0) {
     return;
   }
   const channelType = buttonGroup.selectedItems[0] as components["schemas"]["ChannelType"];
 
-  const daySelect = document.querySelector("#pgtable-menu>igc-select") as IgcSelectItemComponent;
-  // 選ばれている日の午前5時の値
-  const today5am = new Date(parseInt(daySelect.value)).setHours(5, 0, 0, 0);
+  // 番組表に渡す、選ばれた日付・放送タイプで絞り込まれた番組情報
+  const dayPrograms = new Map(
+    [...programs.get(selectedDay5am)!.entries()]
+      // 指定されている放送タイプで絞り込む
+      .filter(item => item[0].channel.type === channelType)
+      // チャンネルを並び替える 両方のサービスにリモコンIDが定義されて異なるならばリモコンIDで並び替え、同じならばIDで並び替える
+      .sort((a, b) =>
+        a[0].remoteControlKeyId && b[0].remoteControlKeyId && a[0].remoteControlKeyId !== b[0].remoteControlKeyId ?
+          a[0].remoteControlKeyId - b[0].remoteControlKeyId :
+          a[0].id - b[0].id)
+  );
 
-  const currentPrograms = programs.get(parseInt(daySelect.value))!;
-  const currentServices = services.get(channelType)!;
-
-  document.querySelector<MrvPgTable>('mrv-pgtable')?.refreshTable(currentServices, currentPrograms, today5am);
+  // 番組表を更新
+  document.querySelector<MrvPgTable>('mrv-pgtable')?.refreshTable(dayPrograms, selectedDay5am);
 }
 
+// 放送タイプボタンにイベントをつける
+document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group")?.addEventListener('igcSelect', refreshTable);
+
 // 日付ドロップダウンを作る
-updateDateDropdown([...programs!.keys()]);
+createDateDropdown([...programs!.keys()]);
 
 // 放送タイプのボタングループの有効無効を切り替える
-updateServiceButtons(new Set(services.keys()));
+// updateServiceButtons(new Set(['BS']));
 
 // 初回の番組表更新を行う
-refreshTable();
+// refreshTable();
 
 // 初回だけ現在時刻のラインまでスクロールする
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
 
 // 番組ダイアログの閉じるボタン
 document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('click',
-  () => document.querySelector<IgcDialogComponent>('#dialog-programinfo')?.hide()
+  () => document.querySelector<IgcDialogComponent>('#mrv-pgtable-dialog')?.hide()
 );
 
 // 番組ダイアログの録画ボタン
@@ -182,7 +168,4 @@ document.querySelector('#dialog-programinfo-recbutton')?.addEventListener('click
   () => window.alert('未実装')
 );
 
-// 番組リンクのクリック
-customElements.whenDefined('mrv-pgtable').then(() => {
-  document.querySelector<MrvPgTable>('mrv-pgtable')!.programClickedCallback = showProgramInfoDialog;
-});
+// updateServiceButtons();
