@@ -20,17 +20,20 @@ mrv-pgtable {
   grid-auto-flow: column;
   grid-auto-columns: 10rem;
 
+  /* skeltonの場合は放送チャンネルヘッダ無し */
   &:has(.skelton) {
     grid-template-rows: 1fr;
   }
 
+  /* 通常の場合は放送チャンネルヘッダあり */
   &:not(:has(.skelton)) {
     grid-template-rows: auto 1fr;
   }
 
-  & * {
+  /* divのサイズ指定に境界線も含む 番組の放送時間をサイズ指定で表現しているので必須 */
+  & div {
     box-sizing: border-box;
-    border-color: var(--ig-gray-600);
+    border-color: var(--ig-gray-50);
   }
 
   /* リンクの色を普通の文字と同じにする アンダーラインはホバー時のみ */
@@ -45,15 +48,13 @@ mrv-pgtable {
     }
   }
 
-  /* 直下にあるskelton以外のdivすべて */
-  &>div:not(.skelton) {
-    /* margin: 1px;   marginで線を引いてもいいかもしれない */
-    border-style: solid;
-    border-width: 0 1px 1px 0;
+  /* 直下にあるdivすべて marginで境界線を引く */
+  &>div {
+    margin: 1px;
   }
 
-  /* 上ヘッダのdiv nは0スタート */
-  &>div:nth-child(2n+1) {
+  /* 上の番組ヘッダのdiv nは0スタート */
+  &>div:nth-child(2n+3) {
     position: sticky;
     text-align: center;
     background-color: var(--mrv-pgtable-header-background-color);
@@ -62,7 +63,7 @@ mrv-pgtable {
     padding: 0.25rem 0;
   }
 
-  /* 左ヘッダのdiv */
+  /* 左の放送時間ヘッダのdiv */
   &>div:nth-child(2) {
     position: sticky;
     left: 0;
@@ -76,9 +77,10 @@ mrv-pgtable {
       background-color: var(--mrv-pgtable-header-background-color);
     }
 
-    /* 最初の1個以外、時刻バー以外は上に線を引く */
-    &>div:nth-child(n+2):not(.time-bar) {
-      border-top: 1px solid;
+    /* 時刻バー以外は上に線を引く */
+    &>div:not(.time-bar) {
+      border-width: 1px 0px 0px 0px;
+      border-style: solid;
     }
 
     /* 現在時刻の横棒 */
@@ -120,7 +122,6 @@ mrv-pgtable {
 
   /* ロード中に出すスケルトン */
   & .skelton {
-    margin: 3px;
     /* 40%から前・60%から後は単色 */
     background-image: linear-gradient(90deg, var(--ig-gray-100) 40%, var(--ig-gray-200), var(--ig-gray-100) 60%);
     /* 横300% 縦100% */
