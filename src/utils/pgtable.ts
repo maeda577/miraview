@@ -1,5 +1,5 @@
 import { loadConfigFromStorage } from './localconfig.ts';
-import { audio_component_types } from './const.ts';
+import { audio_component_types, genre_large, genre_middle } from './const.ts';
 import { IgcDialogComponent } from 'igniteui-webcomponents';
 import type { components } from './mirakc.d.ts';
 
@@ -9,6 +9,7 @@ export function getServiceId(program: components['schemas']['MirakurunProgram'])
 
 /**
  * 番組情報を使いやすくまとめる
+ * 第1キーは番組の放送日の5時ちょうどのunixtime 第2キーはService
  */
 export function groupPrograms(
   programs: components['schemas']['MirakurunProgram'][],
@@ -190,7 +191,7 @@ export class MrvPgTable extends HTMLElement {
     }
     // 各種チップ 映像フォーマット
     if (program.video) {
-      chipInfo.push(['movie', `${program.video.type} ${program.video.resolution}`]);
+      chipInfo.push(['videocam', `${program.video.type} ${program.video.resolution}`]);
     }
     // 各種チップ 音声フォーマット
     program.audios?.forEach(item => chipInfo.push([
@@ -202,7 +203,7 @@ export class MrvPgTable extends HTMLElement {
     const chipDiv = document.createElement('div');
     dialog.appendChild(chipDiv);
     chipInfo.forEach(item => chipDiv.insertAdjacentHTML('beforeend', `
-      <igc-chip>
+      <igc-chip disabled>
         <span slot="start" class="material-symbols-outlined">${item[0]}</span>
         <span>${item[1]}</span>
       </igc-chip>`
@@ -219,6 +220,12 @@ export class MrvPgTable extends HTMLElement {
         pDiv.insertAdjacentHTML('beforeend', `<p>${item.join(': ')}</p>`)
       );
     }
+
+    // 各種チップ カテゴリ
+    program.genres?.forEach(item => chipInfo.push([
+      'book_2', `${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2)}`
+    ]));
+    dialog.insertAdjacentHTML('beforeend', `<p>Program ID: ${program.id}<br/>Service ID: ${program.serviceId}</p>`);
 
     // 録画予約ボタン
     document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();

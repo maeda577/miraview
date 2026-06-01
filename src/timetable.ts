@@ -25,14 +25,14 @@ defineComponents(
 
 // APIを叩く
 // 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice
-const programs = await getApiData();
+const programs = await getApiData(loadConfigFromStorage().getApiEndpoint().href);
 
 /**
  * mirakcAPIを叩く
  */
-async function getApiData(): Promise<Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>> {
+async function getApiData(baseUrl: string): Promise<Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>> {
   try {
-    const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint().href });
+    const client = createClient<paths>({ baseUrl: baseUrl });
     const response = await Promise.all([
       client.GET("/programs"),
       client.GET("/services"),
@@ -149,12 +149,6 @@ document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group"
 // 日付ドロップダウンを作る
 createDateDropdown([...programs!.keys()]);
 
-// 放送タイプのボタングループの有効無効を切り替える
-// updateServiceButtons(new Set(['BS']));
-
-// 初回の番組表更新を行う
-// refreshTable();
-
 // 初回だけ現在時刻のラインまでスクロールする
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
 
@@ -167,5 +161,3 @@ document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('cli
 document.querySelector('#dialog-programinfo-recbutton')?.addEventListener('click',
   () => window.alert('未実装')
 );
-
-// updateServiceButtons();
