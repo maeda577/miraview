@@ -45,6 +45,7 @@ async function getApiData(baseUrl: string): Promise<Map<number, Map<components['
     return groupPrograms(response[0].data!, response[1].data!);
   } catch (error) {
     window.alert("mirakc APIへのアクセスに失敗しました。\nAPIエンドポイントの指定を確認してください。また、ブラウザのコンソールにエラーが出ていないか確認してください。");
+    document.querySelector<MrvPgTable>('mrv-pgtable')?.showSkelton(0);
     throw error;
   }
 }
@@ -69,6 +70,7 @@ function createDateDropdown(dateNumbers: number[]): void {
   // 番組が無い
   if (daySelect.childElementCount == 0) {
     window.alert("表示する番組がありません。\nmirakcの番組スキャンが正しく動作しているか確認してください。");
+    document.querySelector<MrvPgTable>('mrv-pgtable')?.showSkelton(0);
     return;
   }
   // ドロップダウンで今日を選ぶ

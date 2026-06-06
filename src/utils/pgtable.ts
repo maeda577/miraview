@@ -87,11 +87,9 @@ export class MrvPgTable extends HTMLElement {
   }
 
   /** 読み込み中のスケルトンを出す */
-  public showSkelton(): void {
-    // スケルトンの数が指定されていれば参照し、無ければ適当に6
-    const length = this.getAttribute('skelton-length') ?? '6';
+  public showSkelton(skeltonCount: number = 6): void {
     this.replaceChildren();
-    for (let index = 0; index < parseInt(length); index++) {
+    for (let index = 0; index < skeltonCount; index++) {
       this.insertAdjacentHTML('beforeend', '<div class="skelton"></div>');
     }
   }
@@ -221,11 +219,13 @@ export class MrvPgTable extends HTMLElement {
       );
     }
 
-    // 各種チップ カテゴリ
-    program.genres?.forEach(item => chipInfo.push([
-      'book_2', `${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2)}`
-    ]));
-    dialog.insertAdjacentHTML('beforeend', `<p>Program ID: ${program.id}<br/>Service ID: ${program.serviceId}</p>`);
+    // カテゴリ
+    program.genres?.forEach((item, idx) => dialog.insertAdjacentHTML('beforeend',
+      `<p>Category[${idx + 1}]: ${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</p>`
+    ));
+    // 番組ID
+    dialog.insertAdjacentHTML('beforeend', `<p>Program ID: ${program.id}</p>`);
+    dialog.insertAdjacentHTML('beforeend', `<p>Service ID: ${program.serviceId}</p>`);
 
     // 録画予約ボタン
     document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();
