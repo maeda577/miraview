@@ -1,11 +1,13 @@
-import './utils/igniteui.ts';
 import { loadConfigFromStorage } from './utils/localconfig.ts';
+import { MrvMenu } from './utils/menu.ts';
 import { groupPrograms, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
 
 import {
   defineComponents,
+  IgcNavbarComponent,
+  IgcIconButtonComponent,
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
@@ -15,6 +17,8 @@ import {
 } from 'igniteui-webcomponents';
 
 defineComponents(
+  IgcNavbarComponent,
+  IgcIconButtonComponent,
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
@@ -62,6 +66,11 @@ function createDateDropdown(dateNumbers: number[]): void {
     .forEach((dayUnixTime) => daySelect.insertAdjacentHTML('beforeend', `
       <igc-select-item value="${dayUnixTime}">${datetimeFormat.format(dayUnixTime)}</igc-select-item>
     `));
+  // 番組が無い
+  if (daySelect.childElementCount == 0) {
+    window.alert("表示する番組がありません。\nmirakcの番組スキャンが正しく動作しているか確認してください。");
+    return;
+  }
   // ドロップダウンで今日を選ぶ
   daySelect.select(today.toString());
   daySelect.addEventListener('igcChange', updateServiceButtons);
@@ -79,9 +88,13 @@ function updateServiceButtons(): void {
   if (!daySelect || daySelect.value === '') {
     return;
   }
-  const selectedDay5am = parseInt(daySelect!.value);
+  const selectedDay5am = parseInt(daySelect.value);
   // 選ばれている日に番組が存在する放送タイプ
-  const serviceTypes = new Set([...programs.get(selectedDay5am)!.keys()].map(item => item.channel.type));
+  const channels = programs.get(selectedDay5am)?.keys();
+  if (!channels) {
+    return;
+  }
+  const serviceTypes = new Set([...channels].map(item => item.channel.type));
 
   // 放送タイプのボタングループ
   const buttonGroup = document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group");
@@ -147,7 +160,7 @@ function refreshTable(): void {
 document.querySelector<IgcButtonGroupComponent>("#pgtable-menu>igc-button-group")?.addEventListener('igcSelect', refreshTable);
 
 // 日付ドロップダウンを作る
-createDateDropdown([...programs!.keys()]);
+createDateDropdown([...programs.keys()]);
 
 // 初回だけ現在時刻のラインまでスクロールする
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
@@ -160,4 +173,9 @@ document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('cli
 // 番組ダイアログの録画ボタン
 document.querySelector('#dialog-programinfo-recbutton')?.addEventListener('click',
   () => window.alert('未実装')
+);
+
+// 上メニューのハンバーガーボタン
+document.querySelector('igc-icon-button')?.addEventListener('click',
+  () => document.querySelector<MrvMenu>('mrv-menu')?.show()
 );

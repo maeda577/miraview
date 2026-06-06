@@ -59,7 +59,7 @@ mrv-pgtable {
     text-align: center;
     background-color: var(--mrv-pgtable-header-background-color);
     top: 0;
-    z-index: 30;
+    z-index: 20;
     padding: 0.25rem 0;
   }
 
@@ -67,7 +67,7 @@ mrv-pgtable {
   &>div:nth-child(2) {
     position: sticky;
     left: 0;
-    z-index: 20;
+    z-index: 30;
 
     /* さらに下の1時間ごとのdiv */
     &>div:not(.time-bar) {

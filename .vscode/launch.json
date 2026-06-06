@@ -2,11 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Open miraview (Live Preview)",
       "type": "editor-browser",
       "request": "launch",
-      "name": "Open miraview",
-      "url": "http://localhost:3000/",
-      "webRoot": "${workspaceFolder}/dist/",
-    }
+      "url": "http://localhost:3000/dist/timetable.html",
+      "webRoot": "${workspaceFolder}/",
+      "sourceMaps": true,
+      "preLaunchTask": "npm: serve",
+      "postDebugTask": "Terminate All Tasks"
+    },
   ]
 }

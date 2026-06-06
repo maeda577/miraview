@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // Webサーバ起動 依存関係にrolldownがいる
+    {
+      "type": "npm",
+      "script": "serve",
+      "label": "npm: serve",
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "npm exec",
+          "endsPattern": "Serving!"
+        }
+      },
+      "dependsOn": [
+        "npm: watch"
+      ]
+    },
+    // Rolldownのバンドラを実行
+    {
+      "type": "npm",
+      "script": "watch",
+      "label": "npm: watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "rebuilding",
+          "endsPattern": "Rebuilt dist/js in"
+        }
+      }
+    },
+    // 実行中のタスクを全て止めるタスク inputに意味があるので、このecho自体には意味がない
+    // https://code.visualstudio.com/docs/reference/variables-reference#_input-variables
+    {
+      "label": "Terminate All Tasks",
+      "command": "echo ${input:terminate}",
+      "type": "shell",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 deno.lock
 
-/dist/api
+/api
 /dist/js
 /dist/resources/*.woff2
 /dist/themes

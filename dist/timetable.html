@@ -10,8 +10,8 @@
     <!-- <link id="theme-css" rel='stylesheet' href='./themes/light/material.css' /> -->
     <link id="theme-css" rel='stylesheet' href='./themes/dark/material.css' />
     <style type="text/css">
+      mrv-menu:not(:defined),
       igc-navbar:not(:defined),
-      igc-nav-drawer:not(:defined),
       igc-dialog:not(:defined) {
         display: none;
       }
@@ -33,10 +33,7 @@
       <span>番組表</span>
     </igc-navbar>
     <!-- 左メニュー -->
-    <igc-nav-drawer position="start">
-      <igc-nav-drawer-header-item>miraview</igc-nav-drawer-header-item>
-      <!-- ここに igc-nav-drawer-item が入る -->
-    </igc-nav-drawer>
+    <mrv-menu></mrv-menu>
     <!-- 日付と放送波の切り替えバー -->
     <div id="pgtable-menu" style="display: flex; justify-content: center; align-items:center; padding: 0.5rem;">
       <igc-select style="width: 10rem; margin-right: 1rem;"></igc-select>
