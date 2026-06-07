@@ -169,7 +169,7 @@ document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior:
 
 // 番組ダイアログの閉じるボタン
 document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('click',
-  () => document.querySelector<IgcDialogComponent>('#mrv-pgtable-dialog')?.hide()
+  () => document.querySelector<IgcDialogComponent>('mrv-pgtable>igc-dialog')?.hide()
 );
 
 // 番組ダイアログの録画ボタン

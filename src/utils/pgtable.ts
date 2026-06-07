@@ -88,7 +88,7 @@ export class MrvPgTable extends HTMLElement {
 
   /** 読み込み中のスケルトンを出す */
   public showSkelton(skeltonCount: number = 6): void {
-    this.replaceChildren();
+    this.replaceChildren(...this.querySelectorAll('igc-dialog'));
     for (let index = 0; index < skeltonCount; index++) {
       this.insertAdjacentHTML('beforeend', '<div class="skelton"></div>');
     }
@@ -111,11 +111,12 @@ export class MrvPgTable extends HTMLElement {
   ): void {
     // 時刻表示の左ヘッダを作る
     const timeHeader = document.createElement('div');
+    timeHeader.classList.add('timeheader');
     for (let i = 5; i < 29; i++) {
       timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
     }
     timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
-    this.replaceChildren(document.createElement('div'), timeHeader);
+    this.replaceChildren(...this.querySelectorAll('igc-dialog'), document.createElement('div'), timeHeader);
 
     // 番組IDキャッシュを作り直す
     this.idToProgram.clear();
@@ -133,9 +134,9 @@ export class MrvPgTable extends HTMLElement {
         return;
       }
 
-      // 番組ヘッダ 番組名が長いと表示が崩れるので、長さに応じて文字を小さくする
+      // サービスのヘッダ 番組名が長いと表示が崩れるので、長さに応じて文字を小さくする
       this.insertAdjacentHTML('beforeend', `
-      <div>
+      <div class="serviceheader">
         <a href="${apiEndpoint.href}services/${service.id}/stream"
           style="font-size: ${Math.min(9 / service.name.length, 1)}rem;"
         >
@@ -144,8 +145,9 @@ export class MrvPgTable extends HTMLElement {
       </div>
       `);
 
-      // 番組1個分のdiv
+      // サービスごとの各番組を入れるdiv
       const programDiv = document.createElement('div');
+      programDiv.classList.add('serviceprograms');
       this.appendChild(programDiv);
       programsPerService.forEach(prg => {
         // 日付またぎの番組用にstartAtとdurationを調整する
@@ -173,7 +175,7 @@ export class MrvPgTable extends HTMLElement {
     if (!program) { return; }
 
     // 番組表用に定義されたダイアログを探す
-    const dialog = document.querySelector<IgcDialogComponent>('#mrv-pgtable-dialog');
+    const dialog = this.querySelector<IgcDialogComponent>('igc-dialog');
     if (!dialog) { return; }
 
     // ダイアログの中身を作っていく

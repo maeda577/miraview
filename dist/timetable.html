@@ -46,12 +46,12 @@
     </div>
     <!-- 番組表 -->
     <mrv-pgtable class="main-content">
+      <!-- 番組クリックのダイアログ slot="footer" がついていない要素は開くたびに消される -->
+      <igc-dialog close-on-outside-click>
+        <igc-button id="dialog-programinfo-recbutton" variant="flat" slot="footer">録画予約</igc-button>
+        <igc-button id="dialog-programinfo-closebutton" variant="flat" slot="footer">OK</igc-button>
+      </igc-dialog>
     </mrv-pgtable>
-    <!-- 番組クリックのダイアログ slot="footer" がついていない要素は毎回消える -->
-    <igc-dialog id="mrv-pgtable-dialog" close-on-outside-click>
-      <igc-button id="dialog-programinfo-recbutton" variant="flat" slot="footer">録画予約</igc-button>
-      <igc-button id="dialog-programinfo-closebutton" variant="flat" slot="footer">OK</igc-button>
-    </igc-dialog>
   </body>
 
 </html>

@@ -53,8 +53,8 @@ mrv-pgtable {
     margin: 1px;
   }
 
-  /* 上の番組ヘッダのdiv nは0スタート */
-  &>div:nth-child(2n+3) {
+  /* 上の番組ヘッダのdiv */
+  & .serviceheader {
     position: sticky;
     text-align: center;
     background-color: var(--mrv-pgtable-header-background-color);
@@ -64,7 +64,7 @@ mrv-pgtable {
   }
 
   /* 左の放送時間ヘッダのdiv */
-  &>div:nth-child(2) {
+  & .timeheader {
     position: sticky;
     left: 0;
     z-index: 30;
@@ -94,8 +94,8 @@ mrv-pgtable {
     }
   }
 
-  /* 4,6,8...部分のdivの下のdiv(番組アイテム部分) */
-  &>div:nth-child(2n+4) {
+  /* 番組アイテム部分 */
+  & .serviceprograms {
     position: relative;
     max-height: calc(var(--mrv-pgtable-height-per-hour) * 24);
     overflow: hidden;
@@ -127,6 +127,18 @@ mrv-pgtable {
     /* 横300% 縦100% */
     background-size: 300% 100%;
     animation: skeleton-animation 1.5s linear infinite;
+  }
+
+  /* 番組情報ダイアログ 全体 */
+  & igc-dialog::part(base):open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 番組情報ダイアログ コンテンツ部分 */
+  & igc-dialog::part(content) {
+    overflow-y: scroll;
+    flex-grow: 1;
   }
 }
 
