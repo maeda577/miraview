@@ -237,4 +237,6 @@ export class MrvPgTable extends HTMLElement {
   }
 }
 
-customElements.define('mrv-pgtable', MrvPgTable);
+export function definePgTable() {
+  customElements.define('mrv-pgtable', MrvPgTable);
+}

@@ -5,12 +5,6 @@ import {
   IgcNavDrawerItemComponent,
 } from 'igniteui-webcomponents';
 
-defineComponents(
-  IgcNavDrawerComponent,
-  IgcNavDrawerHeaderItemComponent,
-  IgcNavDrawerItemComponent,
-);
-
 export class MrvMenu extends HTMLElement {
   // 左メニューのアイテム 左からMaterialIconの名前・表示する文字列・遷移するHTML
   private menuItems = [
@@ -61,4 +55,11 @@ export class MrvMenu extends HTMLElement {
   }
 }
 
-customElements.define('mrv-menu', MrvMenu);
+export function defineMenu() {
+  defineComponents(
+    IgcNavDrawerComponent,
+    IgcNavDrawerHeaderItemComponent,
+    IgcNavDrawerItemComponent,
+  );
+  customElements.define('mrv-menu', MrvMenu);
+}

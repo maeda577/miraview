@@ -1,6 +1,6 @@
 import { loadConfigFromStorage } from './utils/localconfig.ts';
-import { MrvMenu } from './utils/menu.ts';
-import { groupPrograms, MrvPgTable } from './utils/pgtable.ts';
+import { defineMenu, MrvMenu } from './utils/menu.ts';
+import { groupPrograms, definePgTable, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
 
@@ -26,6 +26,9 @@ defineComponents(
   IgcDialogComponent,
   IgcChipComponent,
 );
+
+definePgTable();
+defineMenu();
 
 // APIを叩く
 // 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice

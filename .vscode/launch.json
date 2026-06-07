@@ -8,8 +8,9 @@
       "url": "http://localhost:3000/dist/timetable.html",
       "webRoot": "${workspaceFolder}/",
       "sourceMaps": true,
+      "disableNetworkCache": true,
       "preLaunchTask": "npm: serve",
-      "postDebugTask": "Terminate All Tasks"
-    },
+      "postDebugTask": "Terminate All Tasks",
+    }
   ]
 }
