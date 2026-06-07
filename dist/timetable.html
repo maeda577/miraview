@@ -7,24 +7,19 @@
     <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
     <link rel='stylesheet' href='./resources/miraview.css' />
     <link rel="stylesheet" href="./resources/pgtable.css" />
-    <!-- <link id="theme-css" rel='stylesheet' href='./themes/light/material.css' /> -->
-    <link id="theme-css" rel='stylesheet' href='./themes/dark/material.css' />
+    <link rel='stylesheet' href='./themes/dark/material.css' />
     <style type="text/css">
       mrv-menu:not(:defined),
       igc-navbar:not(:defined),
       igc-dialog:not(:defined) {
         display: none;
       }
-
-      #dialog-programinfo-paragraphs>p {
-        margin-block-start: 0;
-      }
     </style>
     <script type="module" src="./js/timetable.js"></script>
     <title>番組表 - miraview</title>
   </head>
 
-  <body>
+  <body class="ig-scrollbar">
     <!-- 上部バー -->
     <igc-navbar>
       <igc-icon-button slot="start" variant="flat">
