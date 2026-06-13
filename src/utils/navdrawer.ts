@@ -55,7 +55,7 @@ export class MrvNavDrawer extends HTMLElement {
   }
 }
 
-export function defineMenu() {
+export function defineNavDrawer() {
   defineComponents(
     IgcNavDrawerComponent,
     IgcNavDrawerHeaderItemComponent,

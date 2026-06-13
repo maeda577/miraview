@@ -1,13 +1,12 @@
 import { loadConfigFromStorage } from './utils/localconfig.ts';
-import { defineMenu, MrvNavDrawer } from './utils/nav-drawer.ts';
+import { defineNavDrawer } from './utils/navdrawer.ts';
+import { defineNavbar } from './utils/navbar.ts';
 import { groupPrograms, definePgTable, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
 
 import {
   defineComponents,
-  IgcNavbarComponent,
-  IgcIconButtonComponent,
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
@@ -17,8 +16,6 @@ import {
 } from 'igniteui-webcomponents';
 
 defineComponents(
-  IgcNavbarComponent,
-  IgcIconButtonComponent,
   IgcSelectComponent,
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
@@ -28,7 +25,8 @@ defineComponents(
 );
 
 definePgTable();
-defineMenu();
+defineNavDrawer();
+defineNavbar();
 
 // APIを叩く
 // 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice
@@ -66,7 +64,6 @@ function createDateDropdown(dateNumbers: number[]): void {
   const daySelect = document.querySelector("#pgtable-menu>igc-select") as IgcSelectComponent;
   dateNumbers
     .filter(date => date >= today)
-    .sort()
     .forEach((dayUnixTime) => daySelect.insertAdjacentHTML('beforeend', `
       <igc-select-item value="${dayUnixTime}">${datetimeFormat.format(dayUnixTime)}</igc-select-item>
     `));
@@ -163,9 +160,4 @@ document.querySelector('#button-close')?.addEventListener('click',
 // 番組ダイアログの録画ボタン
 document.querySelector('#button-rec')?.addEventListener('click',
   () => window.alert('未実装')
-);
-
-// 上メニューのハンバーガーボタン
-document.querySelector('igc-icon-button')?.addEventListener('click',
-  () => document.querySelector<MrvNavDrawer>('mrv-nav-drawer')?.show()
 );
