@@ -20,8 +20,8 @@ export function groupPrograms(
     services.map(item => [item.id, item])
   );
 
-  // 番組情報をグループ化した結果
-  const result = new Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>();
+  // 番組情報をグループ化した結果Map
+  const mapAllDay = new Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>();
 
   programs.forEach(program => {
     // 番組名や諸々のIDが入っていない番組を無視する
@@ -31,10 +31,10 @@ export function groupPrograms(
     // 番組の放送日の5時ちょうどのunixtime 午前4時59分までは前日と判定するため5時間引いておく
     const date = new Date(program.startAt - (5 * 60 * 60 * 1000)).setHours(5, 0, 0, 0);
     // 第一キーがなければMapを新規作成
-    if (!result.has(date)) {
-      result.set(date, new Map());
+    if (!mapAllDay.has(date)) {
+      mapAllDay.set(date, new Map());
     }
-    const mapPerDay = result.get(date)!;
+    const mapPerDay = mapAllDay.get(date)!;
 
     // 第二キーがなければ配列を新規作成して追加
     const service = serviceMap.get(getServiceId(program)!)!;
@@ -44,19 +44,58 @@ export function groupPrograms(
     mapPerDay.get(service)!.push(program);
   });
 
-  // グループ化した番組の後処理
-  result.forEach((prgPerDay, date) => prgPerDay.forEach((prgs, service) => {
+  // グループ化した番組配列の後処理
+  mapAllDay.forEach((prgPerDay, date) => prgPerDay.forEach((prgs, service) => {
     // 番組を放送順に並べ替える 並べ替えないと番組のz-indexの指定が必要になって面倒
     prgs.sort((a, b) => a.startAt - b.startAt);
 
     // 翌日5時のunixtime
     const tomorrow5h = date + (1000 * 60 * 60 * 24);
-    // 最後の番組がAM5時をまたいでいる場合は翌日の番組リストにも加える
+    // 最後の番組がAM5時をまたいでいる場合は翌日の番組配列の先頭にも加える
     const lastPrg = prgs.at(-1);
     if (lastPrg && (lastPrg.startAt + lastPrg.duration) > tomorrow5h) {
-      result.get(tomorrow5h)?.get(service)?.unshift(lastPrg);
+      mapAllDay.get(tomorrow5h)?.get(service)?.unshift(lastPrg);
     }
   }));
+
+  // 番組情報をグループ化した結果Mapのソート後版
+  // 第1キーは日付順、第2キーはServiceの順でソートされている
+  // Map自体はsort()を持たないが、挿入順に列挙されることが保証されているらしい
+  // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Map
+  const result = new Map<number, Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>>();
+
+  // チャンネルタイプでソートする時に使うマップ
+  const typeToNumber = new Map<components["schemas"]["ChannelType"], number>([
+    ["GR", 1],
+    ["BS", 2],
+    ["CS", 3],
+    ["SKY", 4],
+  ]);
+
+  // グループ化したMapをソートしつつ作り直す
+  const sortedDays = [...mapAllDay.keys()].sort();
+  sortedDays.forEach(date => {
+    const prgPerDay = mapAllDay.get(date)!;
+    const sortedServices = [...prgPerDay.keys()].sort((a, b) => {
+      // チャンネルタイプ
+      if (a.channel.type !== b.channel.type) {
+        return typeToNumber.get(a.channel.type)! - typeToNumber.get(b.channel.type)!;
+      }
+      // リモコンID
+      else if (a.remoteControlKeyId && b.remoteControlKeyId && a.remoteControlKeyId !== b.remoteControlKeyId) {
+        return a.remoteControlKeyId - b.remoteControlKeyId;
+      }
+      // サービスID(networkIdとserviceIdをつなげたもの)
+      else {
+        return a.id - b.id;
+      }
+    });
+
+    const sortedPrgPerDay = new Map(
+      sortedServices.map(item => [item, prgPerDay.get(item)!])
+    );
+    result.set(date, sortedPrgPerDay);
+  });
 
   return result;
 }
