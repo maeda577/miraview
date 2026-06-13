@@ -171,12 +171,12 @@ createDateDropdown([...programs.keys()]);
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
 
 // 番組ダイアログの閉じるボタン
-document.querySelector('#dialog-programinfo-closebutton')?.addEventListener('click',
+document.querySelector('#button-close')?.addEventListener('click',
   () => document.querySelector<IgcDialogComponent>('mrv-pgtable>igc-dialog')?.hide()
 );
 
 // 番組ダイアログの録画ボタン
-document.querySelector('#dialog-programinfo-recbutton')?.addEventListener('click',
+document.querySelector('#button-rec')?.addEventListener('click',
   () => window.alert('未実装')
 );
 
