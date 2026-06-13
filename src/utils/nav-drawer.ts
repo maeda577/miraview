@@ -5,7 +5,7 @@ import {
   IgcNavDrawerItemComponent,
 } from 'igniteui-webcomponents';
 
-export class MrvMenu extends HTMLElement {
+export class MrvNavDrawer extends HTMLElement {
   // 左メニューのアイテム 左からMaterialIconの名前・表示する文字列・遷移するHTML
   private menuItems = [
     ["newspaper", "番組表", "timetable.html"],
@@ -61,5 +61,5 @@ export function defineMenu() {
     IgcNavDrawerHeaderItemComponent,
     IgcNavDrawerItemComponent,
   );
-  customElements.define('mrv-menu', MrvMenu);
+  customElements.define('mrv-nav-drawer', MrvNavDrawer);
 }

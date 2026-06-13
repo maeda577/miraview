@@ -1,5 +1,5 @@
 import { loadConfigFromStorage } from './utils/localconfig.ts';
-import { defineMenu, MrvMenu } from './utils/menu.ts';
+import { defineMenu, MrvNavDrawer } from './utils/menu.ts';
 import { groupPrograms, definePgTable, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
@@ -167,5 +167,5 @@ document.querySelector('#button-rec')?.addEventListener('click',
 
 // 上メニューのハンバーガーボタン
 document.querySelector('igc-icon-button')?.addEventListener('click',
-  () => document.querySelector<MrvMenu>('mrv-menu')?.show()
+  () => document.querySelector<MrvNavDrawer>('mrv-nav-drawer')?.show()
 );
