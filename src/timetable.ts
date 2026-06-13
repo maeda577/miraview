@@ -1,5 +1,5 @@
 import { loadConfigFromStorage } from './utils/localconfig.ts';
-import { defineMenu, MrvNavDrawer } from './utils/menu.ts';
+import { defineMenu, MrvNavDrawer } from './utils/nav-drawer.ts';
 import { groupPrograms, definePgTable, MrvPgTable } from './utils/pgtable.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
