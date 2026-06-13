@@ -229,8 +229,10 @@ export class MrvPgTable extends HTMLElement {
     dialog.insertAdjacentHTML('beforeend', `<p>Program ID: ${program.id}</p>`);
     dialog.insertAdjacentHTML('beforeend', `<p>Service ID: ${program.serviceId}</p>`);
 
-    // 録画予約ボタン
-    document.querySelector<HTMLElement>('#dialog-programinfo-recbutton')!.dataset['prgid'] = program.id.toString();
+    // footerのボタンに使いそうな情報を割り当てる
+    document.querySelectorAll<HTMLElement>('igc-button[slot="footer"]')?.forEach(item => {
+      item.dataset['prgid'] = program.id.toString();
+    });
 
     // ダイアログ表示
     dialog.show();
