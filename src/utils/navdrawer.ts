@@ -27,6 +27,7 @@ export class MrvNavDrawer extends HTMLElement {
     // 左メニューを作る
     const drawer = document.createElement('igc-nav-drawer');
     drawer.position = 'start';
+    drawer.style.zIndex = '99';
     this.replaceChildren(drawer);
 
     // 左メニューのヘッダ
@@ -48,7 +49,7 @@ export class MrvNavDrawer extends HTMLElement {
 
   // メニューのクリック data-htmlタグを読み、そのhtmlに遷移する
   onMenuClick(ev: PointerEvent): void {
-    const menuItem = ev.target as IgcNavDrawerItemComponent | undefined;
+    const menuItem = ev.currentTarget as IgcNavDrawerItemComponent | undefined;
     if (menuItem && !menuItem.active && menuItem.dataset['html']) {
       window.location.href = `./${menuItem.dataset['html']}`;
     }

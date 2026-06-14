@@ -113,11 +113,11 @@ function updateServiceButtons(): void {
   });
 
   // 手動で画面更新をかける
-  refreshTable();
+  refreshTable(undefined);
 }
 
 // 番組表を更新する
-function refreshTable(): void {
+function refreshTable(e: Event | undefined): void {
   // console.debug(new Date() + ' timetable.ts refreshTable');
   // 選ばれている日
   const daySelect = document.querySelector<IgcSelectItemComponent>("#pgtable-menu>igc-select");
@@ -140,6 +140,12 @@ function refreshTable(): void {
 
   // 番組表を更新
   document.querySelector<MrvPgTable>('mrv-pgtable')?.refreshTable(dayPrograms, selectedDay5am);
+
+  // 放送タイプの切り替えの際は左端までスクロールする
+  if (e?.type === 'igcSelect') {
+    // 番組表の最初のaタグ(番組ヘッダのリンク)を水平方向の真ん中に持っていく
+    document.querySelector('mrv-pgtable a')?.scrollIntoView({ inline: 'center', behavior: 'auto' });
+  }
 }
 
 // 放送タイプボタンにイベントをつける
