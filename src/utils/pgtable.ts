@@ -128,7 +128,7 @@ export class MrvPgTable extends HTMLElement {
   /** 読み込み中のスケルトンを出す */
   public showSkelton(skeltonCount: number = 6): void {
     this.replaceChildren(...this.querySelectorAll('igc-dialog'));
-    for (let index = 0; index < skeltonCount; index++) {
+    for (let index = 0; index < skeltonCount * 2; index++) {
       this.insertAdjacentHTML('beforeend', '<div class="skelton"></div>');
     }
   }
@@ -148,14 +148,8 @@ export class MrvPgTable extends HTMLElement {
     programs: Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>,
     selectedDay5AM: number,
   ): void {
-    // 時刻表示の左ヘッダを作る
-    const timeHeader = document.createElement('div');
-    timeHeader.classList.add('timeheader');
-    for (let i = 5; i < 29; i++) {
-      timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
-    }
-    timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
-    this.replaceChildren(...this.querySelectorAll('igc-dialog'), document.createElement('div'), timeHeader);
+    // ダイアログを除いて全ての子要素を消す
+    this.replaceChildren(...this.querySelectorAll('igc-dialog'));
 
     // 番組IDキャッシュを作り直す
     this.idToProgram.clear();
@@ -166,11 +160,27 @@ export class MrvPgTable extends HTMLElement {
     // 番組divの日付フォーマット
     const timeFormat = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
 
+    // 最後に追加したチャンネルタイプ(GR/BS/CS/SKY) 切り替わりのタイミングで時刻ヘッダを入れる
+    let lastChannelType: components["schemas"]["ChannelType"] | undefined = undefined;
+
     // チャンネルごとに列追加
     programs?.forEach((programsPerService, service) => {
       // チャンネルに番組が無い
       if (!programsPerService || programsPerService.length === 0) {
         return;
+      }
+
+      // 時刻表示の列を作る
+      if (lastChannelType !== service.channel.type) {
+        lastChannelType = service.channel.type;
+        const timeHeader = document.createElement('div');
+        timeHeader.classList.add('timeheader');
+        for (let i = 5; i < 29; i++) {
+          timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
+        }
+        timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
+        this.appendChild(document.createElement('div'));
+        this.appendChild(timeHeader);
       }
 
       // サービスのヘッダ 番組名が長いと表示が崩れるので、長さに応じて文字を小さくする

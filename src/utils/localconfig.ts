@@ -1,26 +1,27 @@
+import { configureTheme, Theme, ThemeVariant } from 'igniteui-webcomponents';
+
 // 設定をlocal storageに書き込む時のキー
 const STORAGE_KEYS = {
   // mirakcのAPIエンドポイント
   API_ENDPOINT: 'miraview.config.mirakcApiEndpoint',
-  // 番組表で並べ替えを無効化するか
-  DISABLE_SERVICE_SORTING: 'miraview.config.disableServiceSorting',
   // テーマの名前
   THEME: 'miraview.config.theme',
+  // テーマがLightかDarkか
+  THEME_VARIANT: 'miraview.config.themeVariant',
 } as const;
 
 /** 設定情報 */
 export class MiraviewConfig {
   /** mirakcのAPI接続先 */
   apiEndpoint: URL | undefined;
-  /** 番組一覧の並べ替えてを無効化するか */
-  disableServiceSorting: boolean = false;
-  /** テーマ */
-  theme: 'theme-classic-dark' | 'theme-classic-light' | undefined;
+
+  theme: Theme | undefined;
+  themeVariant: ThemeVariant | undefined;
 
   /** mirakcのAPI接続先 未指定だったらデフォルト値を返す */
   getApiEndpoint(): URL {
     if (!this.apiEndpoint) {
-      return new URL('api/', window.location.origin);
+      return getDefaultEndpoint();
     }
     const result = new URL(this.apiEndpoint);
     // 末尾に / が無ければつける
@@ -28,6 +29,28 @@ export class MiraviewConfig {
       result.pathname += '/';
     }
     return result;
+  }
+
+  getTheme() {
+    return this.theme ?? 'material';
+  }
+
+  applyTheme() {
+    // テーマ
+    const targetTheme = this.getTheme();
+    // 値が指定されてれば使い、無ければOSのテーマ設定を読む
+    const targetThemeVariant = this.themeVariant ?? (window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light');
+
+    // CSS差し替え
+    const themeLink = document.head.querySelector<HTMLLinkElement>('link[rel="stylesheet"][href^="./themes/"]');
+    if (themeLink) {
+      themeLink.href = `./themes/${targetThemeVariant}/${this.theme}.css`;
+    }
+    else {
+      document.head.insertAdjacentHTML('beforeend', `<link rel='stylesheet' href='./themes/${targetThemeVariant}/${targetTheme}.css' />`);
+    }
+    // Igcのテーマも更新
+    configureTheme(targetTheme, targetThemeVariant);
   }
 }
 
@@ -39,11 +62,10 @@ export function loadConfigFromStorage(): MiraviewConfig {
     const mirakcUrlString = localStorage.getItem(STORAGE_KEYS.API_ENDPOINT);
     config.apiEndpoint = (mirakcUrlString && URL.canParse(mirakcUrlString)) ? new URL(mirakcUrlString) : undefined;
 
-    // 並べ替えの無効化。falseの場合は値自体が無くなるので、何らかの文字があればtrue
-    config.disableServiceSorting = !!localStorage.getItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
+    // テーマの読み取り
+    config.theme = (localStorage.getItem(STORAGE_KEYS.THEME) ?? undefined) as Theme | undefined;
+    config.themeVariant = (localStorage.getItem(STORAGE_KEYS.THEME_VARIANT) ?? undefined) as ThemeVariant | undefined;
 
-    // テーマ文字列
-    config.theme = localStorage.getItem(STORAGE_KEYS.THEME) as 'theme-classic-dark' | 'theme-classic-light' | undefined;
     return config;
   } catch (error) {
     if (error instanceof Error) {
@@ -56,22 +78,29 @@ export function loadConfigFromStorage(): MiraviewConfig {
 
 /** configをローカルストレージに書き込む */
 export function saveConfigToStorage(config: MiraviewConfig) {
-  // APIエンドポイントは指定されていれば入れ、なければ消す（config読む際にデフォルト値に戻る）
-  if (config.apiEndpoint) {
-    localStorage.setItem(STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint.href);
-  } else {
-    localStorage.removeItem(STORAGE_KEYS.API_ENDPOINT);
-  }
-  // 並べ替えの無効化がされていれば文字を入れる。文字は何でもいい。なければ消す
-  if (config.disableServiceSorting) {
-    localStorage.setItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING, 'true');
-  } else {
-    localStorage.removeItem(STORAGE_KEYS.DISABLE_SERVICE_SORTING);
-  }
-  // テーマの文字列
-  if (config.theme) {
-    localStorage.setItem(STORAGE_KEYS.THEME, config.theme);
-  } else {
-    localStorage.removeItem(STORAGE_KEYS.THEME);
-  }
+  // 保存するキーと値のマップ
+  const configs: [string, string | undefined][] = [
+    [STORAGE_KEYS.API_ENDPOINT, config.apiEndpoint?.href],
+    [STORAGE_KEYS.THEME, config.theme],
+    [STORAGE_KEYS.THEME_VARIANT, config.themeVariant],
+  ];
+
+  configs.forEach(item => {
+    // 値があれば保存、無ければキーごと消す
+    if (item[1]) {
+      localStorage.setItem(item[0], item[1]);
+    } else {
+      localStorage.removeItem(item[0]);
+    }
+  });
+}
+
+/** 現在の配色(light/dark)を取得する */
+export function getThemeVariant(): ThemeVariant {
+  return (localStorage.getItem(STORAGE_KEYS.THEME_VARIANT) ??
+    (window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light')) as ThemeVariant;
+}
+
+export function getDefaultEndpoint() {
+  return new URL('api/', window.location.origin);
 }

@@ -3,7 +3,8 @@
   "configurations": [
     {
       "name": "Open miraview (Live Preview)",
-      "type": "editor-browser",
+      // "type": "editor-browser",
+      "type": "msedge",
       "request": "launch",
       "url": "http://localhost:3000/dist/timetable.html",
       "webRoot": "${workspaceFolder}/",

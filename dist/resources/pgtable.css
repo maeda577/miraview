@@ -4,6 +4,11 @@
   --mrv-pgtable-height-per-hour: 240px;
   /* 午前5時を起点とした現在時刻のミリ秒 Javascript側で動的に更新される */
   --mrv-pgtable-now-msec-from-5am: 1;
+  /* チャンネルヘッダの最低高さ */
+  --mrv-pgtable-channel-header-height: 2rem;
+  /* 1つのチャンネルの幅 */
+  --mrv-pgtable-channel-width: 10rem;
+  /* ヘッダや要素の色 */
   --mrv-pgtable-header-background-color: var(--ig-gray-200);
   --mrv-pgtable-item-background-color: var(--ig-gray-100);
 }
@@ -12,23 +17,14 @@
 mrv-pgtable {
   color: var(--ig-gray-100-contrast);
   font-family: var(--ig-font-family);
+
   /* 番組表はCSSグリッドで表現する */
   display: grid;
-
-  /* 時刻の左ヘッダだけサイズ指定 放送部分はauto-columnsで指定 */
-  grid-template-columns: 2rem;
+  /* 行数は固定で、列数が無限に増えていく */
   grid-auto-flow: column;
-  grid-auto-columns: 10rem;
-
-  /* skeltonの場合は放送チャンネルヘッダ無し */
-  &:has(.skelton) {
-    grid-template-rows: 1fr;
-  }
-
-  /* 通常の場合は放送チャンネルヘッダあり */
-  &:not(:has(.skelton)) {
-    grid-template-rows: auto 1fr;
-  }
+  grid-auto-columns: min-content;
+  /* 1行目は中身が空でも高さを確保する(skelton用) */
+  grid-template-rows: minmax(var(--mrv-pgtable-channel-header-height), auto) 1fr;
 
   /* divのサイズ指定に境界線も含む 番組の放送時間をサイズ指定で表現しているので必須 */
   & div {
@@ -61,13 +57,16 @@ mrv-pgtable {
     top: 0;
     z-index: 20;
     padding: 0.25rem 0;
+    width: var(--mrv-pgtable-channel-width);
+    min-height: var(--mrv-pgtable-channel-header-height);
   }
 
-  /* 左の放送時間ヘッダのdiv */
+  /* 放送時間列のdiv 基本は左端にいるはず */
   & .timeheader {
     position: sticky;
     left: 0;
     z-index: 30;
+    width: 2rem;
 
     /* さらに下の1時間ごとのdiv */
     &>div:not(.time-bar) {
@@ -127,6 +126,7 @@ mrv-pgtable {
     /* 横300% 縦100% */
     background-size: 300% 100%;
     animation: skeleton-animation 1.5s linear infinite;
+    width: var(--mrv-pgtable-channel-width);
   }
 
   /* 番組情報ダイアログ 全体 */

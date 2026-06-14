@@ -28,9 +28,13 @@ definePgTable();
 defineNavDrawer();
 defineNavbar();
 
+// configを読み取りテーマを設定する
+const config = loadConfigFromStorage();
+config.applyTheme();
+
 // APIを叩く
 // 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice
-const programs = await getPrograms(loadConfigFromStorage().getApiEndpoint().href);
+const programs = await getPrograms(config.getApiEndpoint().href);
 
 /**
  * mirakcAPIを叩く

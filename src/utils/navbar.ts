@@ -24,7 +24,7 @@ export class MrvNavbar extends HTMLElement {
     `);
 
     // ハンバーガーボタンクリック時のイベントリスナー
-    this.querySelector('igc-icon-button')?.addEventListener('click', () => {
+    this.querySelector<IgcIconButtonComponent>('igc-icon-button[slot="start"]')?.addEventListener('click', () => {
       const drawer = document.querySelector<any>('mrv-nav-drawer');
       if (drawer && typeof drawer.show === 'function') {
         drawer.show();
