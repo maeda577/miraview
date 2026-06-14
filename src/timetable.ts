@@ -139,12 +139,12 @@ function refreshTable(e: Event | undefined): void {
   }
 
   // 番組表を更新
-  document.querySelector<MrvPgTable>('mrv-pgtable')?.refreshTable(dayPrograms, selectedDay5am);
+  const pgtable = document.querySelector<MrvPgTable>('mrv-pgtable');
+  pgtable?.refreshTable(dayPrograms, selectedDay5am);
 
   // 放送タイプの切り替えの際は左端までスクロールする
   if (e?.type === 'igcSelect') {
-    // 番組表の最初のaタグ(番組ヘッダのリンク)を水平方向の真ん中に持っていく
-    document.querySelector('mrv-pgtable a')?.scrollIntoView({ inline: 'center', behavior: 'auto' });
+    pgtable?.scroll({ left: 0 });
   }
 }
 
