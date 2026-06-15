@@ -17,6 +17,7 @@
 mrv-pgtable {
   color: var(--ig-gray-100-contrast);
   font-family: var(--ig-font-family);
+  border: 1px solid var(--ig-gray-400);
 
   /* 番組表はCSSグリッドで表現する */
   display: grid;
@@ -44,9 +45,11 @@ mrv-pgtable {
     }
   }
 
-  /* 直下にあるdivすべて marginで境界線を引く */
+  /* 直下にあるdivすべて */
   &>div {
-    margin: 1px;
+    border-width: 0px 1px 1px 0px;
+    border-style: solid;
+    border-color: inherit;
   }
 
   /* 上の番組ヘッダのdiv */
@@ -80,6 +83,7 @@ mrv-pgtable {
     &>div:not(.time-bar) {
       border-width: 1px 0px 0px 0px;
       border-style: solid;
+      border-color: inherit;
     }
 
     /* 現在時刻の横棒 */
@@ -112,6 +116,7 @@ mrv-pgtable {
 
       border-width: 1px 0px;
       border-style: solid;
+      border-color: inherit;
 
       &:hover {
         z-index: 5;
