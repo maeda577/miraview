@@ -15,7 +15,6 @@
 
 /* 番組表 */
 mrv-pgtable {
-  color: var(--ig-gray-100-contrast);
   font-family: var(--ig-font-family);
   border: 1px solid var(--ig-gray-400);
 
@@ -30,7 +29,6 @@ mrv-pgtable {
   /* divのサイズ指定に境界線も含む 番組の放送時間をサイズ指定で表現しているので必須 */
   & div {
     box-sizing: border-box;
-    border-color: var(--ig-gray-50);
   }
 
   /* リンクの色を普通の文字と同じにする アンダーラインはホバー時のみ */
@@ -45,7 +43,7 @@ mrv-pgtable {
     }
   }
 
-  /* 直下にあるdivすべて */
+  /* 直下にあるdivすべて 右と下に線を引く */
   &>div {
     border-width: 0px 1px 1px 0px;
     border-style: solid;

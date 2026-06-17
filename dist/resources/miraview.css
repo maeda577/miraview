@@ -1,9 +1,6 @@
-/* :root {
-  --ig-primary-500: rgb(45, 106, 7);
-} */
-
 body {
   margin: 0px;
+  color: var(--ig-gray-50-contrast);
   background-color: var(--ig-gray-50);
   height: 100dvh;
   display: flex;

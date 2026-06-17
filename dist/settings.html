@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./resources/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
+    <link rel='stylesheet' href='./resources/miraview.css' />
+    <style type="text/css">
+      mrv-nav-drawer:not(:defined),
+      mrv-navbar:not(:defined),
+      igc-radio-group:not(:defined),
+      igc-input:not(:defined),
+      igc-button:not(:defined) {
+        display: none;
+      }
+
+      igc-divider {
+        margin: 1rem 0;
+      }
+
+      .input-margin {
+        margin: 0.5rem 0 1rem 1rem;
+      }
+    </style>
+    <script type="module" src="./js/settings.js"></script>
+    <title>設定 - miraview</title>
+  </head>
+
+  <body class="ig-scrollbar">
+    <mrv-navbar title="設定"></mrv-navbar>
+    <!-- 左メニュー -->
+    <mrv-nav-drawer></mrv-nav-drawer>
+    <!-- メインコンテンツ -->
+    <form class="main-content ig-typography" style="padding: 2rem;">
+
+      <h6>テーマ</h6>
+      <igc-radio-group id="radio-theme" class="input-margin" alignment="horizontal">
+        <igc-radio name="theme" value="material">material</igc-radio>
+        <igc-radio name="theme" value="bootstrap">bootstrap</igc-radio>
+        <igc-radio name="theme" value="indigo">indigo</igc-radio>
+        <igc-radio name="theme" value="fluent">fluent</igc-radio>
+      </igc-radio-group>
+
+      <h6>テーマの配色</h6>
+      <igc-radio-group id="radio-theme-variant" class="input-margin" alignment="horizontal">
+        <igc-radio name="theme-variant" value="light">ライト</igc-radio>
+        <igc-radio name="theme-variant" value="dark">ダーク</igc-radio>
+        <igc-radio name="theme-variant" value="default">OSのデフォルト</igc-radio>
+      </igc-radio-group>
+      <igc-divider></igc-divider>
+
+      <h6>mirakc接続先</h6>
+      <igc-input id="input-endpoint" class="input-margin" type="url" name="api-endpoint" style="max-width: 30rem;">
+        <span slot="helper-text">通常変更する必要はありません</span>
+        <span slot="type-mismatch">不正なURLフォーマットです</span>
+      </igc-input>
+      <igc-divider></igc-divider>
+
+      <igc-button id="button-save">保存</igc-button>
+    </form>
+  </body>
+
+</html>

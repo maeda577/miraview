@@ -1,27 +1,28 @@
 import { configureTheme, Theme, ThemeVariant } from 'igniteui-webcomponents';
 
-// 設定をlocal storageに書き込む時のキー
+/** 設定をlocal storageに書き込む時のキー */
 const STORAGE_KEYS = {
-  // mirakcのAPIエンドポイント
+  /** mirakcのAPI接続先 */
   API_ENDPOINT: 'miraview.config.mirakcApiEndpoint',
-  // テーマの名前
+  /** 画面テーマ */
   THEME: 'miraview.config.theme',
-  // テーマがLightかDarkか
+  /** 画面テーマの配色(light/dark) */
   THEME_VARIANT: 'miraview.config.themeVariant',
 } as const;
 
 /** 設定情報 */
 export class MiraviewConfig {
-  /** mirakcのAPI接続先 */
+  /** mirakcのAPI接続先 通常はgetApiEndpoint()を使う */
   apiEndpoint: URL | undefined;
-
+  /** 画面テーマ */
   theme: Theme | undefined;
+  /** 画面テーマの配色(light/dark) */
   themeVariant: ThemeVariant | undefined;
 
   /** mirakcのAPI接続先 未指定だったらデフォルト値を返す */
   getApiEndpoint(): URL {
     if (!this.apiEndpoint) {
-      return getDefaultEndpoint();
+      return getDefaultApiEndpoint();
     }
     const result = new URL(this.apiEndpoint);
     // 末尾に / が無ければつける
@@ -95,12 +96,7 @@ export function saveConfigToStorage(config: MiraviewConfig) {
   });
 }
 
-/** 現在の配色(light/dark)を取得する */
-export function getThemeVariant(): ThemeVariant {
-  return (localStorage.getItem(STORAGE_KEYS.THEME_VARIANT) ??
-    (window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light')) as ThemeVariant;
-}
-
-export function getDefaultEndpoint() {
+// URLのデフォルト値 config画面のプレースホルダに使う
+export function getDefaultApiEndpoint() {
   return new URL('api/', window.location.origin);
 }
