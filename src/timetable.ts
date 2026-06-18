@@ -32,6 +32,8 @@ defineNavbar();
 const config = loadConfigFromStorage();
 config.applyTheme();
 
+document.body.style.visibility = 'visible';
+
 // APIを叩く
 // 番組情報の第1キーは日付の5時ちょうどのunixtime、第2キーはservice
 const programs = await getPrograms(config.getApiEndpoint().href);

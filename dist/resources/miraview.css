@@ -5,6 +5,8 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
+  /* bodyを非表示にする WebComponentsの定義が終わったら必ずvisibleに戻す */
+  visibility: hidden;
 
   &>.main-content {
     flex-grow: 1;

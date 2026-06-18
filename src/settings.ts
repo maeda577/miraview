@@ -28,6 +28,10 @@ defineComponents(
 defineNavDrawer();
 defineNavbar();
 
+const config = loadConfigFromStorage().applyTheme();
+
+document.body.style.visibility = 'visible';
+
 // 設定の入力欄
 const radioTheme = document.getElementById('radio-theme') as IgcRadioGroupComponent | null;
 const radioThemeVariant = document.getElementById('radio-theme-variant') as IgcRadioGroupComponent | null;
@@ -40,7 +44,6 @@ if (radioThemeVariant) {
 // 設定の読込と反映
 function loadConfig() {
   const config = loadConfigFromStorage();
-  config.applyTheme();
 
   // テーマの設定
   if (radioTheme) {
@@ -83,6 +86,7 @@ document.getElementById('button-save')?.addEventListener('click', ev => {
 
   saveConfigToStorage(config);
   window.alert('設定を保存しました');
+  config.applyTheme();
   loadConfig();
 });
 
