@@ -22,6 +22,7 @@
 mrv-pgtable {
   font-family: var(--ig-font-family);
   border: 1px solid var(--ig-gray-400);
+  position: relative;
 
   /* 番組表はCSSグリッドで表現する */
   display: grid;
@@ -85,18 +86,19 @@ mrv-pgtable {
       border-style: solid;
       border-color: inherit;
     }
+  }
 
-    /* 現在時刻の横棒 */
-    & .time-bar {
-      border: 1px solid var(--ig-success-500);
-      position: absolute;
-      opacity: 0.7;
-      margin: 0;
-      top: calc(var(--mrv-pgtable-now-msec-from-5am) / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour) - 1px);
-      width: calc(var(--mrv-pgtable-channel-width) * var(--mrv-pgtable-service-count) + var(--mrv-pgtable-timeheader-width) * var(--mrv-pgtable-timeheader-count));
-      /* TODO: うまく聞いてない気がする 2本目以降の時刻ヘッダの下を通っている */
-      z-index: 50;
-    }
+  /* 現在時刻の横棒 */
+  &>.time-bar {
+    border: 1px solid var(--ig-success-500);
+    position: absolute;
+    opacity: 0.7;
+    margin: 0;
+    left: 0;
+    pointer-events: none;
+    top: calc(var(--mrv-pgtable-now-msec-from-5am) / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour) - 1px);
+    width: calc(var(--mrv-pgtable-channel-width) * var(--mrv-pgtable-service-count) + var(--mrv-pgtable-timeheader-width) * var(--mrv-pgtable-timeheader-count));
+    z-index: 40;
   }
 
   /* 番組アイテム部分 */

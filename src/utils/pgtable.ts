@@ -177,15 +177,12 @@ export class MrvPgTable extends HTMLElement {
         return;
       }
 
-      // 時刻表示の列を作る
+      // 最初とチャンネルタイプの変わり目で時刻表示の列を作る
       if (lastChannelType !== service.channel.type) {
         const timeHeader = document.createElement('div');
         timeHeader.classList.add('timeheader');
         for (let i = 5; i < 29; i++) {
           timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
-        }
-        if (lastChannelType === undefined) {
-          timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
         }
         this.appendChild(document.createElement('div'));
         this.appendChild(timeHeader);
@@ -224,6 +221,9 @@ export class MrvPgTable extends HTMLElement {
         programDiv.lastElementChild?.querySelector('a')?.addEventListener('click', this.onProgramClick);
       });
     });
+
+    // 最後に時刻表示の横棒を入れる
+    this.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
   }
 
   onProgramClick(ev: PointerEvent): void {
