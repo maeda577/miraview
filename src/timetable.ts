@@ -12,7 +12,7 @@ import {
   IgcButtonGroupComponent,
   IgcToggleButtonComponent,
   IgcDialogComponent,
-  IgcChipComponent,
+  IgcDividerComponent,
 } from 'igniteui-webcomponents';
 
 defineComponents(
@@ -21,7 +21,7 @@ defineComponents(
   IgcButtonGroupComponent,
   IgcToggleButtonComponent,
   IgcDialogComponent,
-  IgcChipComponent,
+  IgcDividerComponent,
 );
 
 definePgTable();
@@ -51,7 +51,7 @@ async function getPrograms(baseUrl: string): Promise<Map<number, Map<components[
     // throw new Error();
     return groupPrograms(response[0].data!, response[1].data!);
   } catch (error) {
-    window.alert("番組情報の取得に失敗しました。\nmirakc APIエンドポイントの指定を確認してください。また、ブラウザのコンソールにエラーが出ていないか確認してください。");
+    window.alert("番組情報の取得に失敗しました。\nmirakc APIエンドポイントの指定を確認してください。エンドポイントを変更している場合、CORSが無効化されているかも確認してください。\nまた、ブラウザのコンソールにエラーが出ていないか確認してください。");
     document.querySelector<MrvPgTable>('mrv-pgtable')?.showSkelton(0);
     throw error;
   }
@@ -71,7 +71,9 @@ function createDateDropdown(dateNumbers: number[]): void {
   dateNumbers
     .filter(date => date >= today)
     .forEach((dayUnixTime) => daySelect.insertAdjacentHTML('beforeend', `
-      <igc-select-item value="${dayUnixTime}">${datetimeFormat.format(dayUnixTime)}</igc-select-item>
+      <igc-select-item value="${dayUnixTime}">
+        ${datetimeFormat.format(dayUnixTime)}
+      </igc-select-item>
     `));
   // 番組が無い
   if (daySelect.childElementCount == 0) {

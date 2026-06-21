@@ -28,10 +28,20 @@
     </div>
     <!-- 番組表 -->
     <mrv-pgtable class="main-content">
-      <!-- 番組クリックのダイアログ slot="footer" がついていない要素は開くたびに消される -->
+      <!-- 番組クリックのダイアログ -->
       <igc-dialog close-on-outside-click>
-        <igc-button id="button-rec" variant="flat" slot="footer">録画予約</igc-button>
-        <igc-button id="button-close" variant="flat" slot="footer">OK</igc-button>
+        <span id="span-title" slot="title"></span>
+        <igc-divider slot="title"></igc-divider>
+        <div slot="message">
+          <div id="div-chips" style="display: flex; gap: 0.5rem;"></div>
+          <div id="div-message"></div>
+          <table id="table-metadata"></table>
+        </div>
+        <igc-divider slot="footer"></igc-divider>
+        <div slot="footer">
+          <igc-button id="button-rec" variant="flat" slot="footer">録画予約</igc-button>
+          <igc-button id="button-close" variant="flat" slot="footer">OK</igc-button>
+        </div>
       </igc-dialog>
     </mrv-pgtable>
   </body>

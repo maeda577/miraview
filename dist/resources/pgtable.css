@@ -2,15 +2,20 @@
 :root {
   /* 1時間あたりの高さ */
   --mrv-pgtable-height-per-hour: 240px;
-  /* 午前5時を起点とした現在時刻のミリ秒 Javascript側で動的に更新される */
-  --mrv-pgtable-now-msec-from-5am: 1;
   /* チャンネルヘッダの最低高さ */
   --mrv-pgtable-channel-header-height: 2rem;
   /* 1つのチャンネルの幅 */
   --mrv-pgtable-channel-width: 10rem;
+  /* 1つの時刻ヘッダの幅 */
+  --mrv-pgtable-timeheader-width: 2rem;
   /* ヘッダや要素の色 */
   --mrv-pgtable-header-background-color: var(--ig-gray-200);
   --mrv-pgtable-item-background-color: var(--ig-gray-100);
+  /* 午前5時を起点とした現在時刻のミリ秒 時刻の横棒の高さ計算に使う Javascript側で動的に更新される */
+  --mrv-pgtable-now-msec-from-5am: 1;
+  /* 今表示されている時刻ヘッダ数とチャンネル数 時刻の横棒の幅計算に使う Javascript側で動的に更新される */
+  --mrv-pgtable-timeheader-count: 0;
+  --mrv-pgtable-service-count: 0;
 }
 
 /* 番組表 */
@@ -67,7 +72,7 @@ mrv-pgtable {
     position: sticky;
     left: 0;
     z-index: 30;
-    width: 2rem;
+    width: var(--mrv-pgtable-timeheader-width);
 
     /* さらに下の1時間ごとのdiv */
     &>div:not(.time-bar) {
@@ -75,10 +80,7 @@ mrv-pgtable {
       padding-top: 1rem;
       text-align: center;
       background-color: var(--mrv-pgtable-header-background-color);
-    }
-
-    /* 時刻バー以外は上に線を引く */
-    &>div:not(.time-bar) {
+      /* 時刻バー以外は上に線を引く */
       border-width: 1px 0px 0px 0px;
       border-style: solid;
       border-color: inherit;
@@ -91,7 +93,8 @@ mrv-pgtable {
       opacity: 0.7;
       margin: 0;
       top: calc(var(--mrv-pgtable-now-msec-from-5am) / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour) - 1px);
-      width: 100vw;
+      width: calc(var(--mrv-pgtable-channel-width) * var(--mrv-pgtable-service-count) + var(--mrv-pgtable-timeheader-width) * var(--mrv-pgtable-timeheader-count));
+      z-index: 50;
     }
   }
 
@@ -132,16 +135,54 @@ mrv-pgtable {
     width: var(--mrv-pgtable-channel-width);
   }
 
-  /* 番組情報ダイアログ 全体 */
-  & igc-dialog::part(base):open {
-    display: flex;
-    flex-direction: column;
-  }
+  /* 番組情報ダイアログ */
+  & igc-dialog {
 
-  /* 番組情報ダイアログ コンテンツ部分 */
-  & igc-dialog::part(content) {
-    overflow-y: scroll;
-    flex-grow: 1;
+    /* 番組情報ダイアログ 全体 */
+    &::part(base):open {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 番組情報ダイアログ タイトル部分 */
+    &::part(title) {
+      display: block;
+    }
+
+    /* 番組情報ダイアログ コンテンツ部分 */
+    &::part(content) {
+      /* スクロール位置を保持してしまうので、ダイアログを開くたびに一番上に戻した方が良いが直せなかった */
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    /* [name=message]::slotted(*) で何故かmax-widthが指定されているので消す */
+    &>[slot=message] {
+      max-width: none;
+
+      & p {
+        margin-block-start: 0;
+        margin-block-end: 1rem;
+        line-height: 1.6;
+      }
+    }
+
+    /* 番組情報ダイアログ フッター部分 */
+    &::part(footer) {
+      display: flex;
+      flex-direction: column;
+      padding: 0rem 1.5rem 1rem 1.5rem;
+      align-items: end;
+      gap: 0px;
+    }
+
+    & igc-divider[slot=title] {
+      margin-top: 1rem;
+    }
+
+    & igc-divider[slot=footer] {
+      margin-bottom: 1rem;
+    }
   }
 }
 

@@ -31,7 +31,7 @@ export class MrvNavDrawer extends HTMLElement {
     this.replaceChildren(drawer);
 
     // 左メニューのヘッダ
-    drawer.insertAdjacentHTML('beforeend', '<igc-nav-drawer-header-item>miraview</igc-nav-drawer-header-item>');
+    drawer.insertAdjacentHTML('beforeend', '<igc-nav-drawer-header-item style="justify-content: center;">miraview</igc-nav-drawer-header-item>');
 
     // 左メニューのアイテム
     this.menuItems.forEach(item => drawer.insertAdjacentHTML('beforeend', `

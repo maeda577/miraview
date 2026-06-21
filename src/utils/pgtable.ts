@@ -160,6 +160,13 @@ export class MrvPgTable extends HTMLElement {
     // 番組divの日付フォーマット
     const timeFormat = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
 
+    // サービス数 時刻の横棒の長さ計算に使う
+    document.body.style.setProperty('--mrv-pgtable-service-count', programs.size.toString());
+    // 時刻ヘッダ数 時刻の横棒の長さ計算に使う
+    document.body.style.setProperty('--mrv-pgtable-timeheader-count',
+      new Set([...programs.keys()].map(item => item.channel.type)).size.toString()
+    );
+
     // 最後に追加したチャンネルタイプ(GR/BS/CS/SKY) 切り替わりのタイミングで時刻ヘッダを入れる
     let lastChannelType: components["schemas"]["ChannelType"] | undefined = undefined;
 
@@ -172,15 +179,17 @@ export class MrvPgTable extends HTMLElement {
 
       // 時刻表示の列を作る
       if (lastChannelType !== service.channel.type) {
-        lastChannelType = service.channel.type;
         const timeHeader = document.createElement('div');
         timeHeader.classList.add('timeheader');
         for (let i = 5; i < 29; i++) {
           timeHeader.insertAdjacentHTML('beforeend', `<div>${i % 24}</div>`);
         }
-        timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
+        if (lastChannelType === undefined) {
+          timeHeader.insertAdjacentHTML('beforeend', '<div class="time-bar"></div>');
+        }
         this.appendChild(document.createElement('div'));
         this.appendChild(timeHeader);
+        lastChannelType = service.channel.type;
       }
 
       // サービスのヘッダ 番組名が長いと表示が崩れるので、長さに応じて文字を小さくする
@@ -228,9 +237,11 @@ export class MrvPgTable extends HTMLElement {
     if (!dialog) { return; }
 
     // ダイアログの中身を作っていく
-    dialog.replaceChildren(...dialog.querySelectorAll('*[slot="footer"]'));
     // タイトル
-    dialog.title = program.name ?? '';
+    const titleDiv = dialog.querySelector<HTMLSpanElement>('#span-title');
+    if (titleDiv && program.name) {
+      titleDiv.innerText = program.name;
+    }
 
     // 各種チップを作るための情報を集める
     const chipInfo: string[][] = [];
@@ -249,34 +260,37 @@ export class MrvPgTable extends HTMLElement {
     ]));
 
     // チップを作る
-    const chipDiv = document.createElement('div');
-    dialog.appendChild(chipDiv);
-    chipInfo.forEach(item => chipDiv.insertAdjacentHTML('beforeend', `
-      <igc-chip disabled>
-        <span slot="start" class="material-symbols-outlined">${item[0]}</span>
+    const chipDiv = dialog.querySelector('#div-chips');
+    chipDiv?.replaceChildren();
+    chipInfo.forEach(item => chipDiv?.insertAdjacentHTML('beforeend', `
+      <div class="div-chip">
+        <span class="material-symbols-outlined">${item[0]}</span>
         <span>${item[1]}</span>
-      </igc-chip>`
+      </div>`
     ));
 
     // 番組情報
-    const pDiv = document.createElement('div');
-    dialog.appendChild(pDiv);
+    const messageDiv = dialog.querySelector('#div-message');
+    messageDiv?.replaceChildren();
+
     if (program.description) {
-      pDiv.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
+      messageDiv?.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
     }
     if (program.extended) {
       Object.entries(program.extended).forEach(item =>
-        pDiv.insertAdjacentHTML('beforeend', `<p>${item.join(': ')}</p>`)
+        messageDiv?.insertAdjacentHTML('beforeend', `<p>${item[0]}: ${item[1]}</p>`)
       );
     }
 
     // カテゴリ
-    program.genres?.forEach((item, idx) => dialog.insertAdjacentHTML('beforeend',
-      `<p>Category[${idx + 1}]: ${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</p>`
+    const table = dialog.querySelector('#table-metadata');
+    table?.replaceChildren();
+    program.genres?.forEach((item, idx) => table?.insertAdjacentHTML('beforeend',
+      `<tr><td>Genre [${idx + 1}]</td><td> : </td><td>${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</td></tr>`
     ));
     // 番組ID
-    dialog.insertAdjacentHTML('beforeend', `<p>Program ID: ${program.id}</p>`);
-    dialog.insertAdjacentHTML('beforeend', `<p>Service ID: ${program.serviceId}</p>`);
+    table?.insertAdjacentHTML('beforeend', `<tr><td>Program ID</td><td> : </td><td>${program.id}</td></tr>`);
+    table?.insertAdjacentHTML('beforeend', `<tr><td>Service ID</td><td> : </td><td>${program.serviceId}</td></tr>`);
 
     // footerのボタンに使いそうな情報を割り当てる
     document.querySelectorAll<HTMLElement>('igc-button[slot="footer"]')?.forEach(item => {

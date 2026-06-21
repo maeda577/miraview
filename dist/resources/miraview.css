@@ -5,11 +5,31 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* bodyを非表示にする WebComponentsの定義が終わったら必ずvisibleに戻す */
+  /* bodyを非表示にする WebComponents作成中のがたつきを抑えるためで、作成が終わったら必ずvisibleに戻す */
   visibility: hidden;
 
   &>.main-content {
     flex-grow: 1;
-    overflow: scroll;
+    overflow: auto;
+  }
+}
+
+/* チップを作るCSS igc-chipの中身が実質buttonだったのでシンプルなものが必要だった */
+.div-chip {
+  display: flex;
+  align-items: center;
+  padding: 0rem 0.5rem;
+  gap: 0.2rem;
+  background-color: var(--ig-primary-700);
+  color: var(--ig-primary-700-contrast);
+  border-radius: 10rem;
+
+  &>span:first-child {
+    font-size: calc(var(--ig-caption-font-size) + 0.5rem);
+  }
+
+  &>span:last-child {
+    font-size: var(--ig-caption-font-size);
+    font-family: var(--ig-font-family);
   }
 }
