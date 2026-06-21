@@ -94,6 +94,7 @@ mrv-pgtable {
       margin: 0;
       top: calc(var(--mrv-pgtable-now-msec-from-5am) / 1000 / 60 / 60 * var(--mrv-pgtable-height-per-hour) - 1px);
       width: calc(var(--mrv-pgtable-channel-width) * var(--mrv-pgtable-service-count) + var(--mrv-pgtable-timeheader-width) * var(--mrv-pgtable-timeheader-count));
+      /* TODO: うまく聞いてない気がする 2本目以降の時刻ヘッダの下を通っている */
       z-index: 50;
     }
   }
@@ -151,7 +152,7 @@ mrv-pgtable {
 
     /* 番組情報ダイアログ コンテンツ部分 */
     &::part(content) {
-      /* スクロール位置を保持してしまうので、ダイアログを開くたびに一番上に戻した方が良いが直せなかった */
+      /* TODO: スクロール位置を保持してしまうので、ダイアログを開くたびに一番上に戻した方が良いが直せなかった */
       overflow-y: auto;
       flex-grow: 1;
     }
