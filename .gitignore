@@ -9,6 +9,8 @@ deno.lock
 /dist/resources/*.woff2
 /dist/themes
 
+.agents/skills/igniteui*
+
 # dependencies
 /node_modules
 

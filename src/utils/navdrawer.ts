@@ -63,12 +63,14 @@ export class MrvNavDrawer extends HTMLElement {
     );
   }
 
-  // メニューのクリック data-htmlタグを読み、そのhtmlに遷移する
+  // メニューのクリック
   async onMenuClick(ev: PointerEvent) {
     const menuItem = ev.currentTarget as IgcNavDrawerItemComponent | undefined;
+    // data-htmlタグがあれば読み、そのhtmlに遷移する
     if (menuItem && !menuItem.active && menuItem.dataset['html']) {
       window.location.href = `./${menuItem.dataset['html']}`;
     }
+    // 無ければバージョン表示アイテムのはず
     else {
       const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint().href });
       let version: string | undefined;
