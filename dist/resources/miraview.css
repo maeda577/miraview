@@ -33,3 +33,10 @@ body {
     font-family: var(--ig-font-family);
   }
 }
+
+/* 左メニュー 下部にアイテムを置けなかったのでflexにする */
+igc-nav-drawer::part(main) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

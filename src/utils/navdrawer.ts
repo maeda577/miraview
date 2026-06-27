@@ -4,8 +4,13 @@ import {
   IgcNavDrawerHeaderItemComponent,
   IgcNavDrawerItemComponent,
 } from 'igniteui-webcomponents';
+import { loadConfigFromStorage } from './localconfig.ts';
+import createClient from 'openapi-fetch';
+import type { paths } from './mirakc.d.ts';
 
 export class MrvNavDrawer extends HTMLElement {
+  // バージョン情報で出すmiraviewのバージョン
+  private readonly MIRAVIEW_VERSION = 'v3.4.1';
   // 左メニューのアイテム 左からMaterialIconの名前・表示する文字列・遷移するHTML
   private menuItems = [
     ["newspaper", "番組表", "timetable.html"],
@@ -21,6 +26,8 @@ export class MrvNavDrawer extends HTMLElement {
   }
 
   connectedCallback() {
+    this.onMenuClick = this.onMenuClick.bind(this);
+
     // 今表示しているHTML名
     const currentHtml = window.location.pathname.split('/').pop();
 
@@ -41,6 +48,15 @@ export class MrvNavDrawer extends HTMLElement {
       </igc-nav-drawer-item>
     `));
 
+    // 左メニューの上と下を分けるdiv
+    drawer.insertAdjacentHTML('beforeend', '<div style="flex-grow: 1;"></div>');
+
+    drawer.insertAdjacentHTML('beforeend', `
+      <igc-nav-drawer-item>
+        <span slot="icon" class="material-symbols-outlined">info</span>
+        <span slot="content">バージョン情報</span>
+      </igc-nav-drawer-item>
+    `);
     // メニューアイテムにクリックイベント割り当て
     drawer.querySelectorAll('igc-nav-drawer-item')?.forEach(
       item => item.addEventListener('click', this.onMenuClick)
@@ -48,10 +64,19 @@ export class MrvNavDrawer extends HTMLElement {
   }
 
   // メニューのクリック data-htmlタグを読み、そのhtmlに遷移する
-  onMenuClick(ev: PointerEvent): void {
+  async onMenuClick(ev: PointerEvent) {
     const menuItem = ev.currentTarget as IgcNavDrawerItemComponent | undefined;
     if (menuItem && !menuItem.active && menuItem.dataset['html']) {
       window.location.href = `./${menuItem.dataset['html']}`;
+    }
+    else {
+      const client = createClient<paths>({ baseUrl: loadConfigFromStorage().getApiEndpoint().href });
+      let version: string | undefined;
+      try {
+        const response = await client.GET("/version");
+        version = response.data?.current;
+      } catch { }
+      window.alert(`miraview: ${this.MIRAVIEW_VERSION}\nmirakc: ${version ?? 'バージョン情報を取得できませんでした'}`);
     }
   }
 }

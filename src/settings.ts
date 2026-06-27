@@ -28,7 +28,7 @@ defineComponents(
 defineNavDrawer();
 defineNavbar();
 
-const config = loadConfigFromStorage().applyTheme();
+loadConfigFromStorage().applyTheme();
 
 document.body.style.visibility = 'visible';
 
