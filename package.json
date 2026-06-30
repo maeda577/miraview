@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "igniteui-webcomponents": "^7",
-    "openapi-fetch": "*",
+    "openapi-fetch": "*"
+  },
+  "devDependencies": {
     "rolldown": "^1"
   },
   "scripts": {
@@ -12,7 +14,7 @@
     "clean-npx": "npm cache npx rm --force",
     "serve": "npm exec -- serve --no-clipboard --no-request-logging --no-etag",
     "watch": "rolldown --config --watch --sourcemap",
-    "update-license.json": "npm exec --package license-checker --call 'license-checker --production --json --customPath - --relativeLicensePath' | grep -v '\"path\":' > dist/resources/license.json",
+    "update-license": "npm exec --package=node-module-license-output@1.0.0 -- third-party-license --license",
     "update-mirakc.d.ts": "npm exec -- openapi-typescript http://mirakc.local:40772/api/docs --output ./src/utils/mirakc.d.ts"
   }
 }
