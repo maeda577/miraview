@@ -13,11 +13,11 @@ const STORAGE_KEYS = {
 /** 設定情報 */
 export class MiraviewConfig {
   /** mirakcのAPI接続先 通常はgetApiEndpoint()を使う */
-  apiEndpoint: URL | undefined;
+  apiEndpoint?: URL;
   /** 画面テーマ */
-  theme: Theme | undefined;
+  theme?: Theme;
   /** 画面テーマの配色(light/dark) */
-  themeVariant: ThemeVariant | undefined;
+  themeVariant?: ThemeVariant;
 
   /** mirakcのAPI接続先 未指定だったらデフォルト値を返す */
   getApiEndpoint(): URL {

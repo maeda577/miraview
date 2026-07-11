@@ -1,7 +1,6 @@
 import { loadConfigFromStorage } from './localconfig.ts';
-import { audio_component_types, genre_large, genre_middle } from './const.ts';
-import { IgcDialogComponent } from 'igniteui-webcomponents';
 import type { components } from './mirakc.d.ts';
+import { MrvPgDialog } from './pgdialog.ts';
 
 export function getServiceId(program: components['schemas']['MirakurunProgram']): number {
   return parseInt(program.networkId.toString() + program.serviceId.toString().padStart(5, '0'));
@@ -127,7 +126,7 @@ export class MrvPgTable extends HTMLElement {
 
   /** 読み込み中のスケルトンを出す */
   public showSkelton(skeltonCount: number = 6): void {
-    this.replaceChildren(...this.querySelectorAll('igc-dialog'));
+    this.replaceChildren();
     for (let index = 0; index < skeltonCount * 2; index++) {
       this.insertAdjacentHTML('beforeend', '<div class="skelton"></div>');
     }
@@ -148,8 +147,8 @@ export class MrvPgTable extends HTMLElement {
     programs: Map<components['schemas']['MirakurunService'], components['schemas']['MirakurunProgram'][]>,
     selectedDay5AM: number,
   ): void {
-    // ダイアログを除いて全ての子要素を消す
-    this.replaceChildren(...this.querySelectorAll('igc-dialog'));
+    // 全ての子要素を消す
+    this.replaceChildren();
 
     // 番組IDキャッシュを作り直す
     this.idToProgram.clear();
@@ -232,73 +231,11 @@ export class MrvPgTable extends HTMLElement {
     const program = this.idToProgram.get(parseInt(prgid));
     if (!program) { return; }
 
-    // 番組表用に定義されたダイアログを探す
-    const dialog = this.querySelector<IgcDialogComponent>('igc-dialog');
-    if (!dialog) { return; }
-
-    // ダイアログの中身を作っていく
-    // タイトル
-    const titleDiv = dialog.querySelector<HTMLSpanElement>('#span-title');
-    if (titleDiv && program.name) {
-      titleDiv.innerText = program.name;
+    // 番組詳細ダイアログを表示する
+    const dialog = document.querySelector('mrv-pgdialog') as MrvPgDialog | undefined;
+    if (dialog && typeof dialog.show === 'function') {
+      dialog.show(program);
     }
-
-    // 各種チップを作るための情報を集める
-    const chipInfo: string[][] = [];
-    // 各種チップ 有料放送かどうか
-    if (!program.isFree) {
-      chipInfo.push(['currency_yen', '有料放送']);
-    }
-    // 各種チップ 映像フォーマット
-    if (program.video) {
-      chipInfo.push(['videocam', `${program.video.type} ${program.video.resolution}`]);
-    }
-    // 各種チップ 音声フォーマット
-    program.audios?.forEach(item => chipInfo.push([
-      'brand_awareness',
-      `${audio_component_types.get(item.componentType)} ${item.samplingRate / 1000}kHz ${item.langs.join(',')}`
-    ]));
-
-    // チップを作る
-    const chipDiv = dialog.querySelector('#div-chips');
-    chipDiv?.replaceChildren();
-    chipInfo.forEach(item => chipDiv?.insertAdjacentHTML('beforeend', `
-      <div class="div-chip">
-        <span class="material-symbols-outlined">${item[0]}</span>
-        <span>${item[1]}</span>
-      </div>`
-    ));
-
-    // 番組情報
-    const messageDiv = dialog.querySelector('#div-message');
-    messageDiv?.replaceChildren();
-
-    if (program.description) {
-      messageDiv?.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
-    }
-    if (program.extended) {
-      Object.entries(program.extended).forEach(item =>
-        messageDiv?.insertAdjacentHTML('beforeend', `<p>${item[0]}: ${item[1]}</p>`)
-      );
-    }
-
-    // カテゴリ
-    const table = dialog.querySelector('#table-metadata');
-    table?.replaceChildren();
-    program.genres?.forEach((item, idx) => table?.insertAdjacentHTML('beforeend',
-      `<tr><td>Genre [${idx + 1}]</td><td> : </td><td>${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</td></tr>`
-    ));
-    // 番組ID
-    table?.insertAdjacentHTML('beforeend', `<tr><td>Program ID</td><td> : </td><td>${program.id}</td></tr>`);
-    table?.insertAdjacentHTML('beforeend', `<tr><td>Service ID</td><td> : </td><td>${program.serviceId}</td></tr>`);
-
-    // footerのボタンに使いそうな情報を割り当てる
-    document.querySelectorAll<HTMLElement>('igc-button[slot="footer"]')?.forEach(item => {
-      item.dataset['prgid'] = program.id.toString();
-    });
-
-    // ダイアログ表示
-    dialog.show();
   }
 }
 

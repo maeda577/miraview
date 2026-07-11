@@ -2,6 +2,7 @@ import { loadConfigFromStorage } from './utils/localconfig.ts';
 import { defineNavDrawer } from './utils/navdrawer.ts';
 import { defineNavbar } from './utils/navbar.ts';
 import { groupPrograms, definePgTable, MrvPgTable } from './utils/pgtable.ts';
+import { definePgDialog } from './utils/pgdialog.ts';
 import createClient from 'openapi-fetch';
 import type { components, paths } from './utils/mirakc.d.ts';
 
@@ -11,8 +12,6 @@ import {
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
   IgcToggleButtonComponent,
-  IgcDialogComponent,
-  IgcDividerComponent,
 } from 'igniteui-webcomponents';
 
 defineComponents(
@@ -20,11 +19,10 @@ defineComponents(
   IgcSelectItemComponent,
   IgcButtonGroupComponent,
   IgcToggleButtonComponent,
-  IgcDialogComponent,
-  IgcDividerComponent,
 );
 
 definePgTable();
+definePgDialog();
 defineNavDrawer();
 defineNavbar();
 
@@ -165,13 +163,3 @@ createDateDropdown([...programs.keys()]);
 
 // 初回だけ現在時刻のラインまでスクロールする
 document.querySelector('.time-bar')?.scrollIntoView({ block: 'center', behavior: 'auto' });
-
-// 番組ダイアログの閉じるボタン
-document.querySelector('#button-close')?.addEventListener('click',
-  () => document.querySelector<IgcDialogComponent>('mrv-pgtable>igc-dialog')?.hide()
-);
-
-// 番組ダイアログの録画ボタン
-document.querySelector('#button-rec')?.addEventListener('click',
-  () => window.alert('未実装')
-);

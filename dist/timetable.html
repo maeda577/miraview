@@ -7,6 +7,7 @@
     <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
     <link rel='stylesheet' href='./resources/miraview.css' />
     <link rel="stylesheet" href="./resources/pgtable.css" />
+    <link rel="stylesheet" href="./resources/pgdialog.css" />
     <script type="module" src="./js/timetable.js"></script>
     <title>番組表 - miraview</title>
   </head>
@@ -27,23 +28,9 @@
       </igc-button-group>
     </div>
     <!-- 番組表 -->
-    <mrv-pgtable class="main-content">
-      <!-- 番組クリックのダイアログ -->
-      <igc-dialog close-on-outside-click>
-        <span id="span-title" slot="title"></span>
-        <igc-divider slot="title"></igc-divider>
-        <div slot="message">
-          <div id="div-chips" style="display: flex; gap: 0.5rem;"></div>
-          <div id="div-message"></div>
-          <table id="table-metadata"></table>
-        </div>
-        <igc-divider slot="footer"></igc-divider>
-        <div slot="footer">
-          <igc-button id="button-rec" variant="flat" slot="footer">録画予約</igc-button>
-          <igc-button id="button-close" variant="flat" slot="footer">OK</igc-button>
-        </div>
-      </igc-dialog>
-    </mrv-pgtable>
+    <mrv-pgtable class="main-content"></mrv-pgtable>
+    <!-- 番組詳細ダイアログ -->
+    <mrv-pgdialog></mrv-pgdialog>
   </body>
 
 </html>

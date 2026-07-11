@@ -1,0 +1,49 @@
+/* 番組情報ダイアログのCSSファイル */
+mrv-pgdialog igc-dialog {
+
+  /* 番組情報ダイアログ 全体 */
+  &::part(base):open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 番組情報ダイアログ タイトル部分 */
+  &::part(title) {
+    display: block;
+  }
+
+  /* 番組情報ダイアログ コンテンツ部分 */
+  &::part(content) {
+    /* TODO: スクロール位置を保持してしまうので、ダイアログを開くたびに一番上に戻した方が良いが直せなかった */
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  /* [name=message]::slotted(*) で何故かmax-widthが指定されているので消す */
+  &>[slot=message] {
+    max-width: none;
+
+    & p {
+      margin-block-start: 0;
+      margin-block-end: 1rem;
+      line-height: 1.6;
+    }
+  }
+
+  /* 番組情報ダイアログ フッター部分 */
+  &::part(footer) {
+    display: flex;
+    flex-direction: column;
+    padding: 0rem 1.5rem 1rem 1.5rem;
+    align-items: end;
+    gap: 0px;
+  }
+
+  & igc-divider[slot=title] {
+    margin-top: 1rem;
+  }
+
+  & igc-divider[slot=footer] {
+    margin-bottom: 1rem;
+  }
+}
