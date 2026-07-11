@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./resources/favicon.svg" sizes="any" type="image/svg+xml" />
+    <link rel='stylesheet' href='./resources/MaterialSymbols.css' />
+    <link rel='stylesheet' href='./resources/miraview.css' />
+    <style type="text/css">
+      .tuner-container {
+        padding: 2rem;
+      }
+
+      .tuner-actions {
+        margin-bottom: 1.5rem;
+      }
+
+      .tuner-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        align-items: start;
+      }
+
+      /* チューナー詳細の定義リストスタイル */
+      .tuner-details {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.5rem 1rem;
+        font-size: var(--ig-body-medium-font-size);
+      }
+
+      .tuner-details dt {
+        font-weight: bold;
+        color: var(--ig-gray-600);
+      }
+
+      .tuner-details dd {
+        margin: 0;
+        word-break: break-all;
+      }
+
+      /* ユーザーごとの区切り線 */
+      .user-divider {
+        grid-column: span 2;
+        border: 0;
+        border-top: 1px dashed var(--ig-gray-300);
+        margin: 0.5rem 0;
+      }
+
+      #loading-spinner {
+        display: none;
+        margin: 3rem auto;
+      }
+    </style>
+    <script type="module" src="./js/tuners.js"></script>
+    <title>チューナー - miraview</title>
+  </head>
+
+  <body class="ig-scrollbar">
+    <mrv-navbar title="チューナー"></mrv-navbar>
+    <!-- 左メニュー -->
+    <mrv-nav-drawer></mrv-nav-drawer>
+    <!-- メインコンテンツ -->
+    <div class="main-content ig-typography tuner-container">
+      <div class="tuner-actions">
+        <igc-button id="button-refresh" variant="flat">
+          <span slot="prefix" class="material-symbols-outlined">refresh</span>
+          最新の情報に更新
+        </igc-button>
+      </div>
+
+      <!-- スピナー -->
+      <igc-circular-progress id="loading-spinner" indeterminate></igc-circular-progress>
+
+      <!-- カードリスト -->
+      <div id="tuner-list" class="tuner-grid"></div>
+    </div>
+  </body>
+
+</html>

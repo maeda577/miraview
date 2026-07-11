@@ -4,6 +4,7 @@ export default defineConfig({
   input: [
     'src/timetable.ts',
     'src/settings.ts',
+    'src/tuners.ts',
   ],
   output: {
     dir: 'dist/js',

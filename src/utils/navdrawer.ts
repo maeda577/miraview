@@ -14,6 +14,7 @@ export class MrvNavDrawer extends HTMLElement {
   // 左メニューのアイテム 左からMaterialIconの名前・表示する文字列・遷移するHTML
   private menuItems = [
     ["newspaper", "番組表", "timetable.html"],
+    ["router", "チューナー", "tuners.html"],
     ["settings", "設定", "settings.html"],
   ];
 
