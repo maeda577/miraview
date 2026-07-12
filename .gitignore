@@ -2,8 +2,6 @@
 
 /test
 
-deno.lock
-
 /api
 /dist/js
 /dist/resources/*.woff2
