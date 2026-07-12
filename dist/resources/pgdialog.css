@@ -5,11 +5,13 @@ mrv-pgdialog igc-dialog {
   &::part(base):open {
     display: flex;
     flex-direction: column;
+    padding: 1rem 1.5rem;
   }
 
   /* 番組情報ダイアログ タイトル部分 */
   &::part(title) {
     display: block;
+    padding: 0px;
   }
 
   /* 番組情報ダイアログ コンテンツ部分 */
@@ -17,16 +19,18 @@ mrv-pgdialog igc-dialog {
     /* TODO: スクロール位置を保持してしまうので、ダイアログを開くたびに一番上に戻した方が良いが直せなかった */
     overflow-y: auto;
     flex-grow: 1;
+    padding: 1rem 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   /* [name=message]::slotted(*) で何故かmax-widthが指定されているので消す */
   &>[slot=message] {
     max-width: none;
 
-    & p {
-      margin-block-start: 0;
-      margin-block-end: 1rem;
-      line-height: 1.6;
+    & dt {
+      font-weight: bold;
     }
   }
 
@@ -34,7 +38,7 @@ mrv-pgdialog igc-dialog {
   &::part(footer) {
     display: flex;
     flex-direction: column;
-    padding: 0rem 1.5rem 1rem 1.5rem;
+    padding: 0px;
     align-items: end;
     gap: 0px;
   }

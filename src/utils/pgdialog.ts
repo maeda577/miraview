@@ -3,6 +3,7 @@ import {
   IgcDialogComponent,
   IgcDividerComponent,
   IgcButtonComponent,
+  IgcBadgeComponent,
 } from 'igniteui-webcomponents';
 import type { components } from './mirakc.d.ts';
 import { audio_component_types, genre_large, genre_middle } from './const.ts';
@@ -19,12 +20,12 @@ export class MrvPgDialog extends HTMLElement {
     this.insertAdjacentHTML('beforeend', `
       <igc-dialog close-on-outside-click>
         <span slot="title"></span>
+        <igc-badge slot="title" variant="danger">有料放送</igc-badge>
         <igc-divider slot="title"></igc-divider>
-        <div slot="message">
-          <div id="div-chips" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;"></div>
-          <div id="div-message"></div>
-          <table id="table-metadata"></table>
-        </div>
+        <p slot="message"></p>
+        <dl slot="message" id="dl-extended"></dl>
+        <igc-divider slot="message"></igc-divider>
+        <dl slot="message" id="dl-metadata"></dl>
         <igc-divider slot="footer"></igc-divider>
         <div slot="footer">
           <igc-button id="button-close" variant="flat" slot="footer">OK</igc-button>
@@ -45,51 +46,64 @@ export class MrvPgDialog extends HTMLElement {
     if (titleSpan) {
       titleSpan.innerText = program.name || '';
     }
-
-    const chipInfo: string[][] = [];
-    if (!program.isFree) {
-      chipInfo.push(['currency_yen', '有料放送']);
-    }
-    if (program.video) {
-      chipInfo.push(['videocam', `${program.video.type} ${program.video.resolution}`]);
-    }
-    program.audios?.forEach(item => chipInfo.push([
-      'brand_awareness',
-      `${audio_component_types.get(item.componentType)} ${item.samplingRate / 1000}kHz ${item.langs.join(',')}`
-    ]));
-
-    const chipDiv = this.querySelector('#div-chips');
-    if (chipDiv) {
-      chipDiv.replaceChildren();
-      chipInfo.forEach(item => chipDiv.insertAdjacentHTML('beforeend', `
-        <div class="div-chip">
-          <span class="material-symbols-outlined" style="font-size: 1.2rem; vertical-align: middle;">${item[0]}</span>
-          <span style="vertical-align: middle;">${item[1]}</span>
-        </div>`
-      ));
+    // 有料バッジ
+    const badge = this.querySelector<IgcBadgeComponent>('igc-badge[slot="title"]');
+    if (badge) {
+      badge.style.display = program.isFree ? 'none' : 'unset';
     }
 
-    const messageDiv = this.querySelector('#div-message');
-    if (messageDiv) {
-      messageDiv.replaceChildren();
-      if (program.description) {
-        messageDiv.insertAdjacentHTML('beforeend', `<p>${program.description}</p>`);
-      }
+    // 詳細
+    const descriptionP = this.querySelector<HTMLParagraphElement>('p[slot="message"]');
+    if (descriptionP) {
+      descriptionP.innerText = program.description ?? '';
+      descriptionP.style.display = program.description ? 'unset' : 'none';
+    }
+
+    // 拡張情報
+    const extendedDl = this.querySelector<HTMLDListElement>('#dl-extended');
+    if (extendedDl) {
+      extendedDl.replaceChildren();
+      extendedDl.style.display = program.extended ? 'unset' : 'none';
       if (program.extended) {
         Object.entries(program.extended).forEach(item =>
-          messageDiv.insertAdjacentHTML('beforeend', `<p><strong>${item[0]}</strong>: ${item[1]}</p>`)
+          extendedDl.insertAdjacentHTML('beforeend', `
+            <dt>${item[0]}</dt>
+            <dd>${item[1]}</dd>
+          `)
         );
       }
     }
 
-    const table = this.querySelector('#table-metadata');
-    if (table) {
-      table.replaceChildren();
-      program.genres?.forEach((item, idx) => table.insertAdjacentHTML('beforeend',
-        `<tr><td>Genre [${idx + 1}]</td><td> : </td><td>${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</td></tr>`
-      ));
-      table.insertAdjacentHTML('beforeend', `<tr><td>Program ID</td><td> : </td><td>${program.id}</td></tr>`);
-      table.insertAdjacentHTML('beforeend', `<tr><td>Service ID</td><td> : </td><td>${program.serviceId}</td></tr>`);
+    // 各種メタデータ
+    const dlMetadata = this.querySelector('#dl-metadata');
+    if (dlMetadata) {
+      dlMetadata.replaceChildren();
+      // ジャンル
+      if (program.genres) {
+        dlMetadata.insertAdjacentHTML('beforeend', `<dt>Genre</dt>`);
+        program.genres.forEach(item => dlMetadata.insertAdjacentHTML('beforeend',
+          `<dd>${genre_large.get(item.lv1)} - ${genre_middle.get(item.lv1)?.get(item.lv2) ?? ''}</dd>`
+        ));
+      }
+      // 映像
+      if (program.video) {
+        dlMetadata.insertAdjacentHTML('beforeend', `
+          <dt>Video</dt>
+          <dd>${program.video.type} ${program.video.resolution}</dd>
+        `);
+      }
+      // 音声
+      if (program.audios) {
+        dlMetadata.insertAdjacentHTML('beforeend', `<dt>Audio</dt>`);
+        program.audios.forEach(item => dlMetadata.insertAdjacentHTML('beforeend',
+          `<dd>${audio_component_types.get(item.componentType)} ${item.samplingRate / 1000}kHz ${item.langs.join(',')}`
+        ));
+      }
+      // ID
+      dlMetadata.insertAdjacentHTML('beforeend', `
+        <dt>Program ID</dt><dd>${program.id}</dd>
+        <dt>Service ID</dt><dd>${program.serviceId}</dd>
+      `);
     }
 
     this.querySelectorAll<HTMLElement>('igc-button[slot="footer"]').forEach(item => {
@@ -105,6 +119,7 @@ export function definePgDialog() {
     IgcDialogComponent,
     IgcDividerComponent,
     IgcButtonComponent,
+    IgcBadgeComponent,
   );
   customElements.define('mrv-pgdialog', MrvPgDialog);
 }
