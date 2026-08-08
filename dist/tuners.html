@@ -15,11 +15,17 @@
         margin-bottom: 1.5rem;
       }
 
-      .tuner-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 1.5rem;
-        align-items: start;
+      .tuner-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      igc-expansion-panel {
+        border: 1px solid var(--ig-gray-200);
+        border-radius: 4px;
       }
 
       /* チューナー詳細の定義リストスタイル */
@@ -29,6 +35,7 @@
         grid-template-columns: auto 1fr;
         gap: 0.5rem 1rem;
         font-size: var(--ig-body-medium-font-size);
+        padding: 0.5rem 1rem;
       }
 
       .tuner-details dt {
@@ -74,8 +81,8 @@
       <!-- スピナー -->
       <igc-circular-progress id="loading-spinner" indeterminate></igc-circular-progress>
 
-      <!-- カードリスト -->
-      <div id="tuner-list" class="tuner-grid"></div>
+      <!-- アコーディオンリスト -->
+      <div id="tuner-list" class="tuner-list"></div>
     </div>
   </body>
 

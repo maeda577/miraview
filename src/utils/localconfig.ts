@@ -100,3 +100,17 @@ export function saveConfigToStorage(config: MiraviewConfig) {
 export function getDefaultApiEndpoint() {
   return new URL('api/', window.location.origin);
 }
+
+// HTMLエスケープ処理
+// innerTextでは不要。innerHtmlやinsertAdjacentHTMLなどでは必要
+export function escapeHtml(str: string): string {
+  return str.replace(/[&<>'"]/g,
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+}

@@ -1,4 +1,4 @@
-import { loadConfigFromStorage } from './utils/localconfig.ts';
+import { loadConfigFromStorage, escapeHtml } from './utils/localconfig.ts';
 import { defineNavDrawer } from './utils/navdrawer.ts';
 import { defineNavbar } from './utils/navbar.ts';
 import createClient from 'openapi-fetch';
@@ -6,10 +6,9 @@ import type { components, paths } from './utils/mirakc.d.ts';
 
 import {
   defineComponents,
+  StyleVariant,
   IgcButtonComponent,
-  IgcCardComponent,
-  IgcCardHeaderComponent,
-  IgcCardContentComponent,
+  IgcExpansionPanelComponent,
   IgcBadgeComponent,
   IgcCircularProgressComponent,
 } from 'igniteui-webcomponents';
@@ -17,9 +16,7 @@ import {
 // 使用する Ignite UI コンポーネントの登録
 defineComponents(
   IgcButtonComponent,
-  IgcCardComponent,
-  IgcCardHeaderComponent,
-  IgcCardContentComponent,
+  IgcExpansionPanelComponent,
   IgcBadgeComponent,
   IgcCircularProgressComponent,
 );
@@ -40,13 +37,13 @@ async function getTuners() {
     const response = await client.GET("/tuners");
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch tuners:", error);
-    return undefined;
+    window.alert("チューナー情報の取得に失敗しました。\nmirakc APIエンドポイントの指定を確認してください。エンドポイントを変更している場合、CORSが無効化されているかも確認してください。\nまた、ブラウザのコンソールにエラーが出ていないか確認してください。");
+    throw error;
   }
 }
 
 // チューナーの利用状況に応じてバッジのバリアントを判定
-function getVariant(tuner: components['schemas']['MirakurunTuner']) {
+function getVariant(tuner: components['schemas']['MirakurunTuner']): StyleVariant {
   if (tuner.isFree) {
     return 'success';
   } else if (Math.max(...tuner.users.map(u => u.priority)) <= 0) {
@@ -56,21 +53,9 @@ function getVariant(tuner: components['schemas']['MirakurunTuner']) {
   }
 }
 
-// HTMLエスケープ処理
-function escapeHtml(str: string): string {
-  return str.replace(/[&<>'"]/g,
-    tag => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[tag] || tag)
-  );
-}
 
-// チューナーカードのHTML生成
-function createTunerCard(tuner: components['schemas']['MirakurunTuner']) {
+// チューナーパネルのHTML生成
+function createTunerPanel(tuner: components['schemas']['MirakurunTuner']) {
   const badgeVariant = getVariant(tuner);
   const badgeText = tuner.isFree ? 'Free' : 'Using';
 
@@ -93,20 +78,34 @@ function createTunerCard(tuner: components['schemas']['MirakurunTuner']) {
     <dd>${escapeHtml(tuner.command)}</dd>
   ` : '';
 
+  // コンテンツ領域の構築（使用中でない場合はその旨を表示）
+  let contentHtml = '';
+  if (commandHtml || usersHtml) {
+    contentHtml = `
+      <dl class="tuner-details">
+        ${commandHtml}
+        ${usersHtml ? `<hr class="user-divider" />${usersHtml}` : ''}
+      </dl>
+    `;
+  } else {
+    contentHtml = `
+      <div style="padding: 1rem; color: var(--ig-gray-500); font-style: italic; font-size: var(--ig-body-medium-font-size);">
+        現在使用されていません。
+      </div>
+    `;
+  }
+
   return `
-    <igc-card>
-      <igc-card-header>
-        <igc-badge slot="thumbnail" variant="${badgeVariant}">${badgeText}</igc-badge>
-        <h3 slot="title">${escapeHtml(tuner.name)}</h3>
-        <span slot="subtitle">${escapeHtml(tuner.types.join(' : '))}</span>
-      </igc-card-header>
-      <igc-card-content>
-        <dl class="tuner-details">
-          ${commandHtml}
-          ${usersHtml ? `<hr class="user-divider" />${usersHtml}` : ''}
-        </dl>
-      </igc-card-content>
-    </igc-card>
+    <igc-expansion-panel>
+      <div slot="title" style="display: flex; align-items: center; gap: 0.75rem;">
+        <igc-badge variant="${badgeVariant}">${badgeText}</igc-badge>
+        <strong>${escapeHtml(tuner.name)}</strong>
+      </div>
+      <span slot="subtitle">${escapeHtml(tuner.types.join(' : '))}</span>
+      <div>
+        ${contentHtml}
+      </div>
+    </igc-expansion-panel>
   `;
 }
 
@@ -123,8 +122,8 @@ async function refreshTuners() {
   try {
     const tuners = await getTuners();
     if (tuners && tuners.length > 0) {
-      const cardsHtml = tuners.map(createTunerCard).join('');
-      tunerList.innerHTML = cardsHtml;
+      const panelsHtml = tuners.map(createTunerPanel).join('');
+      tunerList.innerHTML = panelsHtml;
     } else {
       tunerList.innerHTML = '<p>チューナー情報がありません。</p>';
     }
