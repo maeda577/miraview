@@ -1,9 +1,12 @@
 {
   "dependencies": {
+    "bootstrap": "^5",
+    "bootstrap-icons": "^1",
     "igniteui-webcomponents": "^7",
     "openapi-fetch": "*"
   },
   "devDependencies": {
+    "typescript": "^7",
     "rolldown": "^1"
   },
   "scripts": {
